@@ -8,22 +8,22 @@ import tinkerer.paths
 # **************************************************************
 
 # Change this to the name of your blog
-project = 'My blog'
+project = 'chris\' sandbox'
 
 # Change this to the tagline of your blog
-tagline = 'Add intelligent tagline here'
+tagline = 'python, R, ubuntu, bayesian methods, machine learning and more...'
 
 # Change this to the description of your blog
-description = 'This is an awesome blog'
+description = 'Christopher Strelioff\'s blog'
 
 # Change this to your name
-author = 'Winston Smith'
+author = 'Chris Strelioff'
 
 # Change this to your copyright string
-copyright = '1984, ' + author
+copyright = '2014 Christopher Strelioff'
 
 # Change this to your blog root URL (required for RSS feed)
-website = 'http://127.0.0.1/blog/html/'
+website = 'http://chrisstrelioff.ws/sandbox/'
 
 # **************************************************************
 # More tweaks you can do
@@ -36,10 +36,10 @@ disqus_shortname = None
 html_favicon = 'tinkerer.ico'
 
 # Pick another Tinkerer theme or use your own
-html_theme = "flat"
+html_theme = "ccsflat"
 
 # Theme-specific options, see docs
-html_theme_options = { }
+html_theme_options = {}
 
 # Link to RSS service like FeedBurner if any, otherwise feed is
 # linked directly
@@ -59,7 +59,7 @@ slug_word_separator = '_'
 # **************************************************************
 
 # Add other Sphinx extensions here
-extensions = ['tinkerer.ext.blog', 'tinkerer.ext.disqus']
+extensions = ['tinkerer.ext.blog', 'tinkerer.ext.disqus', 'sphinx.ext.mathjax']
 
 # Add other template paths here
 templates_path = ['_templates']
@@ -71,11 +71,11 @@ html_static_path = ['_static', tinkerer.paths.static]
 html_theme_path = ['_themes', tinkerer.paths.themes]
 
 # Add file patterns to exclude from build
-exclude_patterns = ["drafts/*", "_templates/*"]
+exclude_patterns = ["drafts/*", "_templates/*", "pweave/*"]
 
 # Add templates to be rendered in sidebar here
 html_sidebars = {
-    "**": ["recent.html", "searchbox.html"]
+    "**": ["searchbox.html", "pages.html", "recent.html", "tags.html"]
 }
 
 # **************************************************************
