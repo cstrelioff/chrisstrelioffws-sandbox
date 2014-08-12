@@ -5,6 +5,8 @@ I need to use a set of ssh keys on a new machine. **In general, it is best to
 generate new keys instead of copying old keys**, but this is a *temporary
 solution*.
 
+.. more::
+
 So, given that disclaimer, I copied the **~/.ssh** folder from the old machine
 into a *temp folder* on the new machine.  This avoids copying over anything in
 the new machine's **~/.ssh** folder.  Copy all *keyname*, *keyname.pub* files
