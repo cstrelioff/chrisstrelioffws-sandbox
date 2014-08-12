@@ -1,4 +1,4 @@
-Install and setup screen_ on Ubuntu 14.04
+Install and setup screen on Ubuntu 14.04
 =========================================
 
 screen_ is a great tool for the terminal, allowing me to have many windows
