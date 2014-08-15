@@ -4,6 +4,7 @@ Sitemap
 .. toctree::
    :maxdepth: 1
 
+   2014/08/15/install_r_on_ubuntu_14_04
    2014/07/29/install_igraph_for_python_on_ubuntu_14_04
    2014/07/12/python_and_yaml_on_ubuntu_14_04
    2014/07/10/install_sqlite3_on_ubuntu_14_04
