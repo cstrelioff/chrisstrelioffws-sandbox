@@ -15,7 +15,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
         <meta name="description" content="Christopher Strelioff's blog">
         <meta name="viewport" content="width=device-width">
-        <title>Install igraph for Python on Ubuntu 14.04 &mdash; chris&#39; sandbox</title>
+        <title>Garmin forerunner and Ubuntu 14.04 &mdash; chris&#39; sandbox</title>
             <link rel="stylesheet" href="../../../_static/normalize.css" type="text/css">
             <link rel="stylesheet" href="../../../_static/sphinx.css" type="text/css">
             <link rel="stylesheet" href="../../../_static/main.css" type="text/css">
@@ -28,7 +28,7 @@
         <script>window.jQuery || document.write('<script src="../../../_static/vendor/jquery-1.8.2.min.js"><\/script>')</script>
         <script src="../../../_static/plugins.js"></script>
         <script src="../../../_static/main.js"></script>
-        <link rel="next" title="Python and YAML on Ubuntu 14.04" href="../12/python_and_yaml_on_ubuntu_14_04.html" /><link rel="prev" title="Install R on Ubuntu 14.04" href="../../08/15/install_r_on_ubuntu_14_04.html" /><link rel="alternate" type="application/rss+xml" title="RSS" href="../../../rss.html" /><script type="text/javascript">
+        <link rel="next" title="Install R on Ubuntu 14.04" href="../15/install_r_on_ubuntu_14_04.html" /><link rel="alternate" type="application/rss+xml" title="RSS" href="../../../rss.html" /><script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
         VERSION:     '1.4.2',
@@ -66,36 +66,63 @@
     </hgroup>
   </header>
 <div class="main-container" role="main"><div class="main wrapper clearfix"><article><div class="timestamp postmeta">
-            <span>July 29, 2014</span>
+            <span>August 16, 2014</span>
         </div>
-    <div class="section" id="install-igraph-for-python-on-ubuntu-14-04">
-<h1>Install igraph for Python on Ubuntu 14.04</h1>
-<p>In this post I will describe installing <a class="reference external" href="http://igraph.org/python/">python-igraph</a> on Ubuntu 14.04, using
-the default Python 2.7.  Previously I wrote a (long) post about how to
-<a class="reference internal" href="../../06/04/install_and_setup_python_and_packages_on_ubuntu_14_04.html#initial-python-setup"><em>Install Python packages on Ubuntu 14.04</em></a>, which provides lots of detail about how I approach
-Python package installation.  In particular, I use <strong>pip</strong> and install as a
-<strong>user</strong>.  Of course, you can do otherwise.</p>
-<div id="more"> </div><p>On Ubuntut 14.04 <a class="reference external" href="http://igraph.org/python/">python-igraph</a> requires <span class="docutils literal"><span class="pre">build-essential</span></span> and
-<span class="docutils literal"><span class="pre">python-dev</span></span>.  I detail how to install these in the <strong>Ubuntu dependencies</strong>
-section of the <a class="reference internal" href="../../06/04/install_and_setup_python_and_packages_on_ubuntu_14_04.html#initial-python-setup"><em>Install Python packages on Ubuntu 14.04</em></a> post.  Assuming that these
-dependencies are satisfied, the install command is:</p>
-<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>pip install --user python-igraph
+    <div class="section" id="garmin-forerunner-and-ubuntu-14-04">
+<h1>Garmin forerunner and Ubuntu 14.04</h1>
+<p>This post is about getting running data off of a Garmin Forerunner 305 and
+uploaded to the Garmin Connect website.  This post follows my previous post on
+the <a class="reference external" href="http://livesoncoffee.wordpress.com/2013/10/21/garmin-forerunner-and-ubuntu-12-04-updated/">Garmin forerunner and Ubuntu 12.04</a>. Basically I will repeat these
+previous instructions, making sure that everything can still be done
+on Ubuntu 14.04&#8211; the good news is that everything works on 14.04, so read on
+if you are interested.</p>
+<div id="more"> </div><ul class="simple">
+<li>First, we install some dependencies:</li>
+</ul>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>sudo apt-get install garmin-forerunner-tools libxml2-utils
 </pre></div>
 </div>
-<p>If you haven&#8217;t previously compiled the c-core there will be lots of compiling.
-Once done, you should get a note about successful installation, and information
-about the install is available using:</p>
-<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>pip show python-igraph
----
-Name: python-igraph
-Version: 0.7
-Location: /home/cstrelioff/.local/lib/python2.7/site-packages
-Requires:
+<ul class="simple">
+<li>Second, we grab code from a git repository (do this in a directory where you
+want the code to reside&#8211; I&#8217;ll do this in <span class="docutils literal"><span class="pre">~/gitlocal/</span></span>):</li>
+</ul>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span><span class="nb">cd</span> ~/gitlocal/
+<span class="nv">$ </span>git clone git@github.com:cstrelioff/garmin-dev.git
 </pre></div>
 </div>
-<p>Of potential interest is the <span class="docutils literal"><span class="pre">igraph</span></span> start script.  This script will start
-<span class="docutils literal"><span class="pre">IPython</span></span> or <span class="docutils literal"><span class="pre">IDLE</span></span> (if available) and import all <span class="docutils literal"><span class="pre">igraph</span></span> into the main
-namespace.</p>
+<ul class="simple">
+<li>Finally we are ready to get data.  I will give one approach &#8211; start by
+making a directory where the data will be saved. For example,</li>
+</ul>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>mkdir ~/GarminData
+<span class="nv">$ </span><span class="nb">cd</span> ~/GarminData
+</pre></div>
+</div>
+<p>Next, we connect the watch to the computer using the usb cable and obtain the
+data from the watch:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>garmin-save-runs
+</pre></div>
+</div>
+<p>If there is data on the watch, this command should produce <span class="docutils literal"><span class="pre">*.gmn</span></span> files that
+use the directory structure: <span class="docutils literal"><span class="pre">Year/Month/*.gmn</span></span>.</p>
+<p>Finally, the <span class="docutils literal"><span class="pre">*.gmn</span></span> files need to be converted to <span class="docutils literal"><span class="pre">*.tcx</span></span> for upload to
+Garmin Connect. It is probably good to choose a consistent place to do this.
+For example, create a directory called <span class="docutils literal"><span class="pre">tcxfiles</span></span>:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>mkdir ~/GarminData/tcxfiles
+<span class="nv">$ </span><span class="nb">cd</span> ~/GarminData/tcxfiles/
+</pre></div>
+</div>
+<p>A command to do the conversions has to provide full paths for <span class="docutils literal"><span class="pre">gmn2tcx</span></span> and
+the input <span class="docutils literal"><span class="pre">*.gmn</span></span> file. So, try something like this if you&#8217;ve used the
+directory structure discussed above:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>~/gitlocal/garmin-dev/gmn2tcx ~/GarminData/DataFromWatch/Year/Month/file.gmn &gt; run-name.tcx
+</pre></div>
+</div>
+<p>Be sure to change <span class="docutils literal"><span class="pre">~/GarminData/DataFromWatch/Year/Month/file.gmn</span></span> to
+something that makes sense.  If all went well, the file <span class="docutils literal"><span class="pre">run-name.tcx</span></span> (change
+this filename to something sensible as well) will be in your local directory
+and ready to upload. Of course, in the short run you&#8217;ll want to write a script
+to automate this process and avoid the typing.</p>
 </div>
 
     <div class="postmeta">
@@ -106,12 +133,12 @@ namespace.</p>
         <div class="tags">
             <span>
                 Tags:
-                <a href="../../../tags/python_2_7.html">python 2.7</a>, <a href="../../../tags/igraph.html">igraph</a>, <a href="../../../tags/social_networks.html">social networks</a>, <a href="../../../tags/networks.html">networks</a>, <a href="../../../tags/graphs.html">graphs</a></span>
+                <a href="../../../tags/garmin.html">garmin</a>, <a href="../../../tags/running.html">running</a></span>
         </div>
         </div><ul class="related clearfix">
-            <li class="left"> &laquo; <a href="../../08/15/install_r_on_ubuntu_14_04.html">Install R on Ubuntu 14.04</a></li>
-            <li class="right"><a href="../12/python_and_yaml_on_ubuntu_14_04.html">Python and YAML on Ubuntu 14.04</a> &raquo; </li>
-        </ul><div id="disqus_thread"></div><script type="text/javascript">    var disqus_shortname = "chrissandbox";    var disqus_identifier = "2014/07/29/install_igraph_for_python_on_ubuntu_14_04";    disqus_thread();</script><noscript>Please enable JavaScript to view the    <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></article><aside class="sidebar"><section><div class="widget" id="searchbox" role="search">
+            <li class="left"></li>
+            <li class="right"><a href="../15/install_r_on_ubuntu_14_04.html">Install R on Ubuntu 14.04</a> &raquo; </li>
+        </ul><div id="disqus_thread"></div><script type="text/javascript">    var disqus_shortname = "chrissandbox";    var disqus_identifier = "2014/08/16/garmin_forerunner_and_ubuntu_14_04";    disqus_thread();</script><noscript>Please enable JavaScript to view the    <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></article><aside class="sidebar"><section><div class="widget" id="searchbox" role="search">
     <h1>Search</h1>
     <form action="../../../search.html" method="get">
         <input type="text" name="q" />
@@ -128,19 +155,19 @@ namespace.</p>
 </section><section><div class="widget">
     <h1>Recent Posts</h1>
     <ul><li>
-            <a href="../../08/16/garmin_forerunner_and_ubuntu_14_04.html">Garmin forerunner and Ubuntu 14.04</a>
+            <a href="#">Garmin forerunner and Ubuntu 14.04</a>
         </li><li>
-            <a href="../../08/15/install_r_on_ubuntu_14_04.html">Install R on Ubuntu 14.04</a>
+            <a href="../15/install_r_on_ubuntu_14_04.html">Install R on Ubuntu 14.04</a>
         </li><li>
-            <a href="#">Install igraph for Python on Ubuntu 14.04</a>
+            <a href="../../07/29/install_igraph_for_python_on_ubuntu_14_04.html">Install igraph for Python on Ubuntu 14.04</a>
         </li><li>
-            <a href="../12/python_and_yaml_on_ubuntu_14_04.html">Python and YAML on Ubuntu 14.04</a>
+            <a href="../../07/12/python_and_yaml_on_ubuntu_14_04.html">Python and YAML on Ubuntu 14.04</a>
         </li><li>
-            <a href="../10/install_sqlite3_on_ubuntu_14_04.html">Install sqlite3 on Ubuntu 14.04</a>
+            <a href="../../07/10/install_sqlite3_on_ubuntu_14_04.html">Install sqlite3 on Ubuntu 14.04</a>
         </li><li>
-            <a href="../07/install_and_use_sphinx_bootstrap_theme_on_ubuntu_14_04.html">Install and use sphinx-bootstrap-theme on Ubuntu 14.04</a>
+            <a href="../../07/07/install_and_use_sphinx_bootstrap_theme_on_ubuntu_14_04.html">Install and use sphinx-bootstrap-theme on Ubuntu 14.04</a>
         </li><li>
-            <a href="../02/install_oauth2_python_package_on_ubuntu_14_04.html">Install oauth2 Python package on Ubuntu 14.04</a>
+            <a href="../../07/02/install_oauth2_python_package_on_ubuntu_14_04.html">Install oauth2 Python package on Ubuntu 14.04</a>
         </li><li>
             <a href="../../06/27/ubuntu_vps_setup_at_digital_ocean.html">Ubuntu VPS setup at digital ocean</a>
         </li><li>
