@@ -814,6 +814,36 @@ Again, note that the location is **~/gitlocal/cmpy/**, instead of
 **~/.local/lib/python2.7/site-packages/**, due to the **-e** tag.  This is why
 the addition to the **easy_install.pth** file (above) was needed.
 
+**Edit:** Aug 21st, 2014
+
+A note on updating this local installation is in order.  Recently a change in
+code was made that affected underlying *c code* that is incorporated using
+cython.  I pulled the repository changes using:
+
+.. code-block:: bash
+
+    $ cd ~/gitlocal/cmpy/
+    $ git pull
+
+To try and update the install I did:
+
+.. code-block:: bash
+
+    $ pip install --user -e ~/gitlocal/cmpy/
+
+This ran the ``setup.py`` file but did *not* recompile the modified c code.
+To get this to work I had to remove the ``build`` directory, build in place and
+install again:
+
+.. code-block:: bash
+
+    $ cd ~/gitlocal/cmpy/
+    $ rm -r build/
+    $ python setup.py build_ext -i --cython
+    $ pip install --user -e ~/gitlocal/cmpy/
+
+Is there a better way to do this? Let me know in the comments below.
+
 .. _install restview:
 
 restview_

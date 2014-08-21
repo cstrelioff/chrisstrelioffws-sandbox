@@ -750,6 +750,28 @@ Requires:
 <p>Again, note that the location is <strong>~/gitlocal/cmpy/</strong>, instead of
 <strong>~/.local/lib/python2.7/site-packages/</strong>, due to the <strong>-e</strong> tag.  This is why
 the addition to the <strong>easy_install.pth</strong> file (above) was needed.</p>
+<p><strong>Edit:</strong> Aug 21st, 2014</p>
+<p>A note on updating this local installation is in order.  Recently a change in
+code was made that affected underlying <em>c code</em> that is incorporated using
+cython.  I pulled the repository changes using:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span><span class="nb">cd</span> ~/gitlocal/cmpy/
+<span class="nv">$ </span>git pull
+</pre></div>
+</div>
+<p>To try and update the install I did:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>pip install --user -e ~/gitlocal/cmpy/
+</pre></div>
+</div>
+<p>This ran the <span class="docutils literal"><span class="pre">setup.py</span></span> file but did <em>not</em> recompile the modified c code.
+To get this to work I had to remove the <span class="docutils literal"><span class="pre">build</span></span> directory, build in place and
+install again:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span><span class="nb">cd</span> ~/gitlocal/cmpy/
+<span class="nv">$ </span>rm -r build/
+<span class="nv">$ </span>python setup.py build_ext -i --cython
+<span class="nv">$ </span>pip install --user -e ~/gitlocal/cmpy/
+</pre></div>
+</div>
+<p>Is there a better way to do this? Let me know in the comments below.</p>
 </div>
 <div class="section" id="restview">
 <span id="install-restview"></span><h2><a class="reference external" href="https://pypi.python.org/pypi/restview">restview</a></h2>
