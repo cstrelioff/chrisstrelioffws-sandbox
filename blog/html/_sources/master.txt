@@ -4,6 +4,7 @@ Sitemap
 .. toctree::
    :maxdepth: 1
 
+   2014/08/26/joint_conditional_and_marginal_probabilities
    2014/08/16/garmin_forerunner_and_ubuntu_14_04
    2014/08/15/install_r_on_ubuntu_14_04
    2014/07/29/install_igraph_for_python_on_ubuntu_14_04
