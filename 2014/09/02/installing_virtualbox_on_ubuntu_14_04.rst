@@ -38,7 +38,7 @@ downloaded the latest version at this time::
 
     Oracle_VM_VirtualBox_Extension_Pack-4.3.14-95030.vbox-extpack
 
-and installed from the terminal using (you'll asked for your password if you
+and installed from the terminal using (you'll be asked for your password if you
 don't use sudo):
 
 .. code-block:: bash
@@ -66,8 +66,8 @@ The response should be something like::
 
 
 That's it, `virtualbox`_ is installed and ready to go.  Just bring up the
-*dash* and type ``virtualbox``, then click on the icon.  Of course, you lock it
-to the launcher if you like.
+*dash* and type ``virtualbox``, then click on the icon.  Of course, you can
+lock it to the launcher if you like.
 
 At this point you can install windows from an image, official media, or other
 source. I'll be using a version of windows 7 that I bought for occasions just
