@@ -1,0 +1,359 @@
+<!DOCTYPE html><!--[if lt IE 7]>      <html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:og="http://ogp.me/ns#"
+    xmlns:fb="https://www.facebook.com/2008/fbml" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:og="http://ogp.me/ns#"
+    xmlns:fb="https://www.facebook.com/2008/fbml" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:og="http://ogp.me/ns#"
+    xmlns:fb="https://www.facebook.com/2008/fbml" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:og="http://ogp.me/ns#"
+    xmlns:fb="https://www.facebook.com/2008/fbml" class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" content="Christopher Strelioff's blog">
+        <meta name="viewport" content="width=device-width">
+        <title>virtualenv and virtualenvwrapper on Ubuntu 14.04 &mdash; chris&#39; sandbox</title>
+            <link rel="stylesheet" href="../../../_static/normalize.css" type="text/css">
+            <link rel="stylesheet" href="../../../_static/sphinx.css" type="text/css">
+            <link rel="stylesheet" href="../../../_static/main.css" type="text/css">
+            <link rel="stylesheet" href="../../../_static/flat.css" type="text/css">
+            <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+            <link rel="stylesheet" href="../../../_static/font-awesome.min.css" type="text/css">
+        <link rel="stylesheet" href="../../../_static/style.css" type="text/css" /><link rel="shortcut icon" href="../../../_static/tinkerer.ico" /><!-- Load modernizr and JQuery -->
+        <script src="../../../_static/vendor/modernizr-2.6.2.min.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="../../../_static/vendor/jquery-1.8.2.min.js"><\/script>')</script>
+        <script src="../../../_static/plugins.js"></script>
+        <script src="../../../_static/main.js"></script>
+        <link rel="next" title="Installing virtualbox on Ubuntu 14.04" href="../02/installing_virtualbox_on_ubuntu_14_04.html" /><link rel="alternate" type="application/rss+xml" title="RSS" href="../../../rss.html" /><script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '1.4.2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script><script type="text/javascript" src="../../../_static/underscore.js"></script><script type="text/javascript" src="../../../_static/doctools.js"></script><script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script type="text/javascript" src="../../../_static/disqus.js"></script><script type="text/javascript" src="../../../_static/google_analytics.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            // Scroll to content if on small screen
+            if (screen.width < 480)
+            {
+                $(document).scrollTop(document.getElementsByTagName("article")[0].offsetTop - 44);
+            }
+        });
+    </script></head>
+    <body role="document">
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+
+      <div id="container"><header role="banner">
+    <hgroup>
+      <h1><a href="../../../index.html">chris&#39; sandbox</a></h1><h2>python, R, ubuntu, bayesian methods, machine learning and more...</h2></hgroup>
+    </br >
+    <hgroup>
+      <a href="http://www.linkedin.com/pub/christopher-strelioff/a/10a/201">
+        <i class="fa fa-linkedin-square fa-lg"></i>
+      </a>
+      <a href="https://github.com/cstrelioff">
+        <i class="fa fa-github fa-lg"></i>
+      </a>
+    </hgroup>
+  </header>
+<div class="main-container" role="main"><div class="main wrapper clearfix"><article><div class="timestamp postmeta">
+            <span>September 04, 2014</span>
+        </div>
+    <div class="section" id="virtualenv-and-virtualenvwrapper-on-ubuntu-14-04">
+<h1>virtualenv and virtualenvwrapper on Ubuntu 14.04</h1>
+<p>In this post I&#8217;ll go over my attempt to setup virtual environments for
+Python development.  Most Python users probably don&#8217;t want to use virtual
+environments and should just set up a single user environment that works for
+their needs. However, if you are working on writing one or more Python modules
+or packages, these tools are geared towards creating isolated Python
+environments for each project.  This is very useful for keeping track of such
+things as the minimal Python requirements for each project.</p>
+<div id="more"> </div><p>Assuming you want to proceed, my goal will is to setup and use
+<a class="reference external" href="https://bitbucket.org/dhellmann/virtualenvwrapper">virtualenvwrapper</a> (see <a class="reference external" href="http://virtualenvwrapper.readthedocs.org/en/latest/index.html">virtualenvwrapper docs</a> for more info), a set of
+shell tools wrapped around the  <a class="reference external" href="https://virtualenv.pypa.io/en/latest/virtualenv.html">virtualenv</a> package.  Both the
+<a class="reference external" href="http://doughellmann.com/2008/05/01/virtualenvwrapper.html">Doug Hellman post</a> and the <a class="reference external" href="http://simononsoftware.com/virtualenv-tutorial-part-2/">simonsoftware post</a> provide some motivation for
+the development and use of the wrapper formulation&#8211; in simple terms
+<a class="reference external" href="https://bitbucket.org/dhellmann/virtualenvwrapper">virtualenvwrapper</a> provides some shortcuts for common actions.  So, I&#8217;ve
+decided to use the wrapped version.</p>
+<div class="section" id="basic-install">
+<h2>Basic install</h2>
+<p>Following the <a class="reference external" href="http://virtualenvwrapper.readthedocs.org/en/latest/install.html#basic-installation">virtualenvwrapper basic install</a>, the installation process is
+to install <a class="reference external" href="https://virtualenv.pypa.io/en/latest/virtualenv.html">virtualenv</a> and <a class="reference external" href="https://bitbucket.org/dhellmann/virtualenvwrapper">virtualenvwrapper</a> using pip. I have already
+installed <a class="reference external" href="https://virtualenv.pypa.io/en/latest/virtualenv.html">virtualenv</a>, as can be seen by using <span class="docutils literal"><span class="pre">pip</span> <span class="pre">show</span></span>:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>pip show virtualenv
+---
+Name: virtualenv
+Version: 1.11.6
+Location: /home/cstrelioff/.local/lib/python2.7/site-packages
+Requires:
+</pre></div>
+</div>
+<p>If you need to install, the command is &#8211; I install as a user:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>pip install --user virtualenv
+</pre></div>
+</div>
+<p>Next, install the <a class="reference external" href="https://bitbucket.org/dhellmann/virtualenvwrapper">virtualenvwrapper</a>:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>pip install --user virtualenvwrapper
+</pre></div>
+</div>
+<p>Now a <span class="docutils literal"><span class="pre">pip</span> <span class="pre">show</span></span> should show something like:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>pip show virtualenvwrapper
+---
+Name: virtualenvwrapper
+Version: 4.3.1
+Location: /home/cstrelioff/.local/lib/python2.7/site-packages
+Requires: virtualenv, virtualenv-clone, stevedore
+</pre></div>
+</div>
+<p>Finally, we add some information to our <span class="docutils literal"><span class="pre">~/.bashrc</span></span> file &#8211; I added to the
+end of the file, as usual for such things. The actual contents for you will be
+different.</p>
+<ul class="simple">
+<li>I wanted my virtual environments in <span class="docutils literal"><span class="pre">~/virtenvs/</span></span> and I had already made
+that directory.</li>
+<li>I want to keep my active projects in <span class="docutils literal"><span class="pre">~/Projects-Active/</span></span>, an existing
+directory.</li>
+<li>Finally, because I installed as a user, the path to my
+<span class="docutils literal"><span class="pre">virtualenvwrapper.sh</span></span> is in <span class="docutils literal"><span class="pre">~/.local/bin/</span></span>, as indicated by using
+<span class="docutils literal"><span class="pre">which</span></span>:</li>
+</ul>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>which virtualenvwrapper.sh
+/home/cstrelioff/.local/bin/virtualenvwrapper.sh
+</pre></div>
+</div>
+<p>Putting all of that specific information together, I added the following to
+<span class="docutils literal"><span class="pre">~/.bashrc</span></span>:</p>
+<div class="highlight-python"><div class="highlight"><pre># where to store our virtual envs
+export WORKON_HOME=$HOME/virtenvs
+# where projects will reside
+export PROJECT_HOME=$HOME/Projects-Active
+# where is the virtualenvwrapper.sh
+source $HOME/.local/bin/virtualenvwrapper.sh
+</pre></div>
+</div>
+<p>After saving the changes, I sourced the file to make the changes active:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span><span class="nb">source</span> ~/.bashrc
+</pre></div>
+</div>
+</div>
+<div class="section" id="working-with-virtualenvs">
+<h2>Working with virtualenvs</h2>
+<p>Next up, let&#8217;s figure out how to use all this&#8211; you should also look at the
+<a class="reference external" href="http://simononsoftware.com/virtualenv-tutorial-part-2/">simonsoftware post</a> for another take on this. The main command to remember
+is <span class="docutils literal"><span class="pre">workon</span></span>, as in <em>I&#8217;m going to work on this project</em>.  However, if we
+try it now we get nothing:</p>
+<div class="highlight-bash"><div class="highlight"><pre>$ workon
+$
+</pre></div>
+</div>
+<p>We need to make a virtual environment.  So, let&#8217;s make one:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>mkvirtualenv test_env01
+New python executable in test_env01/bin/python
+Installing setuptools, pip...done.
+</pre></div>
+</div>
+<p>We can use <span class="docutils literal"><span class="pre">pip</span> <span class="pre">list</span></span> to see the packages available:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="o">(</span>test_env01<span class="o">)</span><span class="nv">$ </span>pip list
+argparse <span class="o">(</span>1.2.1<span class="o">)</span>
+pip <span class="o">(</span>1.5.6<span class="o">)</span>
+setuptools <span class="o">(</span>3.6<span class="o">)</span>
+wsgiref <span class="o">(</span>0.1.2<span class="o">)</span>
+</pre></div>
+</div>
+<p>Notice that the command prompt has changed to include the environment name.  If
+we want to install a package in this environment we use <span class="docutils literal"><span class="pre">pip</span></span>:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="o">(</span>test_env01<span class="o">)</span><span class="nv">$ </span>pip install pyaml
+</pre></div>
+</div>
+<p>Now, a <span class="docutils literal"><span class="pre">pip</span> <span class="pre">list</span></span> gives:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="o">(</span>test_env01<span class="o">)</span><span class="nv">$ </span>pip list
+argparse <span class="o">(</span>1.2.1<span class="o">)</span>
+pip <span class="o">(</span>1.5.6<span class="o">)</span>
+pyaml <span class="o">(</span>14.05.7<span class="o">)</span>
+PyYAML <span class="o">(</span>3.11<span class="o">)</span>
+setuptools <span class="o">(</span>3.6<span class="o">)</span>
+wsgiref <span class="o">(</span>0.1.2<span class="o">)</span>
+</pre></div>
+</div>
+<p>To <em>deactivate</em> the virtual environment, we type exactly what you&#8217;d expect:</p>
+<div class="highlight-bash"><div class="highlight"><pre>(test_env01)$ deactivate
+$
+</pre></div>
+</div>
+<p>and we get back to the normal command prompt.  However, now the <span class="docutils literal"><span class="pre">workon</span></span>
+command will show the virtual environment that we created:</p>
+<div class="highlight-bash"><div class="highlight"><pre>$ workon
+test_env01
+$
+</pre></div>
+</div>
+<p>To start working on it again, simply try out the following to see everything is
+there:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>workon test_env01
+<span class="o">(</span>test_env01<span class="o">)</span><span class="nv">$ </span>pip list
+argparse <span class="o">(</span>1.2.1<span class="o">)</span>
+pip <span class="o">(</span>1.5.6<span class="o">)</span>
+pyaml <span class="o">(</span>14.05.7<span class="o">)</span>
+PyYAML <span class="o">(</span>3.11<span class="o">)</span>
+setuptools <span class="o">(</span>3.6<span class="o">)</span>
+wsgiref <span class="o">(</span>0.1.2<span class="o">)</span>
+<span class="o">(</span>test_env01<span class="o">)</span><span class="nv">$ </span>deactivate
+</pre></div>
+</div>
+</div>
+<div class="section" id="projects-in-virtualenvwrapper">
+<h2>Projects in virtualenvwrapper</h2>
+<p>Finally, let&#8217;s talk about <em>projects</em> in <a class="reference external" href="https://bitbucket.org/dhellmann/virtualenvwrapper">virtualenvwrapper</a>. This creates both
+(i) a virtual environment and (ii) a project directory in the location
+specified by <span class="docutils literal"><span class="pre">PROJECT_HOME</span></span> variable in the additions to the <span class="docutils literal"><span class="pre">~/.bashrc</span></span>
+file.  Let&#8217;s try it out:</p>
+<div class="highlight-bash"><div class="highlight"><pre>$ mkproject test_project02
+New python executable in test_project02/bin/python
+Installing setuptools, pip...done.
+Creating /home/cstrelioff/Projects-Active/test_project02
+Setting project for test_project02 to
+/home/cstrelioff/Projects-Active/test_project02
+(test_project02)~/Projects-Active/test_project02$
+</pre></div>
+</div>
+<p>Notice that this also creates a directory and cd&#8217;s to directory&#8211; very nice!
+Now, if we try <span class="docutils literal"><span class="pre">pip</span> <span class="pre">list</span></span> we&#8217;ll see only the packages for a new environmnet:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="o">(</span>test_project02<span class="o">)</span>~/Projects-Active/test_project02<span class="nv">$ </span>pip list
+argparse <span class="o">(</span>1.2.1<span class="o">)</span>
+pip <span class="o">(</span>1.5.6<span class="o">)</span>
+setuptools <span class="o">(</span>3.6<span class="o">)</span>
+wsgiref <span class="o">(</span>0.1.2<span class="o">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="switching-between-environments">
+<h2>Switching between environments</h2>
+<p>Now we have two virtual environments setup, but only one is setup as a project.
+We can see both with <span class="docutils literal"><span class="pre">workon</span></span>:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>workon
+test_env01
+test_project02
+</pre></div>
+</div>
+<p>To get a sense of how this all works, let startup <span class="docutils literal"><span class="pre">test_env01</span></span> and use
+<span class="docutils literal"><span class="pre">pip</span> <span class="pre">list</span></span> to see that PyYAML is installed:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>workon test_env01
+<span class="o">(</span>test_env01<span class="o">)</span><span class="nv">$ </span>pip list
+argparse <span class="o">(</span>1.2.1<span class="o">)</span>
+pip <span class="o">(</span>1.5.6<span class="o">)</span>
+pyaml <span class="o">(</span>14.05.7<span class="o">)</span>
+PyYAML <span class="o">(</span>3.11<span class="o">)</span>
+setuptools <span class="o">(</span>3.6<span class="o">)</span>
+wsgiref <span class="o">(</span>0.1.2<span class="o">)</span>
+</pre></div>
+</div>
+<p>Next, while in <span class="docutils literal"><span class="pre">test_env01</span></span>, let&#8217;s switch to <span class="docutils literal"><span class="pre">test_project02</span></span> using
+<span class="docutils literal"><span class="pre">workon</span></span> and look at the installed packages (no PyYAML):</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="o">(</span>test_env01<span class="o">)</span><span class="nv">$ </span>workon test_project02
+<span class="o">(</span>test_project02<span class="o">)</span>~/Projects-Active/test_project02<span class="nv">$ </span>pip list
+argparse <span class="o">(</span>1.2.1<span class="o">)</span>
+pip <span class="o">(</span>1.5.6<span class="o">)</span>
+setuptools <span class="o">(</span>3.6<span class="o">)</span>
+wsgiref <span class="o">(</span>0.1.2<span class="o">)</span>
+</pre></div>
+</div>
+<p>Notice that the <span class="docutils literal"><span class="pre">workon</span></span> cd&#8217;s to the project directory.  This happens because
+we setup <span class="docutils literal"><span class="pre">test_project02</span></span> as a <strong>project</strong> and not just a <strong>virtualenv</strong>.  If
+you use <span class="docutils literal"><span class="pre">workon</span></span> to switch back to <span class="docutils literal"><span class="pre">test_env01</span></span> there will be <strong>no cd</strong>
+because there is no project file associated with that virtual environment.
+In practice I imagine I will always use <span class="docutils literal"><span class="pre">mkproject</span></span> to set things up.</p>
+</div>
+<div class="section" id="cleaning-up">
+<h2>Cleaning up</h2>
+<p>Finally, to clean up the example above we can use <span class="docutils literal"><span class="pre">rmvirtualenv</span></span>:</p>
+<div class="highlight-bash"><div class="highlight"><pre>$ workon
+test_env01
+test_project02
+$ rmvirtualenv test_env01
+Removing test_env01...
+$ rmvirtualenv test_project02
+Removing test_project02...
+$ workon
+$
+</pre></div>
+</div>
+<p>With the final <span class="docutils literal"><span class="pre">workon</span></span> we can see that all of our environments are gone.
+However, note that the directory created in <span class="docutils literal"><span class="pre">PROJECT_HOME</span></span> will not be deleted
+by the above&#8211; this is probably a good default behaviour.  You&#8217;ll have to go
+delete the directory (if you want).</p>
+<p>That&#8217;s it, hopefully some will find this useful post useful.  If you have
+cool/better ways to use these tools leave a comment below.</p>
+</div>
+</div>
+
+    <div class="postmeta">
+        <div class="author">
+            <span>Posted by Chris Strelioff</span>
+        </div>
+        
+        <div class="tags">
+            <span>
+                Tags:
+                <a href="../../../tags/python.html">python</a>, <a href="../../../tags/virtualenv.html">virtualenv</a>, <a href="../../../tags/virtualenvwrapper.html">virtualenvwrapper</a>, <a href="../../../tags/my_python_setup.html">my python setup</a></span>
+        </div>
+        </div><ul class="related clearfix">
+            <li class="left"></li>
+            <li class="right"><a href="../02/installing_virtualbox_on_ubuntu_14_04.html">Installing virtualbox on Ubuntu 14.04</a> &raquo; </li>
+        </ul><div id="disqus_thread"></div><script type="text/javascript">    var disqus_shortname = "chrissandbox";    var disqus_identifier = "2014/09/04/virtualenv_and_virtualenvwrapper_on_ubuntu_14_04";    disqus_thread();</script><noscript>Please enable JavaScript to view the    <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></article><aside class="sidebar"><section><div class="widget" id="searchbox" role="search">
+    <h1>Search</h1>
+    <form action="../../../search.html" method="get">
+        <input type="text" name="q" />
+        <button type="submit"><span class="fa fa-search"></span></button>
+    </form>
+</div></section><section><div class="widget">
+  <h1>Pages</h1>
+  <ul>
+  <li>
+      <a href="../../../index.html">Home</a>
+    </li>
+  </ul>
+</div>
+</section><section><div class="widget">
+    <h1>Recent Posts</h1>
+    <ul><li>
+            <a href="#">virtualenv and virtualenvwrapper on Ubuntu 14.04</a>
+        </li><li>
+            <a href="../02/installing_virtualbox_on_ubuntu_14_04.html">Installing virtualbox on Ubuntu 14.04</a>
+        </li><li>
+            <a href="../../08/26/joint_conditional_and_marginal_probabilities.html">Joint, conditional and marginal probabilities</a>
+        </li><li>
+            <a href="../../08/16/garmin_forerunner_and_ubuntu_14_04.html">Garmin forerunner and Ubuntu 14.04</a>
+        </li><li>
+            <a href="../../08/15/install_r_on_ubuntu_14_04.html">Install R on Ubuntu 14.04</a>
+        </li><li>
+            <a href="../../07/29/install_igraph_for_python_on_ubuntu_14_04.html">Install igraph for Python on Ubuntu 14.04</a>
+        </li><li>
+            <a href="../../07/12/python_and_yaml_on_ubuntu_14_04.html">Python and YAML on Ubuntu 14.04</a>
+        </li><li>
+            <a href="../../07/10/install_sqlite3_on_ubuntu_14_04.html">Install sqlite3 on Ubuntu 14.04</a>
+        </li><li>
+            <a href="../../07/07/install_and_use_sphinx_bootstrap_theme_on_ubuntu_14_04.html">Install and use sphinx-bootstrap-theme on Ubuntu 14.04</a>
+        </li><li>
+            <a href="../../07/02/install_oauth2_python_package_on_ubuntu_14_04.html">Install oauth2 Python package on Ubuntu 14.04</a>
+        </li></ul>
+</div>
+</section><section><div class="widget">
+    <h1>Tags</h1><a href="../../../tags/bayesian.html">Bayesian</a> (1), <a href="../../../tags/blog_setup.html">blog setup</a> (1), <a href="../../../tags/bootstrap.html">bootstrap</a> (1), <a href="../../../tags/bottleneck.html">bottleneck</a> (1), <a href="../../../tags/caret.html">caret</a> (1), <a href="../../../tags/cmpy.html">cmpy</a> (1), <a href="../../../tags/conditional_probability.html">conditional probability</a> (1), <a href="../../../tags/coursera.html">coursera</a> (1), <a href="../../../tags/coursera_intro_to_data_science.html">coursera intro to data science</a> (3), <a href="../../../tags/cython.html">cython</a> (1), <a href="../../../tags/e1071.html">e1071</a> (1), <a href="../../../tags/garmin.html">garmin</a> (1), <a href="../../../tags/ggplot2.html">ggplot2</a> (1), <a href="../../../tags/git.html">git</a> (1), <a href="../../../tags/gnuplot.html">gnuplot</a> (1), <a href="../../../tags/graphs.html">graphs</a> (1), <a href="../../../tags/igraph.html">igraph</a> (1), <a href="../../../tags/ipython.html">ipython</a> (1), <a href="../../../tags/joint_probability.html">joint probability</a> (1), <a href="../../../tags/latex.html">LaTeX</a> (1), <a href="../../../tags/machine_learning.html">machine learning</a> (1), <a href="../../../tags/marginal_probability.html">marginal probability</a> (1), <a href="../../../tags/matplotlib.html">matplotlib</a> (1), <a href="../../../tags/my_python_setup.html">my python setup</a> (5), <a href="../../../tags/my_ubuntu_setup.html">my ubuntu setup</a> (10), <a href="../../../tags/networks.html">networks</a> (1), <a href="../../../tags/networkx.html">networkx</a> (1), <a href="../../../tags/numexpr.html">numexpr</a> (1), <a href="../../../tags/numpy.html">numpy</a> (1), <a href="../../../tags/octave.html">octave</a> (1), <a href="../../../tags/openpyxl.html">openpyxl</a> (1), <a href="../../../tags/pandas.html">pandas</a> (1), <a href="../../../tags/patsy.html">patsy</a> (1), <a href="../../../tags/pip.html">pip</a> (1), <a href="../../../tags/pweave.html">pweave</a> (1), <a href="../../../tags/pygraphviz.html">pygraphviz</a> (1), <a href="../../../tags/pymc.html">pymc</a> (1), <a href="../../../tags/python.html">python</a> (1), <a href="../../../tags/python_2_7.html">python 2.7</a> (5), <a href="../../../tags/pyyaml.html">pyyaml</a> (1), <a href="../../../tags/r.html">R</a> (1), <a href="../../../tags/randomforest.html">randomForest</a> (1), <a href="../../../tags/restview.html">restview</a> (1), <a href="../../../tags/resume.html">resume</a> (1), <a href="../../../tags/rpart.html">rpart</a> (1), <a href="../../../tags/running.html">running</a> (1), <a href="../../../tags/scikit_learn.html">scikit-learn</a> (1), <a href="../../../tags/scipy.html">scipy</a> (1), <a href="../../../tags/screen.html">screen</a> (1), <a href="../../../tags/server_setup.html">server setup</a> (1), <a href="../../../tags/social_networks.html">social networks</a> (1), <a href="../../../tags/sphinx.html">sphinx</a> (1), <a href="../../../tags/sql.html">sql</a> (1), <a href="../../../tags/sqlite3.html">sqlite3</a> (1), <a href="../../../tags/ssh.html">ssh</a> (1), <a href="../../../tags/ssh_keys.html">ssh keys</a> (1), <a href="../../../tags/statsmodels.html">statsmodels</a> (1), <a href="../../../tags/sympy.html">sympy</a> (1), <a href="../../../tags/tableau.html">tableau</a> (1), <a href="../../../tags/tinkerer.html">tinkerer</a> (1), <a href="../../../tags/tree.html">tree</a> (1), <a href="../../../tags/ubuntu_14_04.html">ubuntu 14.04</a> (7), <a href="../../../tags/vim.html">vim</a> (1), <a href="../../../tags/virtualbox.html">virtualbox</a> (1), <a href="../../../tags/virtualenv.html">virtualenv</a> (2), <a href="../../../tags/virtualenvwrapper.html">virtualenvwrapper</a> (1), <a href="../../../tags/vps.html">VPS</a> (1), <a href="../../../tags/yaml.html">yaml</a> (1)</div></section></aside></div> <!-- #main --></div> <!-- #main-container -->
+
+        <div class="footer-container" role="contentinfo"><footer class="wrapper">&copy; Copyright 2014 Christopher Strelioff. Powered by <a href="http://www.tinkerer.me/">Tinkerer</a> and <a href="http://sphinx.pocoo.org/">Sphinx</a>.</footer></div> <!-- footer-container -->
+
+      </div> <!--! end of #container --><!--[if lt IE 7 ]>
+          <script src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js"></script>
+          <script>window.attachEvent('onload',function(){CFInstall.check({mode:'overlay'})})</script>
+        <![endif]-->
+    </body>
+</html>
