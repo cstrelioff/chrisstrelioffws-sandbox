@@ -4,6 +4,7 @@ Sitemap
 .. toctree::
    :maxdepth: 1
 
+   2014/09/11/medical_tests_a_first_example_of_bayesian_calculations
    2014/09/04/virtualenv_and_virtualenvwrapper_on_ubuntu_14_04
    2014/09/02/installing_virtualbox_on_ubuntu_14_04
    2014/08/26/joint_conditional_and_marginal_probabilities

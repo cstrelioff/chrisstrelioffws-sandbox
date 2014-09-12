@@ -1,3 +1,5 @@
+.. _joint, conditional and marginal probabilities:
+
 Joint, conditional and marginal probabilities
 =============================================
 
