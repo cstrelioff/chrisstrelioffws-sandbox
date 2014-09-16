@@ -15,7 +15,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
         <meta name="description" content="Christopher Strelioff's blog">
         <meta name="viewport" content="width=device-width">
-        <title>Ubuntu VPS setup at digital ocean &mdash; chris&#39; sandbox</title>
+        <title>Python 3.4 on Ubuntu 14.04 using virtual environments &mdash; chris&#39; sandbox</title>
             <link rel="stylesheet" href="../../../_static/normalize.css" type="text/css">
             <link rel="stylesheet" href="../../../_static/sphinx.css" type="text/css">
             <link rel="stylesheet" href="../../../_static/main.css" type="text/css">
@@ -28,7 +28,7 @@
         <script>window.jQuery || document.write('<script src="../../../_static/vendor/jquery-1.8.2.min.js"><\/script>')</script>
         <script src="../../../_static/plugins.js"></script>
         <script src="../../../_static/main.js"></script>
-        <link rel="next" title="Installing Octave on Ubuntu 14.04" href="../20/installing_octave_on_ubuntu_14_04.html" /><link rel="prev" title="Install oauth2 Python package on Ubuntu 14.04" href="../../07/02/install_oauth2_python_package_on_ubuntu_14_04.html" /><link rel="alternate" type="application/rss+xml" title="RSS" href="../../../rss.html" /><script type="text/javascript">
+        <link rel="next" title="Medical tests, a first example of Bayesian calculations" href="../11/medical_tests_a_first_example_of_bayesian_calculations.html" /><link rel="alternate" type="application/rss+xml" title="RSS" href="../../../rss.html" /><script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
         VERSION:     '1.4.2',
@@ -57,140 +57,100 @@
       <h1><a href="../../../index.html">chris&#39; sandbox</a></h1><h2>python, R, ubuntu, bayesian methods, machine learning and more...</h2></hgroup>
   </header>
 <div class="main-container" role="main"><div class="main wrapper clearfix"><article><div class="timestamp postmeta">
-            <span>June 27, 2014</span>
+            <span>September 16, 2014</span>
         </div>
-    <div class="section" id="ubuntu-vps-setup-at-digital-ocean">
-<h1>Ubuntu VPS setup at digital ocean</h1>
-<p>This blog is hosted on an Ubuntu 14.04 VPS at <a class="reference external" href="https://www.digitalocean.com/">digital ocean</a>. This post is
-mainly <em>a reminder for me</em> of the tutorials I used to set things up, however
-you might find it a helpful guide as well.</p>
-<div id="more"> </div><ul class="simple">
-<li><a class="reference external" href="https://www.digitalocean.com/community/tutorials/initial-server-setup-with-ubuntu-14-04">initial server setup</a></li>
-</ul>
-<p>As you might expect, this is the place to start after you&#8217;ve created a
-<em>droplet</em> and received a password from <a class="reference external" href="https://www.digitalocean.com/">digital ocean</a>.</p>
-<ul class="simple">
-<li><a class="reference external" href="https://www.digitalocean.com/community/tutorials/how-to-set-up-ssh-keys--2">ssh key setup</a></li>
-</ul>
-<p>Next, I setup my ssh key using a unique ssh port (call it <strong>XXXX</strong>) and
-a non-default identity file <strong>identity.pub</strong>. My command to copy my key
-to the server was then of the form:</p>
-<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>ssh-copy-id -i ~/.ssh/identity.pub -p XXXX username@xxx.xxx.xxx.xx
+    <div class="section" id="python-3-4-on-ubuntu-14-04-using-virtual-environments">
+<h1>Python 3.4 on Ubuntu 14.04 using virtual environments</h1>
+<p>In a previous post discussing <a class="reference internal" href="../04/virtualenv_and_virtualenvwrapper_on_ubuntu_14_04.html#virtualenvs-on-ubuntu-14-04"><em>virtualenv and virtualenvwrapper on Ubuntu 14.04</em></a> I talked about
+using virtual environments with the default Python version&#8211; this is Python
+2.7.6 for Ubuntu 14.04.  However, both Python 2.7 and 3.4 are available on
+Ubuntu 14.04.  In this post I&#8217;ll go over setting up a virtual environment for
+working with Python 3 code.</p>
+<div id="more"> </div><p>To see that both versions of Python are available without additional
+installations try out the following at the terminal:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>python --version
+Python 2.7.6
+<span class="nv">$ </span>python3 --version
+Python 3.4.0
 </pre></div>
 </div>
-<p>Once setup, the ssh command is:</p>
-<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>ssh -i ~/.ssh/identity.pub -p XXXX username@xxx.xxx.xxx.xx
-</pre></div>
-</div>
-<p>To save myself from typing this every time, I added this identity to my
-<strong>~/.ssh/config</strong> file with an entry like:</p>
-<div class="highlight-bash"><div class="highlight"><pre>Host           christrelioff.ws
-HostName       xxx.xxx.xxx.xx
-Port           XXXX
-IdentityFile   ~/.ssh/identity
-User           username
-</pre></div>
-</div>
-<p>This allows me to ssh with the simple command (tab auto-complete works too):</p>
-<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>ssh chrisstrelioff.ws
-</pre></div>
-</div>
-<p>and the correct port, identity file, etc are used.</p>
-<ul>
-<li><p class="first"><a class="reference external" href="https://www.digitalocean.com/community/tutorials/how-to-setup-a-firewall-with-ufw-on-an-ubuntu-and-debian-cloud-server">setup a firewall</a></p>
-<p>Next, I setup a firewall using <a class="reference external" href="https://help.ubuntu.com/community/UFW">ufw</a>. The install is simple:</p>
-</li>
-</ul>
-<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>sudo apt-get install ufw
-</pre></div>
-</div>
-<p>Once installed, the status can be seen using the command:</p>
-<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>sudo ufw status
-</pre></div>
-</div>
-<p>At this point there should be nothing to see&#8211; simply a notification that the
-status is inactive.  So, let&#8217;s set some default policies:</p>
-<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>sudo ufw default deny incoming
-<span class="nv">$ </span>sudo ufw default allow outgoing
-</pre></div>
-</div>
-<p>This denies everything incoming and allows all outgoing by default. Next, we
-must allow incoming <strong>ssh</strong>.  By default <strong>ssh</strong> uses port 22 and the command
-to allow incoming ssh is</p>
-<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>sudo ufw allow ssh
-</pre></div>
-</div>
-<p>However, it you&#8217;ve setup <strong>ssh</strong> on a different port (as I have) &#8211; say port
-XXXX &#8211; the command becomes:</p>
-<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>sudo ufw allow XXXX/tcp
-</pre></div>
-</div>
-<p>We&#8217;ll also allow <strong>www</strong> traffic:</p>
-<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>sudo ufw allow www
-</pre></div>
-</div>
-<p>Finally, to enable (<strong>be sure that you&#8217;ve setup your ssh access before doing
-this!</strong>):</p>
-<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>sudow ufw <span class="nb">enable</span>
-</pre></div>
-</div>
-<p>Now trying the <span class="docutils literal"><span class="pre">$</span> <span class="pre">sudo</span> <span class="pre">ufw</span> <span class="pre">status</span></span> command should reflect the ports we allowed
-above and indicate the firewall is active.  Finally, to disable or reset
-<strong>ufw</strong> the commands are</p>
-<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>sudo ufw disable
-</pre></div>
-</div>
-<p>and</p>
-<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>sudo ufw reset
-</pre></div>
-</div>
-<p>For more information on <strong>ufw</strong> try: <a class="reference external" href="https://help.ubuntu.com/community/UFW">ufw</a> or <a class="reference external" href="https://www.digitalocean.com/community/tutorials/how-to-setup-a-firewall-with-ufw-on-an-ubuntu-and-debian-cloud-server">setup a firewall</a>.</p>
-<ul>
-<li><p class="first"><a class="reference external" href="https://www.digitalocean.com/community/tutorials/how-to-install-nginx-on-ubuntu-14-04-lts">install nginx on ubuntu 14.04</a></p>
-<p>Next, I will install <a class="reference external" href="http://nginx.org/en/">nginx</a> for serving web content.  The install is exactly
-as you&#8217;d expect:</p>
-</li>
-</ul>
-<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>sudo apt-get install nginx
-</pre></div>
-</div>
-<p><a class="reference external" href="http://nginx.org/en/">nginx</a> is active by default when installed. So, open a browser and go to the
-IP/url for your VPS to see the default <a class="reference external" href="http://nginx.org/en/">nginx</a> welcome page.</p>
-<p>To stop, start or restart <a class="reference external" href="http://nginx.org/en/">nginx</a> try:</p>
-<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>sudo service nginx stop
-<span class="nv">$ </span>sudo service nginx start
-<span class="nv">$ </span>sudo service nginx restart
-</pre></div>
-</div>
-<p>Finally, for the initial setup, let&#8217;s make sure that <a class="reference external" href="http://nginx.org/en/">nginx</a> starts when the
-server is rebooted:</p>
-<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>sudo update-rc.d nginx defaults
-</pre></div>
-</div>
-<p>This command should say that stop/start links for <a class="reference external" href="http://nginx.org/en/">nginx</a> already existed.  The
-next step is set up for the actual content&#8211; try
-<a class="reference external" href="https://www.digitalocean.com/community/tutorials/how-to-set-up-nginx-server-blocks-virtual-hosts-on-ubuntu-14-04-lts">how to setup nginx server blocks on ubuntu 14.04</a>.</p>
-<ul>
-<li><p class="first"><strong>Update the server</strong></p>
-<p>The server will need to updated at times and this has to be done via the
-terminal.  Fortunately updates are pretty simple.  For typical (minor) updates
-of installed software the following will get things done:</p>
-</li>
-</ul>
+<p>For installing Python 3 packages, I&#8217;m going to install the <span class="docutils literal"><span class="pre">python3-dev</span></span>
+Ubuntu package using apt-get:</p>
 <div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>sudo apt-get update
-<span class="nv">$ </span>sudo apt-get upgrade
+<span class="nv">$ </span>sudo apt-get install python3-dev
 </pre></div>
 </div>
-<p>For major updates (like a kernel upgrade) more has to be done:</p>
-<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>sudo apt-get update
-<span class="nv">$ </span>sudo apt-get dist-upgrade
+<p>This will require that you have sudo privileges, but the 4 packages that are
+installed will be needed to install Python 3 packages using pip.</p>
+<p>Next, I create a virtual environment for Python3 using <a class="reference external" href="https://bitbucket.org/dhellmann/virtualenvwrapper">virtualenvwrapper</a>,
+instead of <a class="reference external" href="https://virtualenv.pypa.io/en/latest/virtualenv.html">virtualenv</a>, because the environment will be put in a standard
+place that I have already setup and specified&#8211; see my post on
+<a class="reference internal" href="../04/virtualenv_and_virtualenvwrapper_on_ubuntu_14_04.html#virtualenvs-on-ubuntu-14-04"><em>virtualenv and virtualenvwrapper on Ubuntu 14.04</em></a> for more information on this aspect. I will
+call the environment <strong>py3</strong> and specify that I want Python 3:</p>
+<div class="highlight-bash"><div class="highlight"><pre>$ mkvirtualenv py3 -p /usr/bin/python3
+Running virtualenv with interpreter /usr/bin/python3
+Using base prefix &#39;/usr&#39;
+New python executable in py3/bin/python3
+Also creating executable in py3/bin/python
+Installing setuptools, pip...done.
+(py3)$
 </pre></div>
 </div>
-<p>Typically this is followed by a reboot of the server:</p>
-<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>sudo reboot
+<p>First, notice that the prompt now indicates the name of the created virtual
+environment.  Also notice that <span class="docutils literal"><span class="pre">setuptools</span></span> and <span class="docutils literal"><span class="pre">pip</span></span> are automatically
+added. Next let&#8217;s check the python version and use <span class="docutils literal"><span class="pre">pip</span></span> to see what&#8217;s
+installed:</p>
+<div class="highlight-bash"><div class="highlight"><pre>(py3)$ python --version
+Python 3.4.0
+(py3)$
+(py3)$ pip list
+pip (1.5.6)
+setuptools (3.6)
+(py3)$
 </pre></div>
 </div>
-<p>That&#8217;s it for all the basic updating needs.</p>
+<p>That all looks good.  The Python version is 3.4 and only <span class="docutils literal"><span class="pre">pip</span></span> and
+<span class="docutils literal"><span class="pre">setuptools</span></span> are installed.</p>
+<p>Next, let&#8217;s install some packages in <strong>py3</strong>.  I&#8217;m working on a project that
+uses both <span class="docutils literal"><span class="pre">jinja2</span></span> and <span class="docutils literal"><span class="pre">pyyaml</span></span> and I&#8217;d like to make sure that the package
+works for both Python 2.7 and 3.4. <strong>Note:</strong> if you have not installed the
+<strong>python3-dev</strong> Ubuntu package, as described above, the following will
+<em>not work</em>.  Instead you&#8217;ll get compilation errors. The reason for this is that
+the code downloaded by <span class="docutils literal"><span class="pre">pip</span></span> needs to compile against files provided in
+<strong>python3-dev</strong>.  Assuming, you&#8217;re ready to go, the install is easy:</p>
+<div class="highlight-bash"><div class="highlight"><pre>(py3)$ pip install jinja2
+
+--- edited out compiling ---
+
+(py3)$ pip install pyyaml
+
+--- edited out compiling ---
+
+(py3)$
+(py3)$ pip list
+Jinja2 (2.7.3)
+MarkupSafe (0.23)
+pip (1.5.6)
+PyYAML (3.11)
+setuptools (3.6)
+</pre></div>
+</div>
+<p>The final <span class="docutils literal"><span class="pre">pip</span> <span class="pre">list</span></span> shows that the desired Python packages, in addition to
+<span class="docutils literal"><span class="pre">MarkupSafe</span></span> that is required by <span class="docutils literal"><span class="pre">jinja2</span></span>, are installed.</p>
+<p>Finally, you can deactivate the environment using:</p>
+<div class="highlight-bash"><div class="highlight"><pre>(py3)$ deactivate
+$
+</pre></div>
+</div>
+<p>and you&#8217;re back to the normal environment and using Python 2.7.6.  The next
+time the <strong>py3</strong> environment is needed starting it up is as simple as:</p>
+<div class="highlight-bash"><div class="highlight"><pre>$ workon py3
+(py3)$
+</pre></div>
+</div>
+<p>and you&#8217;re all set.</p>
+<p>As always please leave comments, suggestions and questions...anything that will
+be helpful to me or other readers.</p>
 </div>
 
     <div class="postmeta">
@@ -201,12 +161,12 @@ of installed software the following will get things done:</p>
         <div class="tags">
             <span>
                 Tags:
-                <a href="../../../tags/ubuntu_14_04.html">ubuntu 14.04</a>, <a href="../../../tags/vps.html">VPS</a>, <a href="../../../tags/server_setup.html">server setup</a>, <a href="../../../tags/blog_setup.html">blog setup</a></span>
+                <a href="../../../tags/python.html">python</a>, <a href="../../../tags/python_3_4.html">python 3.4</a>, <a href="../../../tags/virtualenv.html">virtualenv</a>, <a href="../../../tags/virtualenvwrapper.html">virtualenvwrapper</a>, <a href="../../../tags/my_python_setup.html">my python setup</a></span>
         </div>
         </div><ul class="related clearfix">
-            <li class="left"> &laquo; <a href="../../07/02/install_oauth2_python_package_on_ubuntu_14_04.html">Install oauth2 Python package on Ubuntu 14.04</a></li>
-            <li class="right"><a href="../20/installing_octave_on_ubuntu_14_04.html">Installing Octave on Ubuntu 14.04</a> &raquo; </li>
-        </ul><div id="disqus_thread"></div><script type="text/javascript">    var disqus_shortname = "chrissandbox";    var disqus_identifier = "2014/06/27/ubuntu_vps_setup_at_digital_ocean";    disqus_thread();</script><noscript>Please enable JavaScript to view the    <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></article><aside class="sidebar"><section><div class="widget" id="searchbox" role="search">
+            <li class="left"></li>
+            <li class="right"><a href="../11/medical_tests_a_first_example_of_bayesian_calculations.html">Medical tests, a first example of Bayesian calculations</a> &raquo; </li>
+        </ul><div id="disqus_thread"></div><script type="text/javascript">    var disqus_shortname = "chrissandbox";    var disqus_identifier = "2014/09/16/python_3_4_on_ubuntu_14_04_using_virtual_environments";    disqus_thread();</script><noscript>Please enable JavaScript to view the    <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></article><aside class="sidebar"><section><div class="widget" id="searchbox" role="search">
     <h1>Search</h1>
     <form action="../../../search.html" method="get">
         <input type="text" name="q" />
@@ -223,13 +183,13 @@ of installed software the following will get things done:</p>
 </section><section><div class="widget">
     <h1>Recent Posts</h1>
     <ul><li>
-            <a href="../../09/16/python_3_4_on_ubuntu_14_04_using_virtual_environments.html">Python 3.4 on Ubuntu 14.04 using virtual environments</a>
+            <a href="#">Python 3.4 on Ubuntu 14.04 using virtual environments</a>
         </li><li>
-            <a href="../../09/11/medical_tests_a_first_example_of_bayesian_calculations.html">Medical tests, a first example of Bayesian calculations</a>
+            <a href="../11/medical_tests_a_first_example_of_bayesian_calculations.html">Medical tests, a first example of Bayesian calculations</a>
         </li><li>
-            <a href="../../09/04/virtualenv_and_virtualenvwrapper_on_ubuntu_14_04.html">virtualenv and virtualenvwrapper on Ubuntu 14.04</a>
+            <a href="../04/virtualenv_and_virtualenvwrapper_on_ubuntu_14_04.html">virtualenv and virtualenvwrapper on Ubuntu 14.04</a>
         </li><li>
-            <a href="../../09/02/installing_virtualbox_on_ubuntu_14_04.html">Installing virtualbox on Ubuntu 14.04</a>
+            <a href="../02/installing_virtualbox_on_ubuntu_14_04.html">Installing virtualbox on Ubuntu 14.04</a>
         </li><li>
             <a href="../../08/26/joint_conditional_and_marginal_probabilities.html">Joint, conditional and marginal probabilities</a>
         </li><li>
