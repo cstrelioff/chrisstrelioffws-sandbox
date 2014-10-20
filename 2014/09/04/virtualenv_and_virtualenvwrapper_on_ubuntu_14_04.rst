@@ -13,7 +13,7 @@ things as the minimal Python requirements for each project.
 
 .. more::
 
-Assuming you want to proceed, my goal will is to setup and use
+Assuming you want to proceed, my goal is to setup and use
 virtualenvwrapper_ (see `virtualenvwrapper docs`_ for more info), a set of
 shell tools wrapped around the  virtualenv_ package.  Both the
 `Doug Hellman post`_ and the `simonsoftware post`_ provide some motivation for
@@ -272,6 +272,9 @@ delete the directory (if you want).
 That's it, hopefully some will find this useful post useful.  If you have
 cool/better ways to use these tools leave a comment below.
 
+**edits**
+
+* 2014, Oct 20: Fixed typo; extra word.
 
 .. _virtualenv: https://virtualenv.pypa.io/en/latest/virtualenv.html
 .. _virtualenvwrapper: https://bitbucket.org/dhellmann/virtualenvwrapper
