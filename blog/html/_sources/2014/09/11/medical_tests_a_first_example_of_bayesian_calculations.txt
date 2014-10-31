@@ -1,3 +1,5 @@
+.. _bayes medical tests:
+
 Medical tests, a first example of Bayesian calculations
 =======================================================
 

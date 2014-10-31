@@ -1,0 +1,558 @@
+Inferring probabilities, a second example of Bayesian calculations
+==================================================================
+
+In this post we will focus on an example of inferring probabilities given a
+short data sample.  We will start by tackling the theory of how
+to do the desired inference in a Bayesian way and will end by implementing
+the theory we develop in Python so that we can play around with the ideas.  To
+keep the post (hopefully) more accessible, we will only consider a small set of
+candidate probabilities. This restriction allows us to minimize the
+mathematical difficulty of the inference and still obtain really cool results.
+
+.. more::
+
+If the content below seems unfamiliar try reading previous posts that provide
+some of the needed background to understand the current post:
+
+* :ref:`joint, conditional and marginal probabilities`
+* :ref:`bayes medical tests`
+
+Check those out to get some background, or jump right in. To be concrete, I'll
+consider the following scenario:
+
+* A computer program outputs a random string of :math:`1` s and :math:`0` s --
+  we'll use :code:`numpy.random.choice` in Python as our source for data.  For
+  example, one sample output could be:
+
+.. math::
+
+    D = 0000110001
+
+* The goal will be to infer the probability of a :math:`0` that the program is
+  using to produce :math:`D`.  We'll use the notation :math:`p_{0}` for the
+  probability of a :math:`0`.  Of course this also means that the probability
+  of a :math:`1` must be :math:`p_{1} = 1 - p_{0}`.
+
+* As discussed above, we will only consider a set of candidate probabilities.
+  To be concrete, let's use the candidates :math:`p_{0} = 0.2, 0.4, 0.6, 0.8` 
+  for the data series above. How do we sensibly choose among these
+  possibilities **and** how certain are we of the result?
+
+Likelihood
+----------
+
+Our starting point is to connect the data :math:`D` to our assumptions about
+the probability of a :math:`0` or a :math:`1`.  For example, the probability of
+:math:`D`, without being specific about the value of :math:`p_{0}`, can be
+written:
+
+.. math::
+
+    \begin{array}{ll}
+    P(D=0000110001 \vert p_{0} )
+        & =      & p_{0} \times p_{0} \times p_{0} \\
+        & \times & p_{0} \times (1-p_{0}) \times (1-p_{0}) \\
+        & \times & p_{0} \times p_{0} \times p_{0} \\
+        & \times & (1-p_{0})
+    \end{array}
+
+where we used :math:`p_{1} = 1 - p_{0}` to write the probability in terms of
+just :math:`p_{0}`. We can also collect terms and write the above probability
+as:
+
+.. math::
+
+    P(D=0000110001 \vert p_{0} ) = p_{0}^{7} \times (1-p_{0})^{3}
+
+**Technical note:** the form of the probabilities given above is called a
+`Bernoulli Process`_ (as opposed to a `Bernoulli Trial`_ or 
+`Binomial Distribution`_).
+
+Writing the probability of :math:`D` this way means that we assume the program
+is very simple-- the probability of a :math:`0` is always :math:`p_{0}`-- and
+does not depend on previous numbers or where in the data stream we are
+considering.
+
+We can write this probability in a very general way, without being specific
+about the data series :math:`D` or probability :math:`p_{0}`, as:
+
+.. math::
+
+    P(D \vert p_{0}) = p_{0}^{n_{0}} \times (1 - p_{0})^{n_{1}}
+
+where :math:`n_{0}` and :math:`n_{1}` are the number of :math:`0` s and
+:math:`1` s in the data series we are considering. However, we can also be
+specific and calculate the likelihood values for the data and probabilities
+given above:
+
+.. math::
+
+    \begin{array}{ll}
+    P(D=0000110001 \vert p_{0}=0.2) & = & 0.2^{7} \times (1-0.2)^{3} \\
+                                    & = & 6.55360 \times 10^{-6} \\
+                                    & & \\
+    P(D=0000110001 \vert p_{0}=0.4) & = & 0.4^{7} \times (1-0.4)^{3} \\
+                                    & = & 3.53894 \times 10^{-4} \\
+                                    & & \\
+    P(D=0000110001 \vert p_{0}=0.6) & = & 0.6^{7} \times (1-0.6)^{3} \\
+                                    & = & 1.79159 \times 10^{-3} \\
+                                    & & \\
+    P(D=0000110001 \vert p_{0}=0.8) & = & 0.8^{7} \times (1-0.8)^{3} \\
+                                    & = & 1.67772 \times 10^{-3} \\
+    \end{array}
+
+From the above, we see that the value that maximizes the likelihood is
+:math:`p_{0}=0.6`, slightly beating out :math:`p_{0}=0.8`.  A couple of things
+to note here are:
+
+* We have the maximum likelihood value (among the values considered). We could
+  provide the answer :math:`p_{0}=0.6` and be done.
+* The sum of the probabilities (likelihoods) **is not 1** -- this means that we
+  do not have a properly normalized `probability mass function`_ (pmf) with
+  respect to :math:`p_{0}`, the parameter that we are trying to infer. A goal
+  of Bayesian inference is to provide a properly normalized pmf for
+  :math:`p_{0}`, called the posterior.
+
+The ability to do the above calculations puts us in good shape to apply
+Bayes' Theorem and obtain the desired posterior pmf. Before moving on to Bayes'
+Theorem we re-emphasize the general form of the **likelihood**:
+
+.. math::
+
+    P(D \vert p_{0}) = p_{0}^{n_{0}} \times (1 - p_{0})^{n_{1}}
+
+It will also be useful to have the **log-likelihood** written down:
+
+.. math::
+
+    \begin{array}{ll}
+    \ln P(D \vert p_{0}) & = & n_{0} \times \ln(p_{0}) \\
+                         & + & n_{1} \times \ln(1 - p_{0})
+    \end{array}
+
+because this form adds to the numerical stability when we create some Python
+code below. If you are rusty with logarithms, check out
+`wikipedia logarithm identities`_ for examples of how to get from the
+likelihood to the log-likelihood. To be clear, I am using natural (base-e)
+logarithms, that is :math:`\log_{e}(x) = \ln(x)`.
+
+Prior
+-----
+
+We've already decided on part of the prior-- we've done this by choosing
+:math:`p_{0} \in \{ 0.2, 0.4, 0.6, 0.8 \}` as the set of probabilities that we
+will consider.  All that is left is to assign prior probabilities to each
+candidate :math:`p_{0}` so that we can start with a properly normalized prior
+pmf.  Let's say that we have no reason to prefer any of the candidates and
+make them equally probable, a priori:
+
+.. math::
+
+    \begin{array}{ll}
+    P(p_{0}=0.2 \vert A1) & =  & 0.25 \\
+    P(p_{0}=0.4 \vert A1) & =  & 0.25 \\
+    P(p_{0}=0.6 \vert A1) & =  & 0.25 \\
+    P(p_{0}=0.8 \vert A1) & =  & 0.25 \\
+    \end{array}
+
+where use :math:`A1` to denote the assumptions that we've made.  The above
+information makes up our **prior** pmf.
+
+Bayes' Theorem and the Posterior
+--------------------------------
+
+Next we employ the **likelihood** and **prior** pmf defined above to make an
+inference about the underlying value of :math:`p_{0}`. That is, we will use
+Bayes' Theorem to calculate the **posterior** pmf given the likelihood and
+prior. The posterior has the form
+
+.. math::
+
+    P(p_{0} \vert D, A1)
+
+In words, this is *the probability of* :math:`p_{0}` *given data series*
+:math:`D` *and assumptions* :math:`A1`-- hey, that's just what we want! We can
+calculate the posterior using Bayes' Theorem:
+
+.. math::
+
+    \color{blue}{P(p_{0} \vert D, A_{1})} 
+                        =  \frac{ 
+                       P(D \vert p_{0}) 
+                       \color{red}{P(p_{0}\vert A_{1})}
+                       }{ 
+                       \sum_{ \hat{p_{0}} } 
+                       P(D \vert p_{0} = \hat{p_{0}})
+                       \color{red}{P(p_{0} = \hat{p_{0}} \vert A_{1})}
+                       } 
+
+where the prior :math:`\color{red}{P(p_{0} \vert A_{1})}` is red, the
+likelihood :math:`P(D\vert p_{0})` is black, and the posterior
+:math:`\color{blue}{P(p_{0} \vert D, A_{1})}` is blue.  This allows our
+information about :math:`p_{0}` to updated from **assumptions** (:math:`A_{1}`)
+to **assumptions + data** (:math:`D, A_{1}`):
+
+.. math::
+    \color{red}{P(p_{0} \vert A_{1})}
+    \rightarrow
+    \color{blue}{P(p_{0} \vert D, A_{1})}
+
+We simplify the look of Bayes' Theorem by defining the **marginal likelihood**,
+or **evidence**:
+
+.. math::
+
+    P(D \vert A_{1}) = \sum_{ \hat{p_{0}} } 
+                       P(D \vert p_{0} = \hat{p_{0}})
+                       \color{red}{P(p_{0} = \hat{p_{0}} \vert A_{1})}
+
+This lets us write Bayes' Theorem in the following form:
+
+.. math::
+
+    \color{blue}{P(p_{0} \vert D, A_{1})} 
+                       =  \frac{ 
+                       P(D \vert p_{0}) 
+                       \color{red}{P(p_{0} \vert A_{1})}
+                       }{ 
+                       P(D \vert A_{1}) 
+                       }
+
+The posterior should really be thought of as a set of equations, one for each
+value of :math:`p_{0}`, just like we had for the likelihood and the prior.
+
+Finally, for the theory, we finish off our example and calculate the posterior
+pmf for :math:`p_{0}`. Let's start by calculating the evidence (we know all the
+values for the likelihood and prior from above):
+
+.. math::
+
+    \begin{array}{ll}
+    P(D=0000110001 \vert A_{1}) 
+        & = & 
+        P(D=0000110001 \vert p_{0} = 0.2) \\
+        & \times & P(p_{0} = 0.2 \vert A_{1}) \\
+        & + & 
+        P(D=0000110001 \vert p_{0} = 0.4) \\
+        & \times & P(p_{0} = 0.4 \vert A_{1}) \\
+        & + & 
+        P(D=0000110001 \vert p_{0} = 0.6) \\
+        & \times & P(p_{0} = 0.6 \vert A_{1}) \\
+        & + & 
+        P(D=0000110001 \vert p_{0} = 0.8) \\
+        & \times & P(p_{0} = 0.8 \vert A_{1}) \\
+        & = & 6.55360e-06 \times 0.25 \\
+        & + & 3.53894e-04 \times 0.25 \\
+        & + & 1.79159e-03 \times 0.25 \\
+        & + & 1.67772e-03 \times 0.25 \\
+        & = & 9.57440e-04
+    \end{array}
+
+So, the denominator in Bayes' Theorem is equal to :math:`9.57440e-04`.  Now,
+complete the posterior pmf calculation.
+
+* First :math:`P(p_{0} = 0.2 \vert D=0000110001, A_{1})`
+
+.. math::
+
+    \begin{array}{ll}
+        & = &  
+        \frac{ P(D=0000110001 \vert p_{0} = 0.2) P(p_{0} = 0.2 \vert A_{1}) 
+        }{ P(D=0000110001 \vert A_{1}) }  \\
+        & = & \frac{6.55360e-06 \times 0.25}{9.57440e-04} \\
+        & = & 1928309182 
+    \end{array}
+
+* Second, :math:`P(p_{0} = 0.4 \vert D=0000110001, A_{1})`
+
+.. math::
+
+    \begin{array}{ll}
+        & = & 
+        \frac{ P(D=0000110001 \vert p_{0} = 0.4) P(p_{0} = 0.4 \vert A_{1}) 
+        }{ P(D=0000110001 \vert A_{1}) } \\
+        & = & 
+        \frac{ P(D=0000110001 \vert p_{0} = 0.6) P(p_{0} = 0.6 \vert A_{1}) 
+        }{ P(D=0000110001 \vert A_{1}) } \\
+        & = & 
+        \frac{ P(D=0000110001 \vert p_{0} = 0.8) P(p_{0} = 0.8 \vert A_{1}) 
+        }{ P(D=0000110001 \vert A_{1}) } \\
+        & = & 6.55360e-06 \times 0.25 \\
+        & + & 3.53894e-04 \times 0.25 \\
+        & + & 1.79159e-03 \times 0.25 \\
+        & + & 1.67772e-03 \times 0.25 \\
+        & = & 9.57440e-04
+    \end{array}
+
+
+
+0.2 6.55360e-06 1.63840e-06
+0.4 3.53894e-04 8.84736e-05
+0.6 1.79159e-03 4.47898e-04
+0.8 1.67772e-03 4.19430e-04
+>>> print "{:1.5e}".format(total)
+9.57440e-04
+
+Writing the inference code in Python
+------------------------------------
+
+First, some imports
+
+<<>>=
+from __future__ import division, print_function
+import numpy as np
+import matplotlib.pyplot as plt
+
+# use matplotlib style sheet
+try:
+    plt.style.use('ggplot')
+except:
+    # version of matplotlib might not be recent
+    pass
+@
+
+Next, a class for inferring probabilities:
+
+<<>>=
+class likelihood:
+    def __init__(self, data):
+        """Likelihood for binary data."""
+        self.counts = {s:0 for s in ['0', '1']}
+        self._process_data(data)
+ 
+    def _process_data(self, data):
+        """Process data."""
+        temp = [str(x) for x in data]
+        for s in ['0', '1']:
+            self.counts[s] = temp.count(s)
+
+        if len(temp) != sum(self.counts.values()):
+            raise Exception("Passed data is not all 0`s and 1`s!")
+    
+    def _process_probabilities(self, p0):
+        """Process probabilities."""
+        n0 = self.counts['0']
+        n1 = self.counts['1']
+
+        if p0 != 0 and p0 != 1:
+            # typical casee
+            logpr_data = n0*np.log(p0) + \
+                         n1*np.log(1.-p0)
+            pr_data = np.exp(logpr_data)
+        elif p0 == 0 and n0 != 0:
+            # p0 can't be 0 if n0 is not 0
+            logpr_data = -np.inf
+            pr_data = np.exp(logpr_data)
+        elif p0 == 0 and n0 == 0:
+            # data consistent with p0=0
+            logpr_data = n1*np.log(1.-p0)
+            pr_data = np.exp(logpr_data)            
+        elif p0 == 1 and n1 != 0:
+            # p0 can't be 1 in n1 is not 0
+            logpr_data = -np.inf
+            pr_data = np.exp(logpr_data)
+        elif p0 == 1 and n1 == 0:
+            # data consistent with p0=1
+            logpr_data = n0*np.log(p0)
+            pr_data = np.exp(logpr_data)
+
+        return pr_data, logpr_data
+        
+    def prob(self, p0):
+        """Get probability of data."""
+        pr_data, _ = self._process_probabilities(p0)
+
+        return pr_data
+    
+    def log_prob(self, p0):
+        """Get log of probability of data."""
+        _, logpr_data = self._process_probabilities(p0)
+
+        return logpr_data
+@
+
+Construct the prior class
+
+<<>>= 
+class prior:
+    def __init__(self, p_list, p_probs=None):
+        """The prior.
+
+        p_list: list of allowed p0's
+        p_probs: [optional] dict of prior probabilities
+                 default is uniform
+        """
+        if p_probs:
+            self.log_pdict = {p:np.log(p_probs[p]) for p in p_list}
+        else:
+            n = len(p_list)
+            self.log_pdict = {p:-np.log(n) for p in p_list}
+
+    def __iter__(self):
+        return iter(sorted(self.log_pdict))
+
+    def log_prob(self, p):
+        """Get log prior probability for passed p0."""
+        if p in self.log_pdict:
+            return self.log_pdict[p]
+        else:
+            return -np.inf
+
+    def prob(self, p):
+        """Get prior probability for passed p0."""
+        if p in self.log_pdict:
+            return np.exp(self.log_pdict[p])
+        else:
+            return 0.0
+@
+
+Construct the posterior class:
+
+<<>>=
+class posterior:
+    def __init__(self, data, prior):
+        """The posterior.
+
+        data: a data sample as list
+        prior: an instance of the prior class
+        """
+        self.likelihood = likelihood(data)
+        self.prior = prior
+
+        self._process_posterior()
+
+    def _process_posterior(self):
+        """Process the posterior using passed data and prior."""
+        
+        # get all numerators in Bayes' Theorem
+        # - also keep track of denominator = sum of all numerators
+        numerators = {}
+        denominator = -np.inf
+        for p in self.prior:
+            numerators[p] = self.likelihood.log_prob(p) + \
+                            self.prior.log_prob(p)
+
+            if numerators[p] != -np.inf:
+                # np.logaddexp(-np.inf, -np.inf) issues warning
+                # skip-- this is adding 0 + 0
+                denominator = np.logaddexp(denominator, numerators[p])
+
+        # save denominator in Bayes' Theorm
+        self.log_marg_likelihood = denominator
+
+        # calculate posterior
+        self.log_pdict = {}
+        for p in self.prior:
+            self.log_pdict[p] = numerators[p] - \
+                                self.log_marg_likelihood
+
+    def log_prob(self, p):
+        """Get log posterior probability for passed p."""
+        if p in self.log_pdict:
+            return self.log_pdict[p]
+        else:
+            return -np.inf
+
+    def prob(self, p):
+        """Get posterior probability for passed p."""
+        if p in self.log_pdict:
+            return np.exp(self.log_pdict[p])
+        else:
+            return 0.0
+
+    def plot(self):
+        """Plot the inference resuults."""
+
+        f, ax= plt.subplots(3, 1, figsize=(8, 6), sharex=True)
+
+        # get candidate probabilities from prior
+        x = [p for p in self.prior]
+        
+        # plot prior
+        y1 = np.array([self.prior.prob(p) for p in x])
+        ax[0].stem(x, y1, linefmt='r-', markerfmt='ro', basefmt='w-')
+        ax[0].set_ylabel("Prior", fontsize=14)
+        ax[0].set_xlim(-0.05, 1.05)
+        ax[0].set_ylim(0., 1.05*np.max(y1))
+        
+        # plot likelihood
+        y2 = np.array([self.likelihood.prob(p) for p in x])
+        ax[1].stem(x, y2, linefmt='k-', markerfmt='ko', basefmt='w-')
+        ax[1].set_ylabel("Likelihood", fontsize=14)
+        ax[1].set_xlim(-0.05, 1.05)
+        ax[1].set_ylim(0., 1.05*np.max(y2))
+
+        # plot posterior 
+        y3 = np.array([self.prob(p) for p in x])
+        ax[2].stem(x, y3, linefmt='b-', markerfmt='bo', basefmt='w-')
+        ax[2].set_ylabel("Posterior", fontsize=14)
+        ax[2].set_xlabel("Probability of Zero", fontsize=14)
+        ax[2].set_xlim(-0.05, 1.05)
+        ax[2].set_ylim(0., 1.05*np.max(y3))
+        
+        plt.tight_layout()
+        plt.show()
+
+@
+
+
+Let's test out the code... First, replicate the example we did in detail above:
+
+<<fig=True>>=
+# data
+data1 = [0,0,0,0,1,1,0,0,0,1]
+
+# prior
+#A1 = prior([0.2, 0.4, 0.6, 0.8])
+A1 = prior(np.arange(0.0,1.1,0.1))
+
+# posterior
+post1 = posterior(data1, A1)
+post1.plot()
+@
+
+We can also analyze the data above using a different, bad prior -- maybe a
+friend that is helping us is an expert and suggest that the probablity is more
+likely to be :math:`p_{0}=0.6` than the other candidate values. Using our Python
+code it is easy to see the effect of this prior:
+
+<<fig=True>>=
+# prior
+A1_friend = prior([0.2, 0.4, 0.6, 0.8],
+                  {0.2:0.2, 0.4:0.2, 0.6:0.4, 0.8:0.2})
+
+# posterior
+post1_friend = posterior(data1, A1_friend)
+post1_friend.plot()
+@
+
+
+
+Next, let's consider lots of data and many candidate probabilities:
+
+<<fig=True>>=
+# set probability of 0
+p0 = 0.23
+# set rng seed to 42, the meaning of like..
+np.random.seed(42)
+# generate data
+data2 = np.random.choice([0,1], 500, p=[p0, 1.-p0])
+
+# prior
+A2 = prior(np.arange(0.0, 1.01, 0.01))
+
+# posterior
+post2 = posterior(data2, A2)
+post2.plot()
+@
+
+.. _wikipedia logarithm identities: http://en.wikipedia.org/wiki/Logarithm#Logarithmic_identities
+.. _probability mass function: http://en.wikipedia.org/wiki/Probability_mass_function
+.. _Bernoulli Process: http://en.wikipedia.org/wiki/Bernoulli_process
+.. _Binomial Distribution: http://en.wikipedia.org/wiki/Binomial_distribution
+.. _Bernoulli Trial: http://en.wikipedia.org/wiki/Bernoulli_trial
+
+.. author:: default
+.. categories:: none
+.. tags:: joint probability, conditional probability, marginal probability, Bayesian, python
+.. comments::

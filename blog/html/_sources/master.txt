@@ -4,6 +4,7 @@ Sitemap
 .. toctree::
    :maxdepth: 1
 
+   2014/10/24/inferring_probabilities_a_second_example_of_bayesian_calculations
    2014/09/16/python_3_4_on_ubuntu_14_04_using_virtual_environments
    2014/09/11/medical_tests_a_first_example_of_bayesian_calculations
    2014/09/04/virtualenv_and_virtualenvwrapper_on_ubuntu_14_04
