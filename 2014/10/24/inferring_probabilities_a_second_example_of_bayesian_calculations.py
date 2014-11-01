@@ -32,7 +32,7 @@ class likelihood:
         n1 = self.counts['1']
 
         if p0 != 0 and p0 != 1:
-            # typical casee
+            # typical case
             logpr_data = n0*np.log(p0) + \
                          n1*np.log(1.-p0)
             pr_data = np.exp(logpr_data)
@@ -45,7 +45,7 @@ class likelihood:
             logpr_data = n1*np.log(1.-p0)
             pr_data = np.exp(logpr_data)            
         elif p0 == 1 and n1 != 0:
-            # p0 can't be 1 in n1 is not 0
+            # p0 can't be 1 if n1 is not 0
             logpr_data = -np.inf
             pr_data = np.exp(logpr_data)
         elif p0 == 1 and n1 == 0:
@@ -77,7 +77,10 @@ class prior:
                  default is uniform
         """
         if p_probs:
-            self.log_pdict = {p:np.log(p_probs[p]) for p in p_list}
+            # make sure prior is normalized
+            norm = sum(p_probs.values())
+            self.log_pdict = {p:np.log(p_probs[p]) - \
+                                np.log(norm) for p in p_list}
         else:
             n = len(p_list)
             self.log_pdict = {p:-np.log(n) for p in p_list}
@@ -115,8 +118,6 @@ class posterior:
     def _process_posterior(self):
         """Process the posterior using passed data and prior."""
         
-        # get all numerators in Bayes' Theorem
-        # - also keep track of denominator = sum of all numerators
         numerators = {}
         denominator = -np.inf
         for p in self.prior:
@@ -126,9 +127,10 @@ class posterior:
             if numerators[p] != -np.inf:
                 # np.logaddexp(-np.inf, -np.inf) issues warning
                 # skip-- this is adding 0 + 0
-                denominator = np.logaddexp(denominator, numerators[p])
+                denominator = np.logaddexp(denominator,
+                                           numerators[p])
 
-        # save denominator in Bayes' Theorm
+        # save denominator in Bayes' Theorem
         self.log_marg_likelihood = denominator
 
         # calculate posterior
@@ -190,33 +192,32 @@ class posterior:
 data1 = [0,0,0,0,1,1,0,0,0,1]
 
 # prior
-#A1 = prior([0.2, 0.4, 0.6, 0.8])
-A1 = prior(np.arange(0.0,1.1,0.1))
+A1 = prior([0.2, 0.4, 0.6, 0.8])
 
 # posterior
 post1 = posterior(data1, A1)
 post1.plot()
 
 
-# prior
-A1_friend = prior([0.2, 0.4, 0.6, 0.8],
-                  {0.2:0.2, 0.4:0.2, 0.6:0.4, 0.8:0.2})
+# prior -- will be normalized by class
+A2 = prior([0.2, 0.4, 0.6, 0.8],
+           {0.2:1, 0.4:20, 0.6:1, 0.8:1})
 
 # posterior
-post1_friend = posterior(data1, A1_friend)
-post1_friend.plot()
+post2 = posterior(data1, A2)
+post2.plot()
 
 
 # set probability of 0
 p0 = 0.23
-# set rng seed to 42, the meaning of like..
+# set rng seed to 42
 np.random.seed(42)
 # generate data
 data2 = np.random.choice([0,1], 500, p=[p0, 1.-p0])
 
 # prior
-A2 = prior(np.arange(0.0, 1.01, 0.01))
+A3 = prior(np.arange(0.0, 1.01, 0.01))
 
 # posterior
-post2 = posterior(data2, A2)
-post2.plot()
+post3 = posterior(data2, A3)
+post3.plot()

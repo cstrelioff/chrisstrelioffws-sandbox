@@ -1,13 +1,14 @@
 Inferring probabilities, a second example of Bayesian calculations
 ==================================================================
 
-In this post we will focus on an example of inferring probabilities given a
-short data sample.  We will start by tackling the theory of how
+In this post I will focus on an example of inferring probabilities given a
+short data series.  I will start by tackling the theory of how
 to do the desired inference in a Bayesian way and will end by implementing
-the theory we develop in Python so that we can play around with the ideas.  To
-keep the post (hopefully) more accessible, we will only consider a small set of
-candidate probabilities. This restriction allows us to minimize the
-mathematical difficulty of the inference and still obtain really cool results.
+the theory in Python so that we can play around with the ideas.  In an attempt
+to keep the post more accessible, I will only consider a small set of
+candidate probabilities. This restriction allows me to minimize the
+mathematical difficulty of the inference and still obtain really cool results,
+including nice plots of the **prior**, **likelihood** and **posterior**.
 
 .. more::
 
@@ -41,9 +42,11 @@ consider the following scenario:
 Likelihood
 ----------
 
-Our starting point is to connect the data :math:`D` to our assumptions about
-the probability of a :math:`0` or a :math:`1`.  For example, the probability of
-:math:`D`, without being specific about the value of :math:`p_{0}`, can be
+My starting point is to write down the probability of the data series *as if I
+knew the probability of a* :math:`0` *or a* :math:`1`. Of course I don't know
+these probabilities-- finding these probabilities is our goal-- but trust me,
+this is leading somewhere useful. For example, the probability of our example
+data series, without being specific about the value of :math:`p_{0}`, can be
 written:
 
 .. math::
@@ -56,34 +59,30 @@ written:
         & \times & (1-p_{0})
     \end{array}
 
-where we used :math:`p_{1} = 1 - p_{0}` to write the probability in terms of
-just :math:`p_{0}`. We can also collect terms and write the above probability
-as:
+where I've used :math:`p_{1} = 1 - p_{0}` to write the probability in terms of
+just :math:`p_{0}`. I can also collect terms and write the above probability
+in a more compact way:
 
 .. math::
 
     P(D=0000110001 \vert p_{0} ) = p_{0}^{7} \times (1-p_{0})^{3}
 
-**Technical note:** the form of the probabilities given above is called a
+**Technical aside:** the form of the probabilities given above is called a
 `Bernoulli Process`_ (as opposed to a `Bernoulli Trial`_ or 
-`Binomial Distribution`_).
-
-Writing the probability of :math:`D` this way means that we assume the program
-is very simple-- the probability of a :math:`0` is always :math:`p_{0}`-- and
-does not depend on previous numbers or where in the data stream we are
-considering.
-
-We can write this probability in a very general way, without being specific
-about the data series :math:`D` or probability :math:`p_{0}`, as:
+`Binomial Distribution`_). I can also write this probability in a very general
+way, without being specific about the data series :math:`D` or probability
+:math:`p_{0}`, as:
 
 .. math::
 
     P(D \vert p_{0}) = p_{0}^{n_{0}} \times (1 - p_{0})^{n_{1}}
 
-where :math:`n_{0}` and :math:`n_{1}` are the number of :math:`0` s and
-:math:`1` s in the data series we are considering. However, we can also be
-specific and calculate the likelihood values for the data and probabilities
-given above:
+:math:`n_{0}` and :math:`n_{1}` denote the number of :math:`0` s and
+:math:`1` s in the data series I am considering.
+
+I can connect the general form to a specific example by substituting the
+relevant counts and probabilities.  I'll start by calculating the likelihood
+values for the data series and probabilities given above:
 
 .. math::
 
@@ -101,21 +100,21 @@ given above:
                                     & = & 1.67772 \times 10^{-3} \\
     \end{array}
 
-From the above, we see that the value that maximizes the likelihood is
-:math:`p_{0}=0.6`, slightly beating out :math:`p_{0}=0.8`.  A couple of things
+Inspecting the results, I see that :math:`p_{0}=0.6` produces the highest
+likelihood, slightly beating out :math:`p_{0}=0.8`.  A couple of things
 to note here are:
 
-* We have the maximum likelihood value (among the values considered). We could
+* I have the maximum likelihood value (among the values considered). I could
   provide the answer :math:`p_{0}=0.6` and be done.
-* The sum of the probabilities (likelihoods) **is not 1** -- this means that we
+* The sum of the probabilities (likelihoods) **is not 1** -- this means that I
   do not have a properly normalized `probability mass function`_ (pmf) with
-  respect to :math:`p_{0}`, the parameter that we are trying to infer. A goal
+  respect to :math:`p_{0}`, the parameter that I am trying to infer. A goal
   of Bayesian inference is to provide a properly normalized pmf for
   :math:`p_{0}`, called the posterior.
 
-The ability to do the above calculations puts us in good shape to apply
+The ability to do the above calculations puts me in good shape to apply
 Bayes' Theorem and obtain the desired posterior pmf. Before moving on to Bayes'
-Theorem we re-emphasize the general form of the **likelihood**:
+Theorem I want to re-emphasize the general form of the **likelihood**:
 
 .. math::
 
@@ -130,7 +129,7 @@ It will also be useful to have the **log-likelihood** written down:
                          & + & n_{1} \times \ln(1 - p_{0})
     \end{array}
 
-because this form adds to the numerical stability when we create some Python
+because this form adds to the numerical stability when I create some Python
 code below. If you are rusty with logarithms, check out
 `wikipedia logarithm identities`_ for examples of how to get from the
 likelihood to the log-likelihood. To be clear, I am using natural (base-e)
@@ -139,11 +138,11 @@ logarithms, that is :math:`\log_{e}(x) = \ln(x)`.
 Prior
 -----
 
-We've already decided on part of the prior-- we've done this by choosing
-:math:`p_{0} \in \{ 0.2, 0.4, 0.6, 0.8 \}` as the set of probabilities that we
+I've already decided on part of the prior-- I've done this by choosing
+:math:`p_{0} \in \{ 0.2, 0.4, 0.6, 0.8 \}` as the set of probabilities that I
 will consider.  All that is left is to assign prior probabilities to each
-candidate :math:`p_{0}` so that we can start with a properly normalized prior
-pmf.  Let's say that we have no reason to prefer any of the candidates and
+candidate :math:`p_{0}` so that I can start with a properly normalized prior
+pmf.  Let's say that I have no reason to prefer any of the candidates and
 make them equally probable, a priori:
 
 .. math::
@@ -155,14 +154,14 @@ make them equally probable, a priori:
     P(p_{0}=0.8 \vert A1) & =  & 0.25 \\
     \end{array}
 
-where use :math:`A1` to denote the assumptions that we've made.  The above
-information makes up our **prior** pmf.
+where use :math:`A1` to denote the assumptions that I've made.  The above
+information makes up my **prior** pmf.
 
 Bayes' Theorem and the Posterior
 --------------------------------
 
-Next we employ the **likelihood** and **prior** pmf defined above to make an
-inference about the underlying value of :math:`p_{0}`. That is, we will use
+Next I employ the **likelihood** and **prior** pmf defined above to make an
+inference about the underlying value of :math:`p_{0}`. That is, I will use
 Bayes' Theorem to calculate the **posterior** pmf given the likelihood and
 prior. The posterior has the form
 
@@ -171,7 +170,7 @@ prior. The posterior has the form
     P(p_{0} \vert D, A1)
 
 In words, this is *the probability of* :math:`p_{0}` *given data series*
-:math:`D` *and assumptions* :math:`A1`-- hey, that's just what we want! We can
+:math:`D` *and assumptions* :math:`A1`-- hey, that's just what I want! I can
 calculate the posterior using Bayes' Theorem:
 
 .. math::
@@ -188,7 +187,7 @@ calculate the posterior using Bayes' Theorem:
 
 where the prior :math:`\color{red}{P(p_{0} \vert A_{1})}` is red, the
 likelihood :math:`P(D\vert p_{0})` is black, and the posterior
-:math:`\color{blue}{P(p_{0} \vert D, A_{1})}` is blue.  This allows our
+:math:`\color{blue}{P(p_{0} \vert D, A_{1})}` is blue.  This allows my
 information about :math:`p_{0}` to updated from **assumptions** (:math:`A_{1}`)
 to **assumptions + data** (:math:`D, A_{1}`):
 
@@ -197,8 +196,8 @@ to **assumptions + data** (:math:`D, A_{1}`):
     \rightarrow
     \color{blue}{P(p_{0} \vert D, A_{1})}
 
-We simplify the look of Bayes' Theorem by defining the **marginal likelihood**,
-or **evidence**:
+I can simplify the look of Bayes' Theorem by defining the **marginal
+likelihood**, or **evidence**:
 
 .. math::
 
@@ -206,7 +205,7 @@ or **evidence**:
                        P(D \vert p_{0} = \hat{p_{0}})
                        \color{red}{P(p_{0} = \hat{p_{0}} \vert A_{1})}
 
-This lets us write Bayes' Theorem in the following form:
+This lets me write Bayes' Theorem in the following form:
 
 .. math::
 
@@ -219,10 +218,11 @@ This lets us write Bayes' Theorem in the following form:
                        }
 
 The posterior should really be thought of as a set of equations, one for each
-value of :math:`p_{0}`, just like we had for the likelihood and the prior.
+candidate value of :math:`p_{0}`, just like we had for the likelihood and the
+prior.
 
-Finally, for the theory, we finish off our example and calculate the posterior
-pmf for :math:`p_{0}`. Let's start by calculating the evidence (we know all the
+Finally, for the theory, I finish off our example and calculate the posterior
+pmf for :math:`p_{0}`. Let's start by calculating the evidence (I know all the
 values for the likelihood and prior from above):
 
 .. math::
@@ -251,7 +251,7 @@ values for the likelihood and prior from above):
 So, the denominator in Bayes' Theorem is equal to :math:`9.57440e-04`.  Now,
 complete the posterior pmf calculation.
 
-* First :math:`P(p_{0} = 0.2 \vert D=0000110001, A_{1})`
+* First, :math:`P(p_{0} = 0.2 \vert D=0000110001, A_{1})`
 
 .. math::
 
@@ -260,7 +260,7 @@ complete the posterior pmf calculation.
         \frac{ P(D=0000110001 \vert p_{0} = 0.2) P(p_{0} = 0.2 \vert A_{1}) 
         }{ P(D=0000110001 \vert A_{1}) }  \\
         & = & \frac{6.55360e-06 \times 0.25}{9.57440e-04} \\
-        & = & 1928309182 
+        & = & 1.78253e-03
     \end{array}
 
 * Second, :math:`P(p_{0} = 0.4 \vert D=0000110001, A_{1})`
@@ -271,32 +271,86 @@ complete the posterior pmf calculation.
         & = & 
         \frac{ P(D=0000110001 \vert p_{0} = 0.4) P(p_{0} = 0.4 \vert A_{1}) 
         }{ P(D=0000110001 \vert A_{1}) } \\
+        & = & \frac{3.53894e-04 \times 0.25}{9.57440e-04} \\
+        & = & 9.62567e-02
+    \end{array}
+
+* Third, :math:`P(p_{0} = 0.6 \vert D=0000110001, A_{1})`
+
+.. math::
+
+    \begin{array}{ll}
         & = & 
         \frac{ P(D=0000110001 \vert p_{0} = 0.6) P(p_{0} = 0.6 \vert A_{1}) 
         }{ P(D=0000110001 \vert A_{1}) } \\
+        & = & \frac{1.79159e-03 \times 0.25}{9.57440e-04} \\
+        & = & 4.87299e-01
+    \end{array}
+
+* Finally, :math:`P(p_{0} = 0.8 \vert D=0000110001, A_{1})`
+
+.. math::
+
+    \begin{array}{ll}
         & = & 
         \frac{ P(D=0000110001 \vert p_{0} = 0.8) P(p_{0} = 0.8 \vert A_{1}) 
         }{ P(D=0000110001 \vert A_{1}) } \\
-        & = & 6.55360e-06 \times 0.25 \\
-        & + & 3.53894e-04 \times 0.25 \\
-        & + & 1.79159e-03 \times 0.25 \\
-        & + & 1.67772e-03 \times 0.25 \\
-        & = & 9.57440e-04
+        & = & \frac{1.67772e-03 \times 0.25}{9.57440e-04} \\
+        & = & 4.56328e-01
     \end{array}
 
+Summing Up
+----------
 
+Before moving on to the Python code, let's go over the results a bit. Using the
+data series and Bayes' Theorem I've gone from the **prior** pmf
 
-0.2 6.55360e-06 1.63840e-06
-0.4 3.53894e-04 8.84736e-05
-0.6 1.79159e-03 4.47898e-04
-0.8 1.67772e-03 4.19430e-04
->>> print "{:1.5e}".format(total)
-9.57440e-04
+.. math::
+
+    \begin{array}{ll}
+    P(p_{0}=0.2 \vert A1) & =  & 0.25 \\
+    P(p_{0}=0.4 \vert A1) & =  & 0.25 \\
+    P(p_{0}=0.6 \vert A1) & =  & 0.25 \\
+    P(p_{0}=0.8 \vert A1) & =  & 0.25 \\
+    \end{array}
+
+to the **posterior** pmf (I'll shorten the data series in the notation below)
+
+.. math::
+
+    \begin{array}{ll}
+    P(p_{0}=0.2 \vert D=000\ldots, A1) & =  & 1.78253e-03 \\
+    P(p_{0}=0.4 \vert D=000\ldots, A1) & =  & 9.62567e-02 \\
+    P(p_{0}=0.6 \vert D=000\ldots, A1) & =  & 4.87299e-01 \\
+    P(p_{0}=0.8 \vert D=000\ldots, A1) & =  & 4.56328e-01
+    \end{array}
+
+In a Bayesian setting, this posterior pmf is the answer to our inference of
+:math:`p_{0}`, reflecting our knowledge of the parameter given the assumptions
+and data.  Often people want to report a single number but this posterior
+reflects a fair amount of uncertainty.  Some options are:
+
+* Report the *maximum a posteriori* value of :math:`p_{0}`-- in this case 
+  :math:`0.6`.
+* Report the *posterior mean*, the *posterior median* -- using the posterior
+  pmf to calculate.
+* Include a posterior variance or credible interval to describe uncertainty in
+  the estimate.
+
+However the inference is reported, communicating the uncertainty is part of the
+job.  In practice, plots of the posterior really help with the task.  So, let's
+leave theory and implement these ideas in Python.
 
 Writing the inference code in Python
 ------------------------------------
 
-First, some imports
+This code will be available as a single Python script, :code:`bayes_ex01.py`,
+at a `github examples repository`_ I've setup to host such things.  You should
+grab it and try to following along.
+
+First, the code has some imports -- just :code:`numpy` and :code:`matplotlib`.
+I will also use a nice :code:`ggplot` style to make the plots look really
+nice.
 
 .. code-block:: python
 
@@ -315,7 +369,11 @@ First, some imports
 
 
 
-Next, a class for inferring probabilities:
+First, I make a class to deal with the **likelihood**.  The class takes the
+data series and provides an interface for computing the likelihood for a given
+probability :math:`p_{0}`.  You should be able to find the **log-likelihood**
+equation in the :code:`_process_probabilities()` method (with some care taken
+for edge cases).
 
 .. code-block:: python
 
@@ -340,7 +398,7 @@ Next, a class for inferring probabilities:
             n1 = self.counts['1']
     
             if p0 != 0 and p0 != 1:
-                # typical casee
+                # typical case
                 logpr_data = n0*np.log(p0) + \
                              n1*np.log(1.-p0)
                 pr_data = np.exp(logpr_data)
@@ -353,7 +411,7 @@ Next, a class for inferring probabilities:
                 logpr_data = n1*np.log(1.-p0)
                 pr_data = np.exp(logpr_data)            
             elif p0 == 1 and n1 != 0:
-                # p0 can't be 1 in n1 is not 0
+                # p0 can't be 1 if n1 is not 0
                 logpr_data = -np.inf
                 pr_data = np.exp(logpr_data)
             elif p0 == 1 and n1 == 0:
@@ -379,7 +437,10 @@ Next, a class for inferring probabilities:
 
 
 
-Construct the prior class
+Next I create a class for the **prior** pmf.  Given a list of candidate values
+for :math:`p_{0}`, this creates a uniform prior by default.  If something
+else is desired, a dictionary of prior probabilities can be passed to override
+this default.  I'll do an example below. 
 
 .. code-block:: python
 
@@ -392,7 +453,10 @@ Construct the prior class
                      default is uniform
             """
             if p_probs:
-                self.log_pdict = {p:np.log(p_probs[p]) for p in p_list}
+                # make sure prior is normalized
+                norm = sum(p_probs.values())
+                self.log_pdict = {p:np.log(p_probs[p]) - \
+                                    np.log(norm) for p in p_list}
             else:
                 n = len(p_list)
                 self.log_pdict = {p:-np.log(n) for p in p_list}
@@ -418,7 +482,14 @@ Construct the prior class
 
 
 
-Construct the posterior class:
+Finally I construct a class for the **posterior** that takes the data series
+and an instance of the :code:`prior` class and constructs the posterior pmf.  A
+:code:`plot()` method provides a really nice visualization of the inference,
+including plots of the **prior**, **likelihood** and **posterior**.
+
+Notice that all of the calculations for the posterior are done using
+log-probabilities.  This is absolutely necessary for numerical accuracy because
+the probabilities can vary greatly and some are extremely small.
 
 .. code-block:: python
 
@@ -437,8 +508,6 @@ Construct the posterior class:
         def _process_posterior(self):
             """Process the posterior using passed data and prior."""
             
-            # get all numerators in Bayes' Theorem
-            # - also keep track of denominator = sum of all numerators
             numerators = {}
             denominator = -np.inf
             for p in self.prior:
@@ -448,9 +517,10 @@ Construct the posterior class:
                 if numerators[p] != -np.inf:
                     # np.logaddexp(-np.inf, -np.inf) issues warning
                     # skip-- this is adding 0 + 0
-                    denominator = np.logaddexp(denominator, numerators[p])
+                    denominator = np.logaddexp(denominator,
+                                               numerators[p])
     
-            # save denominator in Bayes' Theorm
+            # save denominator in Bayes' Theorem
             self.log_marg_likelihood = denominator
     
             # calculate posterior
@@ -511,8 +581,11 @@ Construct the posterior class:
 
 
 
+Examples
+--------
 
-Let's test out the code... First, replicate the example we did in detail above:
+Let's test out the code. First, I will replicate the example we did in the 
+theory example to make sure all is well:
 
 .. code-block:: python
 
@@ -520,8 +593,7 @@ Let's test out the code... First, replicate the example we did in detail above:
     data1 = [0,0,0,0,1,1,0,0,0,1]
     
     # prior
-    #A1 = prior([0.2, 0.4, 0.6, 0.8])
-    A1 = prior(np.arange(0.0,1.1,0.1))
+    A1 = prior([0.2, 0.4, 0.6, 0.8])
     
     # posterior
     post1 = posterior(data1, A1)
@@ -534,20 +606,31 @@ Let's test out the code... First, replicate the example we did in detail above:
 
 
 
-We can also analyze the data above using a different, bad prior -- maybe a
-friend that is helping us is an expert and suggest that the probablity is more
-likely to be :math:`p_{0}=0.6` than the other candidate values. Using our Python
-code it is easy to see the effect of this prior:
+Notice how the posterior pmf nicely shows that both :math:`p_{0}=0.6` and
+:math:`p_{0}=0.8` have substantial probability-- there is uncertainty here!
+That makes sense because we only have a data series of length 10 and the are
+only four candidate probabilities.  Also, notice:
+
+* The sums of all stems in the prior and the posterior sum to 1, reflecting
+  that these are proper pmfs.
+* The likelihood does not have this property -- look at the scale on the
+  y-axis.  This gets even worse when we consider a longer data series below.
+* Because the prior was uniform, the posterior shape looks just like the
+  likelihood.
+
+Next, let's consider setting a strong prior -- preferring one value of
+:math:`p_{0}`.  Using our Python code it is easy to see the effect of this
+prior on the resulting posterior:
 
 .. code-block:: python
 
-    # prior
-    A1_friend = prior([0.2, 0.4, 0.6, 0.8],
-                      {0.2:0.2, 0.4:0.2, 0.6:0.4, 0.8:0.2})
+    # prior -- will be normalized by class
+    A2 = prior([0.2, 0.4, 0.6, 0.8],
+               {0.2:1, 0.4:20, 0.6:1, 0.8:1})
     
     # posterior
-    post1_friend = posterior(data1, A1_friend)
-    post1_friend.plot()
+    post2 = posterior(data1, A2)
+    post2.plot()
     
     
 
@@ -556,25 +639,35 @@ code it is easy to see the effect of this prior:
 
 
 
+Notice the following things:
 
+* The posterior and the likelihood no longer have the same shape.  The strong
+  prior affects of inference -- we should have a really good reason to use this
+  prior!
+* The posterior probabilities of :math:`p_{0}=0.2,0.4` have both *decreased
+  relative to their prior probabilities* because of their low likelihood for
+  the provided data series. In a similar manner, the posterior probabilities
+  of :math:`p_{0}=0.6, 0.8` have *increased relative to their prior
+  probabilities*.  This makes sense because of the prior and the data provided!
 
-Next, let's consider lots of data and many candidate probabilities:
+Finally, let's do a quick example with more candidate probabilities, 100 in this
+case, and a longer data series.
 
 .. code-block:: python
 
     # set probability of 0
     p0 = 0.23
-    # set rng seed to 42, the meaning of like..
+    # set rng seed to 42
     np.random.seed(42)
     # generate data
     data2 = np.random.choice([0,1], 500, p=[p0, 1.-p0])
     
     # prior
-    A2 = prior(np.arange(0.0, 1.01, 0.01))
+    A3 = prior(np.arange(0.0, 1.01, 0.01))
     
     # posterior
-    post2 = posterior(data2, A2)
-    post2.plot()
+    post3 = posterior(data2, A3)
+    post3.plot()
     
     
 
@@ -583,11 +676,22 @@ Next, let's consider lots of data and many candidate probabilities:
 
 
 
+Notice a few things:
+
+* The posterior has a nice smooth shape-- this looks like I treated the
+  probability as a continuous value (I'll do that in a future post).
+* Notice how small the likelihood values are (y-axis) for this amount of data.
+  Longer data series will cause :code:`matplotlib` to have trouble plotting.
+
+Well, that's it.  I hope you find this interesting.  As always, leave question,
+comments and corrections!
+
 .. _wikipedia logarithm identities: http://en.wikipedia.org/wiki/Logarithm#Logarithmic_identities
 .. _probability mass function: http://en.wikipedia.org/wiki/Probability_mass_function
 .. _Bernoulli Process: http://en.wikipedia.org/wiki/Bernoulli_process
 .. _Binomial Distribution: http://en.wikipedia.org/wiki/Binomial_distribution
 .. _Bernoulli Trial: http://en.wikipedia.org/wiki/Bernoulli_trial
+.. _github examples repository: https://github.com/cstrelioff/chrisstrelioffws-sandbox-examples
 
 .. author:: default
 .. categories:: none

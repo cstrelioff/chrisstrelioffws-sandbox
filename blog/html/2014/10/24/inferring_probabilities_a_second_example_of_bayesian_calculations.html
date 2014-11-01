@@ -61,13 +61,14 @@
         </div>
     <div class="section" id="inferring-probabilities-a-second-example-of-bayesian-calculations">
 <h1>Inferring probabilities, a second example of Bayesian calculations</h1>
-<p>In this post we will focus on an example of inferring probabilities given a
-short data sample.  We will start by tackling the theory of how
+<p>In this post I will focus on an example of inferring probabilities given a
+short data series.  I will start by tackling the theory of how
 to do the desired inference in a Bayesian way and will end by implementing
-the theory we develop in Python so that we can play around with the ideas.  To
-keep the post (hopefully) more accessible, we will only consider a small set of
-candidate probabilities. This restriction allows us to minimize the
-mathematical difficulty of the inference and still obtain really cool results.</p>
+the theory in Python so that we can play around with the ideas.  In an attempt
+to keep the post more accessible, I will only consider a small set of
+candidate probabilities. This restriction allows me to minimize the
+mathematical difficulty of the inference and still obtain really cool results,
+including nice plots of the <strong>prior</strong>, <strong>likelihood</strong> and <strong>posterior</strong>.</p>
 <div id="more"> </div><p>If the content below seems unfamiliar try reading previous posts that provide
 some of the needed background to understand the current post:</p>
 <ul class="simple">
@@ -95,9 +96,11 @@ possibilities <strong>and</strong> how certain are we of the result?</li>
 </ul>
 <div class="section" id="likelihood">
 <h2>Likelihood</h2>
-<p>Our starting point is to connect the data <span class="math">\(D\)</span> to our assumptions about
-the probability of a <span class="math">\(0\)</span> or a <span class="math">\(1\)</span>.  For example, the probability of
-<span class="math">\(D\)</span>, without being specific about the value of <span class="math">\(p_{0}\)</span>, can be
+<p>My starting point is to write down the probability of the data series <em>as if I
+knew the probability of a</em> <span class="math">\(0\)</span> <em>or a</em> <span class="math">\(1\)</span>. Of course I don&#8217;t know
+these probabilities&#8211; finding these probabilities is our goal&#8211; but trust me,
+this is leading somewhere useful. For example, the probability of our example
+data series, without being specific about the value of <span class="math">\(p_{0}\)</span>, can be
 written:</p>
 <div class="math">
 \[\begin{split}\begin{array}{ll}
@@ -107,26 +110,23 @@ P(D=0000110001 \vert p_{0} )
     &amp; \times &amp; p_{0} \times p_{0} \times p_{0} \\
     &amp; \times &amp; (1-p_{0})
 \end{array}\end{split}\]</div>
-<p>where we used <span class="math">\(p_{1} = 1 - p_{0}\)</span> to write the probability in terms of
-just <span class="math">\(p_{0}\)</span>. We can also collect terms and write the above probability
-as:</p>
+<p>where I&#8217;ve used <span class="math">\(p_{1} = 1 - p_{0}\)</span> to write the probability in terms of
+just <span class="math">\(p_{0}\)</span>. I can also collect terms and write the above probability
+in a more compact way:</p>
 <div class="math">
 \[P(D=0000110001 \vert p_{0} ) = p_{0}^{7} \times (1-p_{0})^{3}\]</div>
-<p><strong>Technical note:</strong> the form of the probabilities given above is called a
+<p><strong>Technical aside:</strong> the form of the probabilities given above is called a
 <a class="reference external" href="http://en.wikipedia.org/wiki/Bernoulli_process">Bernoulli Process</a> (as opposed to a <a class="reference external" href="http://en.wikipedia.org/wiki/Bernoulli_trial">Bernoulli Trial</a> or
-<a class="reference external" href="http://en.wikipedia.org/wiki/Binomial_distribution">Binomial Distribution</a>).</p>
-<p>Writing the probability of <span class="math">\(D\)</span> this way means that we assume the program
-is very simple&#8211; the probability of a <span class="math">\(0\)</span> is always <span class="math">\(p_{0}\)</span>&#8211; and
-does not depend on previous numbers or where in the data stream we are
-considering.</p>
-<p>We can write this probability in a very general way, without being specific
-about the data series <span class="math">\(D\)</span> or probability <span class="math">\(p_{0}\)</span>, as:</p>
+<a class="reference external" href="http://en.wikipedia.org/wiki/Binomial_distribution">Binomial Distribution</a>). I can also write this probability in a very general
+way, without being specific about the data series <span class="math">\(D\)</span> or probability
+<span class="math">\(p_{0}\)</span>, as:</p>
 <div class="math">
 \[P(D \vert p_{0}) = p_{0}^{n_{0}} \times (1 - p_{0})^{n_{1}}\]</div>
-<p>where <span class="math">\(n_{0}\)</span> and <span class="math">\(n_{1}\)</span> are the number of <span class="math">\(0\)</span> s and
-<span class="math">\(1\)</span> s in the data series we are considering. However, we can also be
-specific and calculate the likelihood values for the data and probabilities
-given above:</p>
+<p><span class="math">\(n_{0}\)</span> and <span class="math">\(n_{1}\)</span> denote the number of <span class="math">\(0\)</span> s and
+<span class="math">\(1\)</span> s in the data series I am considering.</p>
+<p>I can connect the general form to a specific example by substituting the
+relevant counts and probabilities.  I&#8217;ll start by calculating the likelihood
+values for the data series and probabilities given above:</p>
 <div class="math">
 \[\begin{split}\begin{array}{ll}
 P(D=0000110001 \vert p_{0}=0.2) &amp; = &amp; 0.2^{7} \times (1-0.2)^{3} \\
@@ -141,21 +141,21 @@ P(D=0000110001 \vert p_{0}=0.6) &amp; = &amp; 0.6^{7} \times (1-0.6)^{3} \\
 P(D=0000110001 \vert p_{0}=0.8) &amp; = &amp; 0.8^{7} \times (1-0.8)^{3} \\
                                 &amp; = &amp; 1.67772 \times 10^{-3} \\
 \end{array}\end{split}\]</div>
-<p>From the above, we see that the value that maximizes the likelihood is
-<span class="math">\(p_{0}=0.6\)</span>, slightly beating out <span class="math">\(p_{0}=0.8\)</span>.  A couple of things
+<p>Inspecting the results, I see that <span class="math">\(p_{0}=0.6\)</span> produces the highest
+likelihood, slightly beating out <span class="math">\(p_{0}=0.8\)</span>.  A couple of things
 to note here are:</p>
 <ul class="simple">
-<li>We have the maximum likelihood value (among the values considered). We could
+<li>I have the maximum likelihood value (among the values considered). I could
 provide the answer <span class="math">\(p_{0}=0.6\)</span> and be done.</li>
-<li>The sum of the probabilities (likelihoods) <strong>is not 1</strong> &#8211; this means that we
+<li>The sum of the probabilities (likelihoods) <strong>is not 1</strong> &#8211; this means that I
 do not have a properly normalized <a class="reference external" href="http://en.wikipedia.org/wiki/Probability_mass_function">probability mass function</a> (pmf) with
-respect to <span class="math">\(p_{0}\)</span>, the parameter that we are trying to infer. A goal
+respect to <span class="math">\(p_{0}\)</span>, the parameter that I am trying to infer. A goal
 of Bayesian inference is to provide a properly normalized pmf for
 <span class="math">\(p_{0}\)</span>, called the posterior.</li>
 </ul>
-<p>The ability to do the above calculations puts us in good shape to apply
+<p>The ability to do the above calculations puts me in good shape to apply
 Bayes&#8217; Theorem and obtain the desired posterior pmf. Before moving on to Bayes&#8217;
-Theorem we re-emphasize the general form of the <strong>likelihood</strong>:</p>
+Theorem I want to re-emphasize the general form of the <strong>likelihood</strong>:</p>
 <div class="math">
 \[P(D \vert p_{0}) = p_{0}^{n_{0}} \times (1 - p_{0})^{n_{1}}\]</div>
 <p>It will also be useful to have the <strong>log-likelihood</strong> written down:</p>
@@ -164,7 +164,7 @@ Theorem we re-emphasize the general form of the <strong>likelihood</strong>:</p>
 \ln P(D \vert p_{0}) &amp; = &amp; n_{0} \times \ln(p_{0}) \\
                      &amp; + &amp; n_{1} \times \ln(1 - p_{0})
 \end{array}\end{split}\]</div>
-<p>because this form adds to the numerical stability when we create some Python
+<p>because this form adds to the numerical stability when I create some Python
 code below. If you are rusty with logarithms, check out
 <a class="reference external" href="http://en.wikipedia.org/wiki/Logarithm#Logarithmic_identities">wikipedia logarithm identities</a> for examples of how to get from the
 likelihood to the log-likelihood. To be clear, I am using natural (base-e)
@@ -172,11 +172,11 @@ logarithms, that is <span class="math">\(\log_{e}(x) = \ln(x)\)</span>.</p>
 </div>
 <div class="section" id="prior">
 <h2>Prior</h2>
-<p>We&#8217;ve already decided on part of the prior&#8211; we&#8217;ve done this by choosing
-<span class="math">\(p_{0} \in \{ 0.2, 0.4, 0.6, 0.8 \}\)</span> as the set of probabilities that we
+<p>I&#8217;ve already decided on part of the prior&#8211; I&#8217;ve done this by choosing
+<span class="math">\(p_{0} \in \{ 0.2, 0.4, 0.6, 0.8 \}\)</span> as the set of probabilities that I
 will consider.  All that is left is to assign prior probabilities to each
-candidate <span class="math">\(p_{0}\)</span> so that we can start with a properly normalized prior
-pmf.  Let&#8217;s say that we have no reason to prefer any of the candidates and
+candidate <span class="math">\(p_{0}\)</span> so that I can start with a properly normalized prior
+pmf.  Let&#8217;s say that I have no reason to prefer any of the candidates and
 make them equally probable, a priori:</p>
 <div class="math">
 \[\begin{split}\begin{array}{ll}
@@ -185,19 +185,19 @@ P(p_{0}=0.4 \vert A1) &amp; =  &amp; 0.25 \\
 P(p_{0}=0.6 \vert A1) &amp; =  &amp; 0.25 \\
 P(p_{0}=0.8 \vert A1) &amp; =  &amp; 0.25 \\
 \end{array}\end{split}\]</div>
-<p>where use <span class="math">\(A1\)</span> to denote the assumptions that we&#8217;ve made.  The above
-information makes up our <strong>prior</strong> pmf.</p>
+<p>where use <span class="math">\(A1\)</span> to denote the assumptions that I&#8217;ve made.  The above
+information makes up my <strong>prior</strong> pmf.</p>
 </div>
 <div class="section" id="bayes-theorem-and-the-posterior">
 <h2>Bayes&#8217; Theorem and the Posterior</h2>
-<p>Next we employ the <strong>likelihood</strong> and <strong>prior</strong> pmf defined above to make an
-inference about the underlying value of <span class="math">\(p_{0}\)</span>. That is, we will use
+<p>Next I employ the <strong>likelihood</strong> and <strong>prior</strong> pmf defined above to make an
+inference about the underlying value of <span class="math">\(p_{0}\)</span>. That is, I will use
 Bayes&#8217; Theorem to calculate the <strong>posterior</strong> pmf given the likelihood and
 prior. The posterior has the form</p>
 <div class="math">
 \[P(p_{0} \vert D, A1)\]</div>
 <p>In words, this is <em>the probability of</em> <span class="math">\(p_{0}\)</span> <em>given data series</em>
-<span class="math">\(D\)</span> <em>and assumptions</em> <span class="math">\(A1\)</span>&#8211; hey, that&#8217;s just what we want! We can
+<span class="math">\(D\)</span> <em>and assumptions</em> <span class="math">\(A1\)</span>&#8211; hey, that&#8217;s just what I want! I can
 calculate the posterior using Bayes&#8217; Theorem:</p>
 <div class="math">
 \[\color{blue}{P(p_{0} \vert D, A_{1})}
@@ -211,20 +211,20 @@ calculate the posterior using Bayes&#8217; Theorem:</p>
                    }\]</div>
 <p>where the prior <span class="math">\(\color{red}{P(p_{0} \vert A_{1})}\)</span> is red, the
 likelihood <span class="math">\(P(D\vert p_{0})\)</span> is black, and the posterior
-<span class="math">\(\color{blue}{P(p_{0} \vert D, A_{1})}\)</span> is blue.  This allows our
+<span class="math">\(\color{blue}{P(p_{0} \vert D, A_{1})}\)</span> is blue.  This allows my
 information about <span class="math">\(p_{0}\)</span> to updated from <strong>assumptions</strong> (<span class="math">\(A_{1}\)</span>)
 to <strong>assumptions + data</strong> (<span class="math">\(D, A_{1}\)</span>):</p>
 <div class="math">
 \[\color{red}{P(p_{0} \vert A_{1})}
 \rightarrow
 \color{blue}{P(p_{0} \vert D, A_{1})}\]</div>
-<p>We simplify the look of Bayes&#8217; Theorem by defining the <strong>marginal likelihood</strong>,
-or <strong>evidence</strong>:</p>
+<p>I can simplify the look of Bayes&#8217; Theorem by defining the <strong>marginal
+likelihood</strong>, or <strong>evidence</strong>:</p>
 <div class="math">
 \[P(D \vert A_{1}) = \sum_{ \hat{p_{0}} }
                    P(D \vert p_{0} = \hat{p_{0}})
                    \color{red}{P(p_{0} = \hat{p_{0}} \vert A_{1})}\]</div>
-<p>This lets us write Bayes&#8217; Theorem in the following form:</p>
+<p>This lets me write Bayes&#8217; Theorem in the following form:</p>
 <div class="math">
 \[\color{blue}{P(p_{0} \vert D, A_{1})}
                    =  \frac{
@@ -234,9 +234,10 @@ or <strong>evidence</strong>:</p>
                    P(D \vert A_{1})
                    }\]</div>
 <p>The posterior should really be thought of as a set of equations, one for each
-value of <span class="math">\(p_{0}\)</span>, just like we had for the likelihood and the prior.</p>
-<p>Finally, for the theory, we finish off our example and calculate the posterior
-pmf for <span class="math">\(p_{0}\)</span>. Let&#8217;s start by calculating the evidence (we know all the
+candidate value of <span class="math">\(p_{0}\)</span>, just like we had for the likelihood and the
+prior.</p>
+<p>Finally, for the theory, I finish off our example and calculate the posterior
+pmf for <span class="math">\(p_{0}\)</span>. Let&#8217;s start by calculating the evidence (I know all the
 values for the likelihood and prior from above):</p>
 <div class="math">
 \[\begin{split}\begin{array}{ll}
@@ -262,7 +263,7 @@ P(D=0000110001 \vert A_{1})
 <p>So, the denominator in Bayes&#8217; Theorem is equal to <span class="math">\(9.57440e-04\)</span>.  Now,
 complete the posterior pmf calculation.</p>
 <ul class="simple">
-<li>First <span class="math">\(P(p_{0} = 0.2 \vert D=0000110001, A_{1})\)</span></li>
+<li>First, <span class="math">\(P(p_{0} = 0.2 \vert D=0000110001, A_{1})\)</span></li>
 </ul>
 <div class="math">
 \[\begin{split}\begin{array}{ll}
@@ -270,7 +271,7 @@ complete the posterior pmf calculation.</p>
     \frac{ P(D=0000110001 \vert p_{0} = 0.2) P(p_{0} = 0.2 \vert A_{1})
     }{ P(D=0000110001 \vert A_{1}) }  \\
     &amp; = &amp; \frac{6.55360e-06 \times 0.25}{9.57440e-04} \\
-    &amp; = &amp; 1928309182
+    &amp; = &amp; 1.78253e-03
 \end{array}\end{split}\]</div>
 <ul class="simple">
 <li>Second, <span class="math">\(P(p_{0} = 0.4 \vert D=0000110001, A_{1})\)</span></li>
@@ -280,28 +281,75 @@ complete the posterior pmf calculation.</p>
     &amp; = &amp;
     \frac{ P(D=0000110001 \vert p_{0} = 0.4) P(p_{0} = 0.4 \vert A_{1})
     }{ P(D=0000110001 \vert A_{1}) } \\
+    &amp; = &amp; \frac{3.53894e-04 \times 0.25}{9.57440e-04} \\
+    &amp; = &amp; 9.62567e-02
+\end{array}\end{split}\]</div>
+<ul class="simple">
+<li>Third, <span class="math">\(P(p_{0} = 0.6 \vert D=0000110001, A_{1})\)</span></li>
+</ul>
+<div class="math">
+\[\begin{split}\begin{array}{ll}
     &amp; = &amp;
     \frac{ P(D=0000110001 \vert p_{0} = 0.6) P(p_{0} = 0.6 \vert A_{1})
     }{ P(D=0000110001 \vert A_{1}) } \\
+    &amp; = &amp; \frac{1.79159e-03 \times 0.25}{9.57440e-04} \\
+    &amp; = &amp; 4.87299e-01
+\end{array}\end{split}\]</div>
+<ul class="simple">
+<li>Finally, <span class="math">\(P(p_{0} = 0.8 \vert D=0000110001, A_{1})\)</span></li>
+</ul>
+<div class="math">
+\[\begin{split}\begin{array}{ll}
     &amp; = &amp;
     \frac{ P(D=0000110001 \vert p_{0} = 0.8) P(p_{0} = 0.8 \vert A_{1})
     }{ P(D=0000110001 \vert A_{1}) } \\
-    &amp; = &amp; 6.55360e-06 \times 0.25 \\
-    &amp; + &amp; 3.53894e-04 \times 0.25 \\
-    &amp; + &amp; 1.79159e-03 \times 0.25 \\
-    &amp; + &amp; 1.67772e-03 \times 0.25 \\
-    &amp; = &amp; 9.57440e-04
+    &amp; = &amp; \frac{1.67772e-03 \times 0.25}{9.57440e-04} \\
+    &amp; = &amp; 4.56328e-01
 \end{array}\end{split}\]</div>
-<p>0.2 6.55360e-06 1.63840e-06
-0.4 3.53894e-04 8.84736e-05
-0.6 1.79159e-03 4.47898e-04
-0.8 1.67772e-03 4.19430e-04
-&gt;&gt;&gt; print &#8220;{:1.5e}&#8221;.format(total)
-9.57440e-04</p>
+</div>
+<div class="section" id="summing-up">
+<h2>Summing Up</h2>
+<p>Before moving on to the Python code, let&#8217;s go over the results a bit. Using the
+data series and Bayes&#8217; Theorem I&#8217;ve gone from the <strong>prior</strong> pmf</p>
+<div class="math">
+\[\begin{split}\begin{array}{ll}
+P(p_{0}=0.2 \vert A1) &amp; =  &amp; 0.25 \\
+P(p_{0}=0.4 \vert A1) &amp; =  &amp; 0.25 \\
+P(p_{0}=0.6 \vert A1) &amp; =  &amp; 0.25 \\
+P(p_{0}=0.8 \vert A1) &amp; =  &amp; 0.25 \\
+\end{array}\end{split}\]</div>
+<p>to the <strong>posterior</strong> pmf (I&#8217;ll shorten the data series in the notation below)</p>
+<div class="math">
+\[\begin{split}\begin{array}{ll}
+P(p_{0}=0.2 \vert D=000\ldots, A1) &amp; =  &amp; 1.78253e-03 \\
+P(p_{0}=0.4 \vert D=000\ldots, A1) &amp; =  &amp; 9.62567e-02 \\
+P(p_{0}=0.6 \vert D=000\ldots, A1) &amp; =  &amp; 4.87299e-01 \\
+P(p_{0}=0.8 \vert D=000\ldots, A1) &amp; =  &amp; 4.56328e-01
+\end{array}\end{split}\]</div>
+<p>In a Bayesian setting, this posterior pmf is the answer to our inference of
+<span class="math">\(p_{0}\)</span>, reflecting our knowledge of the parameter given the assumptions
+and data.  Often people want to report a single number but this posterior
+reflects a fair amount of uncertainty.  Some options are:</p>
+<ul class="simple">
+<li>Report the <em>maximum a posteriori</em> value of <span class="math">\(p_{0}\)</span>&#8211; in this case
+<span class="math">\(0.6\)</span>.</li>
+<li>Report the <em>posterior mean</em>, the <em>posterior median</em> &#8211; using the posterior
+pmf to calculate.</li>
+<li>Include a posterior variance or credible interval to describe uncertainty in
+the estimate.</li>
+</ul>
+<p>However the inference is reported, communicating the uncertainty is part of the
+job.  In practice, plots of the posterior really help with the task.  So, let&#8217;s
+leave theory and implement these ideas in Python.</p>
 </div>
 <div class="section" id="writing-the-inference-code-in-python">
 <h2>Writing the inference code in Python</h2>
-<p>First, some imports</p>
+<p>This code will be available as a single Python script, <span class="code docutils literal"><span class="pre">bayes_ex01.py</span></span>,
+at a <a class="reference external" href="https://github.com/cstrelioff/chrisstrelioffws-sandbox-examples">github examples repository</a> I&#8217;ve setup to host such things.  You should
+grab it and try to following along.</p>
+<p>First, the code has some imports &#8211; just <span class="code docutils literal"><span class="pre">numpy</span></span> and <span class="code docutils literal"><span class="pre">matplotlib</span></span>.
+I will also use a nice <span class="code docutils literal"><span class="pre">ggplot</span></span> style to make the plots look really
+nice.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
@@ -314,7 +362,11 @@ complete the posterior pmf calculation.</p>
     <span class="k">pass</span>
 </pre></div>
 </div>
-<p>Next, a class for inferring probabilities:</p>
+<p>First, I make a class to deal with the <strong>likelihood</strong>.  The class takes the
+data series and provides an interface for computing the likelihood for a given
+probability <span class="math">\(p_{0}\)</span>.  You should be able to find the <strong>log-likelihood</strong>
+equation in the <span class="code docutils literal"><span class="pre">_process_probabilities()</span></span> method (with some care taken
+for edge cases).</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">likelihood</span><span class="p">:</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Likelihood for binary data.&quot;&quot;&quot;</span>
@@ -336,7 +388,7 @@ complete the posterior pmf calculation.</p>
         <span class="n">n1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">counts</span><span class="p">[</span><span class="s">&#39;1&#39;</span><span class="p">]</span>
 
         <span class="k">if</span> <span class="n">p0</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">p0</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="c"># typical casee</span>
+            <span class="c"># typical case</span>
             <span class="n">logpr_data</span> <span class="o">=</span> <span class="n">n0</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">p0</span><span class="p">)</span> <span class="o">+</span> \
                          <span class="n">n1</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mf">1.</span><span class="o">-</span><span class="n">p0</span><span class="p">)</span>
             <span class="n">pr_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">logpr_data</span><span class="p">)</span>
@@ -349,7 +401,7 @@ complete the posterior pmf calculation.</p>
             <span class="n">logpr_data</span> <span class="o">=</span> <span class="n">n1</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mf">1.</span><span class="o">-</span><span class="n">p0</span><span class="p">)</span>
             <span class="n">pr_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">logpr_data</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">p0</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">n1</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="c"># p0 can&#39;t be 1 in n1 is not 0</span>
+            <span class="c"># p0 can&#39;t be 1 if n1 is not 0</span>
             <span class="n">logpr_data</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span>
             <span class="n">pr_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">logpr_data</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">p0</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">n1</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -372,7 +424,10 @@ complete the posterior pmf calculation.</p>
         <span class="k">return</span> <span class="n">logpr_data</span>
 </pre></div>
 </div>
-<p>Construct the prior class</p>
+<p>Next I create a class for the <strong>prior</strong> pmf.  Given a list of candidate values
+for <span class="math">\(p_{0}\)</span>, this creates a uniform prior by default.  If something
+else is desired, a dictionary of prior probabilities can be passed to override
+this default.  I&#8217;ll do an example below.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">prior</span><span class="p">:</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p_list</span><span class="p">,</span> <span class="n">p_probs</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;The prior.</span>
@@ -382,7 +437,10 @@ complete the posterior pmf calculation.</p>
 <span class="sd">                 default is uniform</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">p_probs</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">log_pdict</span> <span class="o">=</span> <span class="p">{</span><span class="n">p</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">p_probs</span><span class="p">[</span><span class="n">p</span><span class="p">])</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">p_list</span><span class="p">}</span>
+            <span class="c"># make sure prior is normalized</span>
+            <span class="n">norm</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">p_probs</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log_pdict</span> <span class="o">=</span> <span class="p">{</span><span class="n">p</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">p_probs</span><span class="p">[</span><span class="n">p</span><span class="p">])</span> <span class="o">-</span> \
+                                <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">norm</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">p_list</span><span class="p">}</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">p_list</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">log_pdict</span> <span class="o">=</span> <span class="p">{</span><span class="n">p</span><span class="p">:</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">p_list</span><span class="p">}</span>
@@ -405,7 +463,13 @@ complete the posterior pmf calculation.</p>
             <span class="k">return</span> <span class="mf">0.0</span>
 </pre></div>
 </div>
-<p>Construct the posterior class:</p>
+<p>Finally I construct a class for the <strong>posterior</strong> that takes the data series
+and an instance of the <span class="code docutils literal"><span class="pre">prior</span></span> class and constructs the posterior pmf.  A
+<span class="code docutils literal"><span class="pre">plot()</span></span> method provides a really nice visualization of the inference,
+including plots of the <strong>prior</strong>, <strong>likelihood</strong> and <strong>posterior</strong>.</p>
+<p>Notice that all of the calculations for the posterior are done using
+log-probabilities.  This is absolutely necessary for numerical accuracy because
+the probabilities can vary greatly and some are extremely small.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">posterior</span><span class="p">:</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">prior</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;The posterior.</span>
@@ -421,8 +485,6 @@ complete the posterior pmf calculation.</p>
     <span class="k">def</span> <span class="nf">_process_posterior</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Process the posterior using passed data and prior.&quot;&quot;&quot;</span>
 
-        <span class="c"># get all numerators in Bayes&#39; Theorem</span>
-        <span class="c"># - also keep track of denominator = sum of all numerators</span>
         <span class="n">numerators</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">denominator</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span>
         <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="p">:</span>
@@ -432,9 +494,10 @@ complete the posterior pmf calculation.</p>
             <span class="k">if</span> <span class="n">numerators</span><span class="p">[</span><span class="n">p</span><span class="p">]</span> <span class="o">!=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">:</span>
                 <span class="c"># np.logaddexp(-np.inf, -np.inf) issues warning</span>
                 <span class="c"># skip-- this is adding 0 + 0</span>
-                <span class="n">denominator</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logaddexp</span><span class="p">(</span><span class="n">denominator</span><span class="p">,</span> <span class="n">numerators</span><span class="p">[</span><span class="n">p</span><span class="p">])</span>
+                <span class="n">denominator</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logaddexp</span><span class="p">(</span><span class="n">denominator</span><span class="p">,</span>
+                                           <span class="n">numerators</span><span class="p">[</span><span class="n">p</span><span class="p">])</span>
 
-        <span class="c"># save denominator in Bayes&#39; Theorm</span>
+        <span class="c"># save denominator in Bayes&#39; Theorem</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log_marg_likelihood</span> <span class="o">=</span> <span class="n">denominator</span>
 
         <span class="c"># calculate posterior</span>
@@ -491,13 +554,16 @@ complete the posterior pmf calculation.</p>
         <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>Let&#8217;s test out the code... First, replicate the example we did in detail above:</p>
+</div>
+<div class="section" id="examples">
+<h2>Examples</h2>
+<p>Let&#8217;s test out the code. First, I will replicate the example we did in the
+theory example to make sure all is well:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="c"># data</span>
 <span class="n">data1</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
 
 <span class="c"># prior</span>
-<span class="c">#A1 = prior([0.2, 0.4, 0.6, 0.8])</span>
-<span class="n">A1</span> <span class="o">=</span> <span class="n">prior</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">1.1</span><span class="p">,</span><span class="mf">0.1</span><span class="p">))</span>
+<span class="n">A1</span> <span class="o">=</span> <span class="n">prior</span><span class="p">([</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">])</span>
 
 <span class="c"># posterior</span>
 <span class="n">post1</span> <span class="o">=</span> <span class="n">posterior</span><span class="p">(</span><span class="n">data1</span><span class="p">,</span> <span class="n">A1</span><span class="p">)</span>
@@ -505,37 +571,69 @@ complete the posterior pmf calculation.</p>
 </pre></div>
 </div>
 <a class="reference internal image-reference" href="../../../_images/inferring_probabilities_a_second_example_of_bayesian_calculations_figure5_1.png"><img alt="../../../_images/inferring_probabilities_a_second_example_of_bayesian_calculations_figure5_1.png" src="../../../_images/inferring_probabilities_a_second_example_of_bayesian_calculations_figure5_1.png" style="width: 15cm;" /></a>
-<p>We can also analyze the data above using a different, bad prior &#8211; maybe a
-friend that is helping us is an expert and suggest that the probablity is more
-likely to be <span class="math">\(p_{0}=0.6\)</span> than the other candidate values. Using our Python
-code it is easy to see the effect of this prior:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="c"># prior</span>
-<span class="n">A1_friend</span> <span class="o">=</span> <span class="n">prior</span><span class="p">([</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">],</span>
-                  <span class="p">{</span><span class="mf">0.2</span><span class="p">:</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">:</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">:</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">:</span><span class="mf">0.2</span><span class="p">})</span>
+<p>Notice how the posterior pmf nicely shows that both <span class="math">\(p_{0}=0.6\)</span> and
+<span class="math">\(p_{0}=0.8\)</span> have substantial probability&#8211; there is uncertainty here!
+That makes sense because we only have a data series of length 10 and the are
+only four candidate probabilities.  Also, notice:</p>
+<ul class="simple">
+<li>The sums of all stems in the prior and the posterior sum to 1, reflecting
+that these are proper pmfs.</li>
+<li>The likelihood does not have this property &#8211; look at the scale on the
+y-axis.  This gets even worse when we consider a longer data series below.</li>
+<li>Because the prior was uniform, the posterior shape looks just like the
+likelihood.</li>
+</ul>
+<p>Next, let&#8217;s consider setting a strong prior &#8211; preferring one value of
+<span class="math">\(p_{0}\)</span>.  Using our Python code it is easy to see the effect of this
+prior on the resulting posterior:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># prior -- will be normalized by class</span>
+<span class="n">A2</span> <span class="o">=</span> <span class="n">prior</span><span class="p">([</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">],</span>
+           <span class="p">{</span><span class="mf">0.2</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">:</span><span class="mi">20</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">:</span><span class="mi">1</span><span class="p">})</span>
 
 <span class="c"># posterior</span>
-<span class="n">post1_friend</span> <span class="o">=</span> <span class="n">posterior</span><span class="p">(</span><span class="n">data1</span><span class="p">,</span> <span class="n">A1_friend</span><span class="p">)</span>
-<span class="n">post1_friend</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+<span class="n">post2</span> <span class="o">=</span> <span class="n">posterior</span><span class="p">(</span><span class="n">data1</span><span class="p">,</span> <span class="n">A2</span><span class="p">)</span>
+<span class="n">post2</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
 </pre></div>
 </div>
 <a class="reference internal image-reference" href="../../../_images/inferring_probabilities_a_second_example_of_bayesian_calculations_figure6_1.png"><img alt="../../../_images/inferring_probabilities_a_second_example_of_bayesian_calculations_figure6_1.png" src="../../../_images/inferring_probabilities_a_second_example_of_bayesian_calculations_figure6_1.png" style="width: 15cm;" /></a>
-<p>Next, let&#8217;s consider lots of data and many candidate probabilities:</p>
+<p>Notice the following things:</p>
+<ul class="simple">
+<li>The posterior and the likelihood no longer have the same shape.  The strong
+prior affects of inference &#8211; we should have a really good reason to use this
+prior!</li>
+<li>The posterior probabilities of <span class="math">\(p_{0}=0.2,0.4\)</span> have both <em>decreased
+relative to their prior probabilities</em> because of their low likelihood for
+the provided data series. In a similar manner, the posterior probabilities
+of <span class="math">\(p_{0}=0.6, 0.8\)</span> have <em>increased relative to their prior
+probabilities</em>.  This makes sense because of the prior and the data provided!</li>
+</ul>
+<p>Finally, let&#8217;s do a quick example with more candidate probabilities, 100 in this
+case, and a longer data series.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="c"># set probability of 0</span>
 <span class="n">p0</span> <span class="o">=</span> <span class="mf">0.23</span>
-<span class="c"># set rng seed to 42, the meaning of like..</span>
+<span class="c"># set rng seed to 42</span>
 <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
 <span class="c"># generate data</span>
 <span class="n">data2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="mi">500</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="p">[</span><span class="n">p0</span><span class="p">,</span> <span class="mf">1.</span><span class="o">-</span><span class="n">p0</span><span class="p">])</span>
 
 <span class="c"># prior</span>
-<span class="n">A2</span> <span class="o">=</span> <span class="n">prior</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.01</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">))</span>
+<span class="n">A3</span> <span class="o">=</span> <span class="n">prior</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.01</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">))</span>
 
 <span class="c"># posterior</span>
-<span class="n">post2</span> <span class="o">=</span> <span class="n">posterior</span><span class="p">(</span><span class="n">data2</span><span class="p">,</span> <span class="n">A2</span><span class="p">)</span>
-<span class="n">post2</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+<span class="n">post3</span> <span class="o">=</span> <span class="n">posterior</span><span class="p">(</span><span class="n">data2</span><span class="p">,</span> <span class="n">A3</span><span class="p">)</span>
+<span class="n">post3</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
 </pre></div>
 </div>
 <a class="reference internal image-reference" href="../../../_images/inferring_probabilities_a_second_example_of_bayesian_calculations_figure7_1.png"><img alt="../../../_images/inferring_probabilities_a_second_example_of_bayesian_calculations_figure7_1.png" src="../../../_images/inferring_probabilities_a_second_example_of_bayesian_calculations_figure7_1.png" style="width: 15cm;" /></a>
+<p>Notice a few things:</p>
+<ul class="simple">
+<li>The posterior has a nice smooth shape&#8211; this looks like I treated the
+probability as a continuous value (I&#8217;ll do that in a future post).</li>
+<li>Notice how small the likelihood values are (y-axis) for this amount of data.
+Longer data series will cause <span class="code docutils literal"><span class="pre">matplotlib</span></span> to have trouble plotting.</li>
+</ul>
+<p>Well, that&#8217;s it.  I hope you find this interesting.  As always, leave question,
+comments and corrections!</p>
 </div>
 </div>
 
