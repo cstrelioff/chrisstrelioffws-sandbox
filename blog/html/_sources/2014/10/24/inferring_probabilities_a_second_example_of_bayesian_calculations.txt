@@ -344,7 +344,7 @@ leave theory and implement these ideas in Python.
 Writing the inference code in Python
 ------------------------------------
 
-This code will be available as a single Python script, :code:`bayes_ex01.py`,
+This code will be available as a single Python script, :code:`ex001_bayes.py`,
 at a `github examples repository`_ I've setup to host such things.  You should
 grab it and try to following along.
 
@@ -683,8 +683,8 @@ Notice a few things:
 * Notice how small the likelihood values are (y-axis) for this amount of data.
   Longer data series will cause :code:`matplotlib` to have trouble plotting.
 
-Well, that's it.  I hope you find this interesting.  As always, leave question,
-comments and corrections!
+Well, that's it.  I hope you find this interesting.  As always, leave
+questions, comments and corrections!
 
 .. _wikipedia logarithm identities: http://en.wikipedia.org/wiki/Logarithm#Logarithmic_identities
 .. _probability mass function: http://en.wikipedia.org/wiki/Probability_mass_function
