@@ -1,3 +1,5 @@
+.. _bayes second example:
+
 Inferring probabilities, a second example of Bayesian calculations
 ==================================================================
 
