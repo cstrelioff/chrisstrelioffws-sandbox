@@ -7,51 +7,218 @@ In this post I will expand on a previous example of inferring probabilities
 from a data series: :ref:`bayes second example`. In particular, instead of
 considering a discrete set of candidate probabilities, I'll consider all
 (continuous) values between :math:`0` and :math:`1`.  This means our prior (and
-posterior) will now be a *probability density function* (pdf) instead of a
-probability mass function (pmf).  More specifically, I'll use the
+posterior) will now be a `probability density function`_ (pdf) instead of a
+`probability mass function`_ (pmf).  More specifically, I'll use the
 `Beta Distribution`_ for this example-- let's get started.
 
 .. more::
 
-Previous Bayesian posts (in order from starting point to more advanced)
-include:
+In the post: :ref:`bayes second example` I considered inference of
+:math:`p_{0}`, the probability for a zero, from a data series:
+
+.. math::
+
+    D = 0000110001
+
+I'll tackle *the same question in this post* using a different prior for
+:math:`p_{0}`, one that allows for continuous values between :math:`0` and
+:math:`1` instead of a discrete set of candidates.  This makes the math a bit
+more difficult, requiring integrals instead of sums, but the basic ideas are
+the same.
+
+This is one in a series of posts on Bayesian methods, starting from the basics
+and increasing in difficulty:
 
 * :ref:`joint, conditional and marginal probabilities`
 * :ref:`bayes medical tests`
 * :ref:`bayes second example`
 
+If the following is unfamiliar or difficult try consulting one or more of the
+above posts for some more basic, introductory material.
+
+Likelihood
+----------
+
+The starting point for our inference problem is the *likelihood* -- the
+probability of the observed data series, written like I know the value of
+:math:`p_{0}` (see the :ref:`bayes second example` post for more details, I'll
+be brief here):
+
+.. math::
+
+    P(D=0000110001 \vert p_{0} ) = p_{0}^{7} \times (1-p_{0})^{3}
+
+To be clear, we could plug in :math:`p_{0}=0.6`, and find the probability of
+the specified data series given that value for the unknown probability. A more
+general form for the likelihood, not being specific about the data series
+considered, is
+
+.. math::
+
+    P(D \vert p_{0} ) = p_{0}^{n{0}} \times (1-p_{0})^{n_{1}}
+
+where :math:`n_{0}` is the number of zeros and :math:`n_{1}` is the number of
+ones in whatever data series :math:`D` is considered.
 
 Prior -- The Beta Distribution
 ------------------------------
 
-Imports:
+The new material, relative to the previous post on this topic, starts here. We
+use the `Beta Distribution`_ to represent our prior assumptions.  The
+mathematical form is:
 
-.. code-block:: python
+.. math::
 
-    from __future__ import division, print_function
-    import numpy as np
-    import matplotlib.pyplot as plt
-    from scipy.stats import beta
-    
-    # use matplotlib style sheet
-    try:
-        plt.style.use('ggplot')
-    except:
-        # version of matplotlib might not be recent
-        pass
-    
-    # font attributes
-    font = {'family' : 'serif',
-            'color'  : 'gray',
-            'weight' : 'normal',
-            'size'   : 16,
-            }
-    
-    
+    P(p_{0} \vert \alpha_{0}, \alpha_{1} )  =  
+      \frac{
+        \Gamma(\alpha_{0} + \alpha_{1})
+        }{
+        \Gamma(\alpha_{0}) \Gamma(\alpha_{1})
+        } 
+    p_{0}^{\alpha_{0}-1} (1-p_{0})^{\alpha_{1}-1}
+
+where :math:`\alpha_{0}` and :math:`\alpha_{1}` are hyper-parameters that we
+have to set to reflect our prior assumptions/information about the values of
+:math:`p_{0}`.  Why would use such a PDF?  Here are some reasons:
+
+* **The pdf is normalized.** This means if we integrate :math:`p_{0}` from
+  :math:`0` to :math:`1` we get one:
+
+.. math::
+
+    \int_{0}^{1} dp_{0} P(p_{0} \vert \alpha_{0}, \alpha{1}) = 1
+
+this true because
+
+.. math::
+
+    \int_{0}^{1} dp_{0} p_{0}^{\alpha_{0}-1} (1-p_{0})^{\alpha_{1}-1}
+    =
+    \frac{\Gamma(\alpha_{0}) \Gamma(\alpha_{1})
+         }{\Gamma(\alpha_{0} + \alpha_{1})} 
+
+* **Prior assumptions/information can be reflected by setting
+  hyper-parameters**.  The hyper-parameters :math:`\alpha_{0}` and
+  :math:`\alpha_{1}` affect the shape of the pdf, enabling a flexible encoding
+  of prior information.
+
+  For example, no (a priori) preferred values of :math:`p_{0}` can be refected
+  by using :math:`\alpha_{0}=1`, :math:`\alpha_{1}=1`. This pdf looks like:
 
 
 
-Plot affect of hyper-parameters on prior pdf:
+
+
+
+.. image:: figs/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations_figure2_1.*
+   :width: 15 cm
+
+
+
+whereas :math:`\alpha_{0}=5`, :math:`\alpha_{1}=5` looks like
+
+
+.. image:: figs/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations_figure3_1.*
+   :width: 15 cm
+
+
+
+and :math:`\alpha_{0}=5`, :math:`\alpha_{1}=1` looks like
+
+
+.. image:: figs/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations_figure4_1.*
+   :width: 15 cm
+
+
+
+* **The Beta Distribution is the conjugate prior for this problem.** This means
+  that the posterior will have the same mathematical form as the prior with
+  updated hyper-parameters.  This mathematical 'resonance' is really nice and
+  let's us do full Bayesian inference without MCMC; everything is analytical.
+
+Some final notes before moving on to Bayes' Theorem and the posterior for this
+problem:
+
+* I've used different notation for the Beta: :math:`(\alpha_{0}, \alpha_{1})`
+  instead of the usual :math:`(\alpha, \beta)`.  As I'll discuss further below,
+  this notation emphasize makes it easier to compare the hyper-parameters with
+  *fake counts* and relate the values with data :math:`n_{0}` and :math:`n_{1}`.
+
+* It useful to use the *mean* as a summary of the prior settings. For the
+  Beta pdf, the mean is
+
+.. math::
+
+    \begin{array}{ll}
+      \mathbf{E}_{prior}[p_{0}] & = & \int_{0}^{1} \, dp_{0} \, p_{0} \,
+                                      P(p_{0} \vert \alpha_{0}, \alpha_{1}) \\
+      & = & \frac{\alpha_{0}}{\alpha_{0}+\alpha_{1}}
+    \end{array}
+
+Many other properties (higher moments, variance, etc) can be calculated-- see
+`Beta Distribution`_ for more.
+
+Bayes' Theorem and the Posterior
+--------------------------------
+
+Our final goal is the posterior probability density function, combining the
+likelihood and the prior to make an updated (by data) reflection of our
+knowledge of :math:`p_{0}` after considering data. The posterior pdf has the
+form (in this case):
+
+.. math::
+
+    P(p_{0} \vert D, \alpha_{0}, \alpha_{1})
+
+In words, this is *the probability density for* :math:`p_{0}` *given data
+series* :math:`D` *and prior assumptions, reflected by the Beta pdf with
+hyper-parameters* :math:`(\alpha_{0}, \alpha_{1})`.
+
+In this setting Bayes' Theorem takes the form:
+
+.. math::
+
+    \color{blue}{P(p_{0} \vert D, \alpha_{0}, \alpha_{1})}
+    = \frac{P(D \vert p_{0}) 
+      \color{red}{P(p_{0} \vert \alpha_{0}, \alpha_{1})}
+      }{
+      \int_{0}^{1} \, d\hat{p}_{0} \,
+      P(D \vert \hat{p}_{0})
+      \color{red}{P(\hat{p}_{0} \vert \alpha_{0}, \alpha_{1})}
+      }
+
+where the posterior is blue, the likelihood is black, and the prior is red.
+Notice that the normalizing *marginal likelihood* or *evidence* (denominator in
+the above equation) is now an integral.  This is the price of using continuous
+values for :math:`p_{0}`-- you should compare this with Bayes' Theorem in the
+:ref:`bayes second example` post.
+
+Amazingly, the integral is do-able:
+
+.. math::
+
+    \begin{array}{ll}
+    P(D \vert \alpha_{0}, \alpha_{1})
+    & = &
+      \int_{0}^{1} \, d\hat{p}_{0} \,
+      P(D \vert \hat{p}_{0})
+      P(\hat{p}_{0} \vert \alpha_{0}, \alpha_{1}) \\
+    & & \\
+    & = &  \int_{0}^{1} \, d\hat{p}_{0} \,
+           \hat{p}_{0}^{n_{0}} \, (1-\hat{p}_{0})^{n_{1}} \\
+    & \times &
+      \frac{ \Gamma(\alpha_{0} + \alpha_{1})
+        }{
+        \Gamma(\alpha_{0}) \Gamma(\alpha_{1}) } 
+        \hat{p}_{0}^{\alpha_{0}-1} (1-\hat{p}_{0})^{\alpha_{1}-1} \\
+    & &
+    \end{array}
+
+Examples
+--------
+
+Let's do some Python.
+
 
 .. code-block:: python
 
@@ -59,26 +226,33 @@ Plot affect of hyper-parameters on prior pdf:
     x = np.arange(0., 1., 0.01)
     
     # four different parameter settings
-    ax.plot(x, beta.pdf(x, 1, 1), 'k-', label=r'$\alpha_0=1, \alpha_1=1$')
-    ax.plot(x, beta.pdf(x, 1./2, 1./2), 'r-', label=r'$\alpha_0=1/2, \alpha_1=1
-    /2$')
-    ax.plot(x, beta.pdf(x, 5, 5), 'b-', label=r'$\alpha_0=5, \alpha_1=5$')
-    ax.plot(x, beta.pdf(x, 8, 2), 'g-', label='8,2')
-    ax.set_xlabel(r'Prob of Zero: $p_0$', fontdict=font)
-    ax.set_ylabel(r'$\rm{Beta}(p_0\vert \alpha_0, \alpha_1)$', fontdict=font)
+    ax.plot(x, beta.pdf(x, 1, 1), 'k-',
+            label=r'$\alpha_0=1, \alpha_1=1$')
+    ax.plot(x, beta.pdf(x, 1./2, 1./2), 'r-',
+            label=r'$\alpha_0=1/2, \alpha_1=1/2$')
+    ax.plot(x, beta.pdf(x, 5, 5), 'b-',
+            label=r'$\alpha_0=5, \alpha_1=5$')
+    ax.plot(x, beta.pdf(x, 8, 2), 'g-',
+            label=r'$\alpha_{0}=8, \alpha_{1}=2$')
+    ax.set_xlabel('Probability of Zero')
+    ax.set_ylabel('Beta PDF')
     
     # add legend and show
     ax.legend(loc='best', frameon=False, fontsize='large')
     plt.show()
     
-    
 
-.. image:: figs/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations_figure2_1.*
+.. image:: figs/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations_figure5_1.*
    :width: 15 cm
 
 
 
+
 .. _Beta Distribution: http://en.wikipedia.org/wiki/Beta_distribution
+.. _probability mass function: http://en.wikipedia.org/wiki/Probability_mass_function
+.. _probability density function: http://en.wikipedia.org/wiki/Probability_density_function
+.. _Bernoulli Process: http://en.wikipedia.org/wiki/Bernoulli_process
+.. _github examples repository: https://github.com/cstrelioff/chrisstrelioffws-sandbox-examples
 
 .. author:: default
 .. categories:: none
