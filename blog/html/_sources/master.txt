@@ -4,7 +4,7 @@ Sitemap
 .. toctree::
    :maxdepth: 1
 
-   2014/11/19/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations
+   2014/11/26/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations
    2014/11/13/getting_started_with_latent_dirichlet_allocation_in_python
    2014/10/24/inferring_probabilities_a_second_example_of_bayesian_calculations
    2014/09/16/python_3_4_on_ubuntu_14_04_using_virtual_environments
