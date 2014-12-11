@@ -49,9 +49,14 @@ be brief here):
     P(D=0000110001 \vert p_{0} ) = p_{0}^{7} \times (1-p_{0})^{3}
 
 To be clear, we could plug in :math:`p_{0}=0.6`, and find the probability of
-the specified data series given that value for the unknown probability. A more
-general form for the likelihood, not being specific about the data series
-considered, is
+the specified data series given that value for the unknown probability:
+
+.. math::
+
+    P(D=0000110001 \vert p_{0}=0.6 ) = 0.6^{7} \times (1-0.6)^{3}
+
+A more general form for the likelihood, not being specific about the data
+series considered, is
 
 .. math::
 
@@ -79,8 +84,38 @@ The mathematical form is:
 
 where :math:`\alpha_{0}` and :math:`\alpha_{1}` are hyper-parameters that we
 have to set to reflect our prior assumptions/information about the value of
-:math:`p_{0}`.  It is useful to understand some of the properties of the
-`Beta Distribution`_, so let's go over some:
+:math:`p_{0}`. I have found that 
+*a probability density funtion for a probability really confuses people*.
+However, just think of :math:`p_{0}` as a parameter that we want to infer--
+ignore the fact that the parameter is a probability.
+
+In any case, it is worth spending some time and effort getting used to this
+prior and what it means. To help, I'll go though some properties of the Beta
+Distribution.  However, note that the **posterior pdf will also be a Beta
+Distribution**, so it is worth the effort to get comfortable with the pdf.
+
+So, some properties are:
+
+* **Prior mean** Most people want a single number, or point estimate, to
+  represent the results of inference.  However, in a Bayesian approach to
+  inference the prior and posterior are both pdf's or pmf's.  One way to get a
+  point estimate is to take the *average* of the parameter of interest with
+  respect to the prior or posterior.  For example, for the Beta prior we
+  obtain:
+
+.. math::
+
+    \begin{array}{ll}
+      \mathbf{E}_{prior}[p_{0}] & = & \int_{0}^{1} \, dp_{0} \, p_{0} \,
+                                      P(p_{0} \vert \alpha_{0}, \alpha_{1}) \\
+      & = & \frac{\alpha_{0}}{\alpha_{0}+\alpha_{1}}
+    \end{array}
+
+However, note that this single number does not fully characterize the prior or
+posterior and should be used with care.  Many other properties (higher moments,
+variance, etc) can be calculated-- see `Beta Distribution`_ for more options.
+Also checkout this nice post on `Probable Points and Credible Intervals`_ for
+ideas on how to summarize a posterior distribution (also relevant to priors).
 
 * **The pdf is normalized.** This means if we integrate :math:`p_{0}` from
   :math:`0` to :math:`1` we get one:
@@ -167,21 +202,6 @@ problem:
   this notation makes it easier to compare the hyper-parameters with
   *fake counts* and relate the values with data :math:`n_{0}` and :math:`n_{1}`.
 
-* It useful to use the *mean* as a summary of the prior settings. For the
-  Beta pdf, the mean is
-
-.. math::
-
-    \begin{array}{ll}
-      \mathbf{E}_{prior}[p_{0}] & = & \int_{0}^{1} \, dp_{0} \, p_{0} \,
-                                      P(p_{0} \vert \alpha_{0}, \alpha_{1}) \\
-      & = & \frac{\alpha_{0}}{\alpha_{0}+\alpha_{1}}
-    \end{array}
-
-Many other properties (higher moments, variance, etc) can be calculated-- see
-`Beta Distribution`_ for more options.  Also checkout this nice post on
-`Probable Points and Credible Intervals`_ for ideas on how to summarize a 
-posterior distribution (also relevant to priors).
 
 Bayes' Theorem and the Posterior
 --------------------------------

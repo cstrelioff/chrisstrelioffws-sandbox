@@ -95,9 +95,11 @@ be brief here):</p>
 <div class="math">
 \[P(D=0000110001 \vert p_{0} ) = p_{0}^{7} \times (1-p_{0})^{3}\]</div>
 <p>To be clear, we could plug in <span class="math">\(p_{0}=0.6\)</span>, and find the probability of
-the specified data series given that value for the unknown probability. A more
-general form for the likelihood, not being specific about the data series
-considered, is</p>
+the specified data series given that value for the unknown probability:</p>
+<div class="math">
+\[P(D=0000110001 \vert p_{0}=0.6 ) = 0.6^{7} \times (1-0.6)^{3}\]</div>
+<p>A more general form for the likelihood, not being specific about the data
+series considered, is</p>
 <div class="math">
 \[P(D \vert p_{0} ) = p_{0}^{n{0}} \times (1-p_{0})^{n_{1}}\]</div>
 <p>where <span class="math">\(n_{0}\)</span> is the number of zeros and <span class="math">\(n_{1}\)</span> is the number of
@@ -118,8 +120,34 @@ The mathematical form is:</p>
 p_{0}^{\alpha_{0}-1} \, (1-p_{0})^{\alpha_{1}-1}\]</div>
 <p>where <span class="math">\(\alpha_{0}\)</span> and <span class="math">\(\alpha_{1}\)</span> are hyper-parameters that we
 have to set to reflect our prior assumptions/information about the value of
-<span class="math">\(p_{0}\)</span>.  It is useful to understand some of the properties of the
-<a class="reference external" href="http://en.wikipedia.org/wiki/Beta_distribution">Beta Distribution</a>, so let&#8217;s go over some:</p>
+<span class="math">\(p_{0}\)</span>. I have found that
+<em>a probability density funtion for a probability really confuses people</em>.
+However, just think of <span class="math">\(p_{0}\)</span> as a parameter that we want to infer&#8211;
+ignore the fact that the parameter is a probability.</p>
+<p>In any case, it is worth spending some time and effort getting used to this
+prior and what it means. To help, I&#8217;ll go though some properties of the Beta
+Distribution.  However, note that the <strong>posterior pdf will also be a Beta
+Distribution</strong>, so it is worth the effort to get comfortable with the pdf.</p>
+<p>So, some properties are:</p>
+<ul class="simple">
+<li><strong>Prior mean</strong> Most people want a single number, or point estimate, to
+represent the results of inference.  However, in a Bayesian approach to
+inference the prior and posterior are both pdf&#8217;s or pmf&#8217;s.  One way to get a
+point estimate is to take the <em>average</em> of the parameter of interest with
+respect to the prior or posterior.  For example, for the Beta prior we
+obtain:</li>
+</ul>
+<div class="math">
+\[\begin{split}\begin{array}{ll}
+  \mathbf{E}_{prior}[p_{0}] &amp; = &amp; \int_{0}^{1} \, dp_{0} \, p_{0} \,
+                                  P(p_{0} \vert \alpha_{0}, \alpha_{1}) \\
+  &amp; = &amp; \frac{\alpha_{0}}{\alpha_{0}+\alpha_{1}}
+\end{array}\end{split}\]</div>
+<p>However, note that this single number does not fully characterize the prior or
+posterior and should be used with care.  Many other properties (higher moments,
+variance, etc) can be calculated&#8211; see <a class="reference external" href="http://en.wikipedia.org/wiki/Beta_distribution">Beta Distribution</a> for more options.
+Also checkout this nice post on <a class="reference external" href="http://sumsar.net/blog/2014/10/probable-points-and-credible-intervals-part-one/">Probable Points and Credible Intervals</a> for
+ideas on how to summarize a posterior distribution (also relevant to priors).</p>
 <ul class="simple">
 <li><strong>The pdf is normalized.</strong> This means if we integrate <span class="math">\(p_{0}\)</span> from
 <span class="math">\(0\)</span> to <span class="math">\(1\)</span> we get one:</li>
@@ -170,19 +198,7 @@ problem:</p>
 instead of the usual <span class="math">\((\alpha, \beta)\)</span>.  As I&#8217;ll discuss further below,
 this notation makes it easier to compare the hyper-parameters with
 <em>fake counts</em> and relate the values with data <span class="math">\(n_{0}\)</span> and <span class="math">\(n_{1}\)</span>.</li>
-<li>It useful to use the <em>mean</em> as a summary of the prior settings. For the
-Beta pdf, the mean is</li>
 </ul>
-<div class="math">
-\[\begin{split}\begin{array}{ll}
-  \mathbf{E}_{prior}[p_{0}] &amp; = &amp; \int_{0}^{1} \, dp_{0} \, p_{0} \,
-                                  P(p_{0} \vert \alpha_{0}, \alpha_{1}) \\
-  &amp; = &amp; \frac{\alpha_{0}}{\alpha_{0}+\alpha_{1}}
-\end{array}\end{split}\]</div>
-<p>Many other properties (higher moments, variance, etc) can be calculated&#8211; see
-<a class="reference external" href="http://en.wikipedia.org/wiki/Beta_distribution">Beta Distribution</a> for more options.  Also checkout this nice post on
-<a class="reference external" href="http://sumsar.net/blog/2014/10/probable-points-and-credible-intervals-part-one/">Probable Points and Credible Intervals</a> for ideas on how to summarize a
-posterior distribution (also relevant to priors).</p>
 </div>
 <div class="section" id="bayes-theorem-and-the-posterior">
 <h2>Bayes&#8217; Theorem and the Posterior</h2>
