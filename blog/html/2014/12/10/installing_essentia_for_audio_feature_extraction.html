@@ -1,0 +1,177 @@
+<!DOCTYPE html><!--[if lt IE 7]>      <html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:og="http://ogp.me/ns#"
+    xmlns:fb="https://www.facebook.com/2008/fbml" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:og="http://ogp.me/ns#"
+    xmlns:fb="https://www.facebook.com/2008/fbml" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:og="http://ogp.me/ns#"
+    xmlns:fb="https://www.facebook.com/2008/fbml" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:og="http://ogp.me/ns#"
+    xmlns:fb="https://www.facebook.com/2008/fbml" class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" content="Christopher Strelioff's blog">
+        <meta name="viewport" content="width=device-width">
+        <title>Installing essentia for audio feature extraction &mdash; chris&#39; sandbox</title>
+            <link rel="stylesheet" href="../../../_static/normalize.css" type="text/css">
+            <link rel="stylesheet" href="../../../_static/sphinx.css" type="text/css">
+            <link rel="stylesheet" href="../../../_static/main.css" type="text/css">
+            <link rel="stylesheet" href="../../../_static/flat.css" type="text/css">
+            <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+            <link rel="stylesheet" href="../../../_static/font-awesome.min.css" type="text/css">
+        <link rel="stylesheet" href="../../../_static/style.css" type="text/css" /><link rel="shortcut icon" href="../../../_static/tinkerer.ico" /><!-- Load modernizr and JQuery -->
+        <script src="../../../_static/vendor/modernizr-2.6.2.min.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="../../../_static/vendor/jquery-1.8.2.min.js"><\/script>')</script>
+        <script src="../../../_static/plugins.js"></script>
+        <script src="../../../_static/main.js"></script>
+        <link rel="next" title="Getting started with Latent Dirichlet Allocation in Python" href="../../11/13/getting_started_with_latent_dirichlet_allocation_in_python.html" /><link rel="prev" title="Inferring probabilities with a Beta prior, a third example of Bayesian calculations" href="../11/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations.html" /><link rel="alternate" type="application/rss+xml" title="RSS" href="../../../rss.html" /><script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '1.5',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script><script type="text/javascript" src="../../../_static/underscore.js"></script><script type="text/javascript" src="../../../_static/doctools.js"></script><script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script type="text/javascript" src="../../../_static/disqus.js"></script><script type="text/javascript" src="../../../_static/google_analytics.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            // Scroll to content if on small screen
+            if (screen.width < 480)
+            {
+                $(document).scrollTop(document.getElementsByTagName("article")[0].offsetTop - 44);
+            }
+        });
+    </script></head>
+    <body role="document">
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+
+      <div id="container"><header role="banner">
+    <hgroup>
+      <h1><a href="../../../index.html">chris&#39; sandbox</a></h1><h2>python, R, ubuntu, bayesian methods, machine learning and more...</h2></hgroup>
+  </header>
+<div class="main-container" role="main"><div class="main wrapper body clearfix"><article><div class="timestamp postmeta">
+            <span>December 10, 2014</span>
+        </div>
+    <div class="section" id="installing-essentia-for-audio-feature-extraction">
+<h1>Installing essentia for audio feature extraction</h1>
+<p>Some notes on the installation of <a class="reference external" href="http://essentia.upf.edu/">essentia</a>, a collection of c++ code with
+Python wrappers for audio feature extraction, following the <a class="reference external" href="http://essentia.upf.edu/documentation/installing.html">essentia
+installation guide</a>.</p>
+<p><strong>First</strong>, get the code from github&#8211; <a class="reference external" href="https://github.com/MTG/essentia">essentia github</a>.  I do this in a local
+directory on my machine called <span class="code docutils literal"><span class="pre">~/gitlocal</span></span> so that I remember where the
+github repository is located:</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>$ cd ~/gitlocal
+$ git clone https://github.com/MTG/essentia.git
+</pre></div>
+</div>
+<p>This is a large amount of code, so be patient as the code downloads and use a
+good internet connection if possible.</p>
+<p><strong>Second</strong>, I make sure that all of the Ubuntu dependencies are installed using
+the following command:</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>$ sudo apt-get install build-essential libyaml-dev libfftw3-dev
+$ sudo apt-get install libavcodec-dev libavformat-dev python-dev
+$ sudo apt-get install libsamplerate0-dev libtag1-dev
+</pre></div>
+</div>
+<p>I&#8217;ve divided the commands onto three lines for easier reading.</p>
+<p><strong>Third</strong>, <span class="code docutils literal"><span class="pre">numpy</span></span> and <span class="code docutils literal"><span class="pre">numpy-dev</span></span> are required for the use of
+<a class="reference external" href="http://essentia.upf.edu/">essentia</a> from Python. I have previously installed these using <span class="code docutils literal"><span class="pre">pip</span></span> as
+detailed elsewhere on the blog&#8211; take a look if you need help.</p>
+<p><strong>Fourth</strong>, we <em>configure</em> (note&#8211; I removed the <strong>&#8211;with-cpptests</strong> flag in
+this configure command as errors were created during compilation with the flag
+in place):</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>$ ./waf configure --mode=release --with-python  --with-examples --with-vamp
+</pre></div>
+</div>
+<p>This finishes successfully, but I note that <strong>libswresample</strong> is not found&#8211;
+we&#8217;ll see if that matters. Next, we <em>compile</em>:</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>$ ./waf
+</pre></div>
+</div>
+<p><strong>Fifth</strong>, we install using (the <strong>sudo</strong> is import for permission to do
+certain thing in the install process):</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>$ sudo ./waf install
+</pre></div>
+</div>
+<p><strong>Finally</strong>, I try importing the Python package as follows:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">Python</span> <span class="mf">2.7</span><span class="o">.</span><span class="mi">6</span> <span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="n">Mar</span> <span class="mi">22</span> <span class="mi">2014</span><span class="p">,</span> <span class="mi">22</span><span class="p">:</span><span class="mi">59</span><span class="p">:</span><span class="mi">56</span><span class="p">)</span>
+<span class="p">[</span><span class="n">GCC</span> <span class="mf">4.8</span><span class="o">.</span><span class="mi">2</span><span class="p">]</span> <span class="n">on</span> <span class="n">linux2</span>
+<span class="n">Type</span> <span class="s">&quot;help&quot;</span><span class="p">,</span> <span class="s">&quot;copyright&quot;</span><span class="p">,</span> <span class="s">&quot;credits&quot;</span> <span class="ow">or</span> <span class="s">&quot;license&quot;</span> <span class="k">for</span> <span class="n">more</span> <span class="n">information</span><span class="o">.</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">essentia</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">print</span> <span class="n">essentia</span><span class="o">.</span><span class="n">__version__</span>
+<span class="mf">2.1</span><span class="o">-</span><span class="n">beta2</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">exit</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>That all look good, looks like things are installed.</p>
+</div>
+
+    <div class="postmeta">
+        <div class="author">
+            <span>Posted by Chris Strelioff</span>
+        </div>
+        
+        <div class="tags">
+            <span>
+                Tags:
+                <a href="../../../tags/essentia.html">essentia</a>, <a href="../../../tags/c.html">c++</a>, <a href="../../../tags/python.html">python</a>, <a href="../../../tags/dsp.html">dsp</a>, <a href="../../../tags/audio_features.html">audio features</a>, <a href="../../../tags/mir.html">mir</a></span>
+        </div>
+        </div><ul class="related clearfix">
+            <li class="left"> &laquo; <a href="../11/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations.html">Inferring probabilities with a Beta prior, a third example of Bayesian calculations</a></li>
+            <li class="right"><a href="../../11/13/getting_started_with_latent_dirichlet_allocation_in_python.html">Getting started with Latent Dirichlet Allocation in Python</a> &raquo; </li>
+        </ul><div id="disqus_thread"></div><script type="text/javascript">    var disqus_shortname = "chrissandbox";    var disqus_identifier = "2014/12/10/installing_essentia_for_audio_feature_extraction";    disqus_thread();</script><noscript>Please enable JavaScript to view the    <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></article><aside class="sidebar"><section><div class="widget" id="searchbox" role="search">
+    <h1><a href="#searchbox">Search</a></h1>
+    <form action="../../../search.html" method="get">
+        <input type="text" name="q" />
+        <button type="submit"><span class="fa fa-search"></span></button>
+    </form>
+</div></section><section><div class="widget">
+  <h1>Pages</h1>
+  <ul>
+  <li>
+      <a href="../../../index.html">Home</a>
+    </li>
+  </ul>
+</div>
+</section><section><div class="widget">
+    <h1>Recent Posts</h1>
+    <ul><li>
+            <a href="../11/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations.html">Inferring probabilities with a Beta prior, a third example of Bayesian calculations</a>
+        </li><li>
+            <a href="#">Installing essentia for audio feature extraction</a>
+        </li><li>
+            <a href="../../11/13/getting_started_with_latent_dirichlet_allocation_in_python.html">Getting started with Latent Dirichlet Allocation in Python</a>
+        </li><li>
+            <a href="../../10/24/inferring_probabilities_a_second_example_of_bayesian_calculations.html">Inferring probabilities, a second example of Bayesian calculations</a>
+        </li><li>
+            <a href="../../09/16/python_3_4_on_ubuntu_14_04_using_virtual_environments.html">Python 3.4 on Ubuntu 14.04 using virtual environments</a>
+        </li><li>
+            <a href="../../09/11/medical_tests_a_first_example_of_bayesian_calculations.html">Medical tests, a first example of Bayesian calculations</a>
+        </li><li>
+            <a href="../../09/04/virtualenv_and_virtualenvwrapper_on_ubuntu_14_04.html">virtualenv and virtualenvwrapper on Ubuntu 14.04</a>
+        </li><li>
+            <a href="../../09/02/installing_virtualbox_on_ubuntu_14_04.html">Installing virtualbox on Ubuntu 14.04</a>
+        </li><li>
+            <a href="../../08/26/joint_conditional_and_marginal_probabilities.html">Joint, conditional and marginal probabilities</a>
+        </li><li>
+            <a href="../../08/16/garmin_forerunner_and_ubuntu_14_04.html">Garmin forerunner and Ubuntu 14.04</a>
+        </li></ul>
+</div>
+</section><section><div class="widget">
+    <h1>Tags</h1><a href="../../../tags/audio_features.html">audio features</a> (1), <a href="../../../tags/bayesian.html">Bayesian</a> (5), <a href="../../../tags/beta.html">Beta</a> (1), <a href="../../../tags/blog_setup.html">blog setup</a> (1), <a href="../../../tags/bootstrap.html">bootstrap</a> (1), <a href="../../../tags/bottleneck.html">bottleneck</a> (1), <a href="../../../tags/c.html">c++</a> (1), <a href="../../../tags/caret.html">caret</a> (1), <a href="../../../tags/cmpy.html">cmpy</a> (1), <a href="../../../tags/conditional_probability.html">conditional probability</a> (4), <a href="../../../tags/coursera.html">coursera</a> (1), <a href="../../../tags/coursera_intro_to_data_science.html">coursera intro to data science</a> (3), <a href="../../../tags/cython.html">cython</a> (1), <a href="../../../tags/dsp.html">dsp</a> (1), <a href="../../../tags/e1071.html">e1071</a> (1), <a href="../../../tags/essentia.html">essentia</a> (1), <a href="../../../tags/garmin.html">garmin</a> (1), <a href="../../../tags/ggplot2.html">ggplot2</a> (1), <a href="../../../tags/git.html">git</a> (1), <a href="../../../tags/gnuplot.html">gnuplot</a> (1), <a href="../../../tags/graphs.html">graphs</a> (1), <a href="../../../tags/igraph.html">igraph</a> (1), <a href="../../../tags/ipython.html">ipython</a> (1), <a href="../../../tags/joint_probability.html">joint probability</a> (4), <a href="../../../tags/latex.html">LaTeX</a> (1), <a href="../../../tags/lda.html">LDA</a> (1), <a href="../../../tags/machine_learning.html">machine learning</a> (1), <a href="../../../tags/marginal_probability.html">marginal probability</a> (4), <a href="../../../tags/matplotlib.html">matplotlib</a> (1), <a href="../../../tags/mir.html">mir</a> (1), <a href="../../../tags/my_python_setup.html">my python setup</a> (6), <a href="../../../tags/my_ubuntu_setup.html">my ubuntu setup</a> (10), <a href="../../../tags/networks.html">networks</a> (1), <a href="../../../tags/networkx.html">networkx</a> (1), <a href="../../../tags/numexpr.html">numexpr</a> (1), <a href="../../../tags/numpy.html">numpy</a> (1), <a href="../../../tags/octave.html">octave</a> (1), <a href="../../../tags/openpyxl.html">openpyxl</a> (1), <a href="../../../tags/pandas.html">pandas</a> (1), <a href="../../../tags/patsy.html">patsy</a> (1), <a href="../../../tags/pip.html">pip</a> (1), <a href="../../../tags/pweave.html">pweave</a> (1), <a href="../../../tags/pygraphviz.html">pygraphviz</a> (1), <a href="../../../tags/pymc.html">pymc</a> (1), <a href="../../../tags/python.html">Python</a> (1), <a href="../../../tags/python.html">python</a> (5), <a href="../../../tags/python_2_7.html">python 2.7</a> (5), <a href="../../../tags/python_3_4.html">python 3.4</a> (1), <a href="../../../tags/pyyaml.html">pyyaml</a> (1), <a href="../../../tags/r.html">R</a> (1), <a href="../../../tags/randomforest.html">randomForest</a> (1), <a href="../../../tags/restview.html">restview</a> (1), <a href="../../../tags/resume.html">resume</a> (1), <a href="../../../tags/rpart.html">rpart</a> (1), <a href="../../../tags/running.html">running</a> (1), <a href="../../../tags/scikit_learn.html">scikit-learn</a> (1), <a href="../../../tags/scipy.html">scipy</a> (1), <a href="../../../tags/screen.html">screen</a> (1), <a href="../../../tags/server_setup.html">server setup</a> (1), <a href="../../../tags/social_networks.html">social networks</a> (1), <a href="../../../tags/sphinx.html">sphinx</a> (1), <a href="../../../tags/sql.html">sql</a> (1), <a href="../../../tags/sqlite3.html">sqlite3</a> (1), <a href="../../../tags/ssh.html">ssh</a> (1), <a href="../../../tags/ssh_keys.html">ssh keys</a> (1), <a href="../../../tags/statsmodels.html">statsmodels</a> (1), <a href="../../../tags/sympy.html">sympy</a> (1), <a href="../../../tags/tableau.html">tableau</a> (1), <a href="../../../tags/tinkerer.html">tinkerer</a> (1), <a href="../../../tags/topic_models.html">topic models</a> (1), <a href="../../../tags/tree.html">tree</a> (1), <a href="../../../tags/ubuntu_14_04.html">ubuntu 14.04</a> (7), <a href="../../../tags/vim.html">vim</a> (1), <a href="../../../tags/virtualbox.html">virtualbox</a> (1), <a href="../../../tags/virtualenv.html">virtualenv</a> (3), <a href="../../../tags/virtualenvwrapper.html">virtualenvwrapper</a> (2), <a href="../../../tags/vps.html">VPS</a> (1), <a href="../../../tags/yaml.html">yaml</a> (1)</div></section></aside></div> <!-- #main --></div> <!-- #main-container -->
+
+        <div class="footer-container" role="contentinfo"><footer class="wrapper">&copy; Copyright 2014 Christopher Strelioff. Powered by <a href="http://www.tinkerer.me/">Tinkerer</a> and <a href="http://sphinx.pocoo.org/">Sphinx</a>.</footer></div> <!-- footer-container -->
+
+      </div> <!--! end of #container --><!--[if lt IE 7 ]>
+          <script src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js"></script>
+          <script>window.attachEvent('onload',function(){CFInstall.check({mode:'overlay'})})</script>
+        <![endif]-->
+    </body>
+</html>

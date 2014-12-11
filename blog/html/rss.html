@@ -5,11 +5,11 @@
         <link>http://chrisstrelioff.ws/sandbox/</link>
         <description>python, R, ubuntu, bayesian methods, machine learning and more...</description>
         <language>en-us</language>
-        <pubDate>Wed, 26 Nov 2014 00:00:00 -0800</pubDate>
+        <pubDate>Thu, 11 Dec 2014 00:00:00 -0800</pubDate>
         
         <item>
-            <link>http://chrisstrelioff.ws/sandbox/2014/11/26/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations.html</link>
-            <guid>http://chrisstrelioff.ws/sandbox/2014/11/26/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations.html</guid>
+            <link>http://chrisstrelioff.ws/sandbox/2014/12/11/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations.html</link>
+            <guid>http://chrisstrelioff.ws/sandbox/2014/12/11/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations.html</guid>
             <title><![CDATA[Inferring probabilities with a Beta prior, a third example of Bayesian calculations]]></title>
             <description><![CDATA[<span id="bayes-third-example"/><h1>Inferring probabilities with a Beta prior, a third example of Bayesian calculations</h1>
 <p>In this post I will expand on a previous example of inferring probabilities
@@ -19,7 +19,7 @@ considering a discrete set of candidate probabilities, I’ll consider all
 posterior) will now be a <a class="reference external" href="http://en.wikipedia.org/wiki/Probability_density_function">probability density function</a> (pdf) instead of a
 <a class="reference external" href="http://en.wikipedia.org/wiki/Probability_mass_function">probability mass function</a> (pmf).  More specifically, I’ll use the
 <a class="reference external" href="http://en.wikipedia.org/wiki/Beta_distribution">Beta Distribution</a> for this example.</p>
-<p class="readmorewrapper"><a class="readmore" href="http://chrisstrelioff.ws/sandbox/2014/11/26/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations.html#more">Read more...</a></p> 
+<p class="readmorewrapper"><a class="readmore" href="http://chrisstrelioff.ws/sandbox/2014/12/11/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations.html#more">Read more...</a></p> 
  
  
  
@@ -31,7 +31,66 @@ posterior) will now be a <a class="reference external" href="http://en.wikipedia
  
  
 ]]></description>
-             <pubDate>Wed, 26 Nov 2014 00:00:00 -0800</pubDate>
+             <pubDate>Thu, 11 Dec 2014 00:00:00 -0800</pubDate>
+        </item>
+    
+        <item>
+            <link>http://chrisstrelioff.ws/sandbox/2014/12/10/installing_essentia_for_audio_feature_extraction.html</link>
+            <guid>http://chrisstrelioff.ws/sandbox/2014/12/10/installing_essentia_for_audio_feature_extraction.html</guid>
+            <title><![CDATA[Installing essentia for audio feature extraction]]></title>
+            <description><![CDATA[<h1>Installing essentia for audio feature extraction</h1>
+<p>Some notes on the installation of <a class="reference external" href="http://essentia.upf.edu/">essentia</a>, a collection of c++ code with
+Python wrappers for audio feature extraction, following the <a class="reference external" href="http://essentia.upf.edu/documentation/installing.html">essentia
+installation guide</a>.</p>
+<p><strong>First</strong>, get the code from github– <a class="reference external" href="https://github.com/MTG/essentia">essentia github</a>.  I do this in a local
+directory on my machine called <span class="code docutils literal"><span class="pre">~/gitlocal</span></span> so that I remember where the
+github repository is located:</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>$ cd ~/gitlocal
+$ git clone https://github.com/MTG/essentia.git
+</pre></div>
+</div>
+<p>This is a large amount of code, so be patient as the code downloads and use a
+good internet connection if possible.</p>
+<p><strong>Second</strong>, I make sure that all of the Ubuntu dependencies are installed using
+the following command:</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>$ sudo apt-get install build-essential libyaml-dev libfftw3-dev
+$ sudo apt-get install libavcodec-dev libavformat-dev python-dev
+$ sudo apt-get install libsamplerate0-dev libtag1-dev
+</pre></div>
+</div>
+<p>I’ve divided the commands onto three lines for easier reading.</p>
+<p><strong>Third</strong>, <span class="code docutils literal"><span class="pre">numpy</span></span> and <span class="code docutils literal"><span class="pre">numpy-dev</span></span> are required for the use of
+<a class="reference external" href="http://essentia.upf.edu/">essentia</a> from Python. I have previously installed these using <span class="code docutils literal"><span class="pre">pip</span></span> as
+detailed elsewhere on the blog– take a look if you need help.</p>
+<p><strong>Fourth</strong>, we <em>configure</em> (note– I removed the <strong>–with-cpptests</strong> flag in
+this configure command as errors were created during compilation with the flag
+in place):</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>$ ./waf configure --mode=release --with-python  --with-examples --with-vamp
+</pre></div>
+</div>
+<p>This finishes successfully, but I note that <strong>libswresample</strong> is not found–
+we’ll see if that matters. Next, we <em>compile</em>:</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>$ ./waf
+</pre></div>
+</div>
+<p><strong>Fifth</strong>, we install using (the <strong>sudo</strong> is import for permission to do
+certain thing in the install process):</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>$ sudo ./waf install
+</pre></div>
+</div>
+<p><strong>Finally</strong>, I try importing the Python package as follows:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">Python</span> <span class="mf">2.7</span><span class="o">.</span><span class="mi">6</span> <span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="n">Mar</span> <span class="mi">22</span> <span class="mi">2014</span><span class="p">,</span> <span class="mi">22</span><span class="p">:</span><span class="mi">59</span><span class="p">:</span><span class="mi">56</span><span class="p">)</span>
+<span class="p">[</span><span class="n">GCC</span> <span class="mf">4.8</span><span class="o">.</span><span class="mi">2</span><span class="p">]</span> <span class="n">on</span> <span class="n">linux2</span>
+<span class="n">Type</span> <span class="s">"help"</span><span class="p">,</span> <span class="s">"copyright"</span><span class="p">,</span> <span class="s">"credits"</span> <span class="ow">or</span> <span class="s">"license"</span> <span class="k">for</span> <span class="n">more</span> <span class="n">information</span><span class="o">.</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">essentia</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">print</span> <span class="n">essentia</span><span class="o">.</span><span class="n">__version__</span>
+<span class="mf">2.1</span><span class="o">-</span><span class="n">beta2</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">exit</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>That all look good, looks like things are installed.</p>
+]]></description>
+             <pubDate>Wed, 10 Dec 2014 00:00:00 -0800</pubDate>
         </item>
     
         <item>
@@ -180,11 +239,11 @@ things as the minimal Python requirements for each project.</p>
             <guid>http://chrisstrelioff.ws/sandbox/2014/09/02/installing_virtualbox_on_ubuntu_14_04.html</guid>
             <title><![CDATA[Installing virtualbox on Ubuntu 14.04]]></title>
             <description><![CDATA[<h1>Installing virtualbox on Ubuntu 14.04</h1>
-<p>In this post I will cover installing Oracle’s <a class="reference external" href="https://www.virtualbox.org">virtualbox</a> on Ubuntu 14.04.
-This will allow me to run Windows and <a class="reference external" href="http://www.tableausoftware.com">tableau</a>, a program for putting together
+<p>In this post I will cover installing Oracle’s <a class="reference external" href="https://www.virtualbox.org/">virtualbox</a> on Ubuntu 14.04.
+This will allow me to run Windows and <a class="reference external" href="http://www.tableausoftware.com/">tableau</a>, a program for putting together
 interactive visualizations.  If you are running Ubuntu and taking
 <a class="reference external" href="https://www.coursera.org/course/datasci">Coursera’s introduction to data science</a> class you might find this post useful
-as well.  However, having <a class="reference external" href="https://www.virtualbox.org">virtualbox</a> installed and available is always a good
+as well.  However, having <a class="reference external" href="https://www.virtualbox.org/">virtualbox</a> installed and available is always a good
 thing for those situations where Win or Mac are the only options.</p>
 <p class="readmorewrapper"><a class="readmore" href="http://chrisstrelioff.ws/sandbox/2014/09/02/installing_virtualbox_on_ubuntu_14_04.html#more">Read more...</a></p> 
  
@@ -232,7 +291,7 @@ As a result, I’ll will often refer back to this discussion in future posts.</p
             <description><![CDATA[<h1>Garmin forerunner and Ubuntu 14.04</h1>
 <p>This post is about getting running data off of a Garmin Forerunner 305 and
 uploaded to the Garmin Connect website.  This post follows my previous post on
-the <a class="reference external" href="http://livesoncoffee.wordpress.com/2013/10/21/garmin-forerunner-and-ubuntu-12-04-updated">Garmin forerunner and Ubuntu 12.04</a>. Basically I will repeat these
+the <a class="reference external" href="http://livesoncoffee.wordpress.com/2013/10/21/garmin-forerunner-and-ubuntu-12-04-updated/">Garmin forerunner and Ubuntu 12.04</a>. Basically I will repeat these
 previous instructions, making sure that everything can still be done
 on Ubuntu 14.04– the good news is that everything works on 14.04, so read on
 if you are interested.</p>
@@ -286,7 +345,7 @@ required to do the <em>Topics in machine learning</em> assignment for
             <guid>http://chrisstrelioff.ws/sandbox/2014/07/29/install_igraph_for_python_on_ubuntu_14_04.html</guid>
             <title><![CDATA[Install igraph for Python on Ubuntu 14.04]]></title>
             <description><![CDATA[<h1>Install igraph for Python on Ubuntu 14.04</h1>
-<p>In this post I will describe installing <a class="reference external" href="http://igraph.org/python">python-igraph</a> on Ubuntu 14.04, using
+<p>In this post I will describe installing <a class="reference external" href="http://igraph.org/python/">python-igraph</a> on Ubuntu 14.04, using
 the default Python 2.7.  Previously I wrote a (long) post about how to
 <a class="reference internal" href="http://chrisstrelioff.ws/sandbox/2014/06/04/install_and_setup_python_and_packages_on_ubuntu_14_04.html#initial-python-setup"><em>Install Python packages on Ubuntu 14.04</em></a>, which provides lots of detail about how I approach
 Python package installation.  In particular, I use <strong>pip</strong> and install as a
@@ -342,8 +401,8 @@ sqlite3, so I need to install it on my Ubuntu 14.04 machine.</p>
             <title><![CDATA[Install and use sphinx-bootstrap-theme on Ubuntu 14.04]]></title>
             <description><![CDATA[<h1>Install and use sphinx-bootstrap-theme on Ubuntu 14.04</h1>
 <p>In this post I will try out the <a class="reference external" href="https://github.com/ryan-roemer/sphinx-bootstrap-theme">sphinx-bootstrap-theme</a>.  As the name
-suggests, this project combines <a class="reference external" href="http://sphinx-doc.org">sphinx</a>, a Python documentation tool that
-generates html/pdf/etc from rst files, and <a class="reference external" href="http://getbootstrap.com">bootstrap</a>, a modern web framework
+suggests, this project combines <a class="reference external" href="http://sphinx-doc.org/">sphinx</a>, a Python documentation tool that
+generates html/pdf/etc from rst files, and <a class="reference external" href="http://getbootstrap.com/">bootstrap</a>, a modern web framework
 from Twitter for generating responsive websites.</p>
 <p class="readmorewrapper"><a class="readmore" href="http://chrisstrelioff.ws/sandbox/2014/07/07/install_and_use_sphinx_bootstrap_theme_on_ubuntu_14_04.html#more">Read more...</a></p> 
  
@@ -388,7 +447,7 @@ I will use pip to install the package as a user:</p>
             <guid>http://chrisstrelioff.ws/sandbox/2014/06/27/ubuntu_vps_setup_at_digital_ocean.html</guid>
             <title><![CDATA[Ubuntu VPS setup at digital ocean]]></title>
             <description><![CDATA[<h1>Ubuntu VPS setup at digital ocean</h1>
-<p>This blog is hosted on an Ubuntu 14.04 VPS at <a class="reference external" href="https://www.digitalocean.com">digital ocean</a>. This post is
+<p>This blog is hosted on an Ubuntu 14.04 VPS at <a class="reference external" href="https://www.digitalocean.com/">digital ocean</a>. This post is
 mainly <em>a reminder for me</em> of the tutorials I used to set things up, however
 you might find it a helpful guide as well.</p>
 <p class="readmorewrapper"><a class="readmore" href="http://chrisstrelioff.ws/sandbox/2014/06/27/ubuntu_vps_setup_at_digital_ocean.html#more">Read more...</a></p> 
@@ -449,7 +508,7 @@ you might find it a helpful guide as well.</p>
 <p>I’m taking Andrew Ng’s <a class="reference external" href="https://www.coursera.org/course/ml">machine learning class at coursera</a> that started June
 17, 2014.  In the Silicon Valley tech world, this seems to be the online course
 that many people recommend for machine learning.  The course is taught using
-<a class="reference external" href="https://www.gnu.org/software/octave/index.html">Octave</a> or <a class="reference external" href="http://www.mathworks.com/products/matlab">Matlab</a>. I’ll use <a class="reference external" href="https://www.gnu.org/software/octave/index.html">Octave</a> because I’m on Ubuntu and <a class="reference external" href="https://www.gnu.org/software/octave/index.html">Octave</a> is a
+<a class="reference external" href="https://www.gnu.org/software/octave/index.html">Octave</a> or <a class="reference external" href="http://www.mathworks.com/products/matlab/">Matlab</a>. I’ll use <a class="reference external" href="https://www.gnu.org/software/octave/index.html">Octave</a> because I’m on Ubuntu and <a class="reference external" href="https://www.gnu.org/software/octave/index.html">Octave</a> is a
 gnu project.</p>
 <p class="readmorewrapper"><a class="readmore" href="http://chrisstrelioff.ws/sandbox/2014/06/20/installing_octave_on_ubuntu_14_04.html#more">Read more...</a></p> 
  
@@ -547,7 +606,7 @@ solution</em>.</p>
             <guid>http://chrisstrelioff.ws/sandbox/2014/05/29/install_and_setup_git_on_ubuntu_14_04.html</guid>
             <title><![CDATA[Install and setup git on Ubuntu 14.04]]></title>
             <description><![CDATA[<h1>Install and setup git on Ubuntu 14.04</h1>
-<p>Here we install and do the most basic setup for <a class="reference external" href="http://git-scm.com">git</a>.  First, install <a class="reference external" href="http://git-scm.com">git</a> from
+<p>Here we install and do the most basic setup for <a class="reference external" href="http://git-scm.com/">git</a>.  First, install <a class="reference external" href="http://git-scm.com/">git</a> from
 the Ubuntu repository:</p>
 <div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>sudo apt-get install git
 </pre></div>
@@ -585,7 +644,7 @@ started using <strong>vim</strong> as my main editor.  The Ubuntu install is sim
             <guid>http://chrisstrelioff.ws/sandbox/2014/05/29/install_and_setup_screen_on_ubuntu_14_04.html</guid>
             <title><![CDATA[Install and setup screen on Ubuntu 14.04]]></title>
             <description><![CDATA[<h1>Install and setup screen on Ubuntu 14.04</h1>
-<p><a class="reference external" href="http://www.gnu.org/software/screen">screen</a> is a great tool for the terminal, allowing me to have many windows
+<p><a class="reference external" href="http://www.gnu.org/software/screen/">screen</a> is a great tool for the terminal, allowing me to have many windows
 (sessions) open at the same time– say <em>vim</em> in one, an <em>ssh</em> session in
 another, etc.  This post documents my basic setup – if you have
 cool/different ideas about how to do this type of thing let me know.</p>

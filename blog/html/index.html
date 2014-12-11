@@ -31,7 +31,7 @@
         <link rel="next" title="Older" href="page2.html" /><link rel="alternate" type="application/rss+xml" title="RSS" href="rss.html" /><script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '1.4.2',
+        VERSION:     '1.5',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -56,10 +56,11 @@
     <hgroup>
       <h1><a href="#">chris&#39; sandbox</a></h1><h2>python, R, ubuntu, bayesian methods, machine learning and more...</h2></hgroup>
   </header>
-<div class="main-container" role="main"><div class="main wrapper clearfix"><article><div class="timestamp postmeta">
-            <span>November 26, 2014</span>
+<div class="main-container" role="main"><div class="main wrapper body clearfix"><article><div class="timestamp postmeta">
+            <span>December 11, 2014</span>
         </div>
-        <span id="bayes-third-example"/><h1><a href="2014/11/26/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations.html">Inferring probabilities with a Beta prior, a third example of Bayesian calculations</a></h1>
+        <div class="section">
+            <span id="bayes-third-example"/><h1><a href="2014/12/11/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations.html">Inferring probabilities with a Beta prior, a third example of Bayesian calculations</a></h1>
 <p>In this post I will expand on a previous example of inferring probabilities
 from a data series: <a class="reference internal" href="2014/10/24/inferring_probabilities_a_second_example_of_bayesian_calculations.html#bayes-second-example"><em>Inferring probabilities, a second example of Bayesian calculations</em></a>. In particular, instead of
 considering a discrete set of candidate probabilities, I’ll consider all
@@ -67,7 +68,7 @@ considering a discrete set of candidate probabilities, I’ll consider all
 posterior) will now be a <a class="reference external" href="http://en.wikipedia.org/wiki/Probability_density_function">probability density function</a> (pdf) instead of a
 <a class="reference external" href="http://en.wikipedia.org/wiki/Probability_mass_function">probability mass function</a> (pmf).  More specifically, I’ll use the
 <a class="reference external" href="http://en.wikipedia.org/wiki/Beta_distribution">Beta Distribution</a> for this example.</p>
-<p class="readmorewrapper"><a class="readmore" href="2014/11/26/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations.html#more">Read more...</a></p> 
+<p class="readmorewrapper"><a class="readmore" href="2014/12/11/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations.html#more">Read more...</a></p> 
  
  
  
@@ -79,6 +80,7 @@ posterior) will now be a <a class="reference external" href="http://en.wikipedia
  
  
 
+        </div>
         <div class="postmeta">
         <div class="author">
             <span>Posted by Chris Strelioff</span>
@@ -90,11 +92,81 @@ posterior) will now be a <a class="reference external" href="http://en.wikipedia
                 <a href="tags/joint_probability.html">joint probability</a>, <a href="tags/conditional_probability.html">conditional probability</a>, <a href="tags/marginal_probability.html">marginal probability</a>, <a href="tags/bayesian.html">Bayesian</a>, <a href="tags/python.html">python</a>, <a href="tags/beta.html">Beta</a></span>
         </div>
         <div class="comments">
-            <a href="http://chrisstrelioff.ws/sandbox/2014/11/26/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations.html#disqus_thread" data-disqus-identifier="2014/11/26/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations">Leave a comment</a>
+            <a href="http://chrisstrelioff.ws/sandbox/2014/12/11/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations.html#disqus_thread" data-disqus-identifier="2014/12/11/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations">Leave a comment</a>
+        </div></div><div class="separator post_separator"></div><div class="timestamp postmeta">
+            <span>December 10, 2014</span>
+        </div>
+        <div class="section">
+            <h1><a href="2014/12/10/installing_essentia_for_audio_feature_extraction.html">Installing essentia for audio feature extraction</a></h1>
+<p>Some notes on the installation of <a class="reference external" href="http://essentia.upf.edu/">essentia</a>, a collection of c++ code with
+Python wrappers for audio feature extraction, following the <a class="reference external" href="http://essentia.upf.edu/documentation/installing.html">essentia
+installation guide</a>.</p>
+<p><strong>First</strong>, get the code from github– <a class="reference external" href="https://github.com/MTG/essentia">essentia github</a>.  I do this in a local
+directory on my machine called <span class="code docutils literal"><span class="pre">~/gitlocal</span></span> so that I remember where the
+github repository is located:</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>$ cd ~/gitlocal
+$ git clone https://github.com/MTG/essentia.git
+</pre></div>
+</div>
+<p>This is a large amount of code, so be patient as the code downloads and use a
+good internet connection if possible.</p>
+<p><strong>Second</strong>, I make sure that all of the Ubuntu dependencies are installed using
+the following command:</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>$ sudo apt-get install build-essential libyaml-dev libfftw3-dev
+$ sudo apt-get install libavcodec-dev libavformat-dev python-dev
+$ sudo apt-get install libsamplerate0-dev libtag1-dev
+</pre></div>
+</div>
+<p>I’ve divided the commands onto three lines for easier reading.</p>
+<p><strong>Third</strong>, <span class="code docutils literal"><span class="pre">numpy</span></span> and <span class="code docutils literal"><span class="pre">numpy-dev</span></span> are required for the use of
+<a class="reference external" href="http://essentia.upf.edu/">essentia</a> from Python. I have previously installed these using <span class="code docutils literal"><span class="pre">pip</span></span> as
+detailed elsewhere on the blog– take a look if you need help.</p>
+<p><strong>Fourth</strong>, we <em>configure</em> (note– I removed the <strong>–with-cpptests</strong> flag in
+this configure command as errors were created during compilation with the flag
+in place):</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>$ ./waf configure --mode=release --with-python  --with-examples --with-vamp
+</pre></div>
+</div>
+<p>This finishes successfully, but I note that <strong>libswresample</strong> is not found–
+we’ll see if that matters. Next, we <em>compile</em>:</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>$ ./waf
+</pre></div>
+</div>
+<p><strong>Fifth</strong>, we install using (the <strong>sudo</strong> is import for permission to do
+certain thing in the install process):</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>$ sudo ./waf install
+</pre></div>
+</div>
+<p><strong>Finally</strong>, I try importing the Python package as follows:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">Python</span> <span class="mf">2.7</span><span class="o">.</span><span class="mi">6</span> <span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="n">Mar</span> <span class="mi">22</span> <span class="mi">2014</span><span class="p">,</span> <span class="mi">22</span><span class="p">:</span><span class="mi">59</span><span class="p">:</span><span class="mi">56</span><span class="p">)</span>
+<span class="p">[</span><span class="n">GCC</span> <span class="mf">4.8</span><span class="o">.</span><span class="mi">2</span><span class="p">]</span> <span class="n">on</span> <span class="n">linux2</span>
+<span class="n">Type</span> <span class="s">"help"</span><span class="p">,</span> <span class="s">"copyright"</span><span class="p">,</span> <span class="s">"credits"</span> <span class="ow">or</span> <span class="s">"license"</span> <span class="k">for</span> <span class="n">more</span> <span class="n">information</span><span class="o">.</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">essentia</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">print</span> <span class="n">essentia</span><span class="o">.</span><span class="n">__version__</span>
+<span class="mf">2.1</span><span class="o">-</span><span class="n">beta2</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">exit</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>That all look good, looks like things are installed.</p>
+
+        </div>
+        <div class="postmeta">
+        <div class="author">
+            <span>Posted by Chris Strelioff</span>
+        </div>
+        
+        <div class="tags">
+            <span>
+                Tags:
+                <a href="tags/essentia.html">essentia</a>, <a href="tags/c.html">c++</a>, <a href="tags/python.html">python</a>, <a href="tags/dsp.html">dsp</a>, <a href="tags/audio_features.html">audio features</a>, <a href="tags/mir.html">mir</a></span>
+        </div>
+        <div class="comments">
+            <a href="http://chrisstrelioff.ws/sandbox/2014/12/10/installing_essentia_for_audio_feature_extraction.html#disqus_thread" data-disqus-identifier="2014/12/10/installing_essentia_for_audio_feature_extraction">Leave a comment</a>
         </div></div><div class="separator post_separator"></div><div class="timestamp postmeta">
             <span>November 13, 2014</span>
         </div>
-        <h1><a href="2014/11/13/getting_started_with_latent_dirichlet_allocation_in_python.html">Getting started with Latent Dirichlet Allocation in Python</a></h1>
+        <div class="section">
+            <h1><a href="2014/11/13/getting_started_with_latent_dirichlet_allocation_in_python.html">Getting started with Latent Dirichlet Allocation in Python</a></h1>
 <p>In this post I will go over installation and basic usage of the <a class="reference external" href="https://github.com/ariddell/lda">lda</a> Python
 package for Latent Dirichlet Allocation (LDA).  I <em>will not</em> go through the
 theoretical foundations of the method in this post. However, the main reference
@@ -110,6 +182,7 @@ model. So, let’s get started...</p>
  
  
 
+        </div>
         <div class="postmeta">
         <div class="author">
             <span>Posted by Chris Strelioff</span>
@@ -125,7 +198,8 @@ model. So, let’s get started...</p>
         </div></div><div class="separator post_separator"></div><div class="timestamp postmeta">
             <span>October 24, 2014</span>
         </div>
-        <span id="bayes-second-example"/><h1><a href="2014/10/24/inferring_probabilities_a_second_example_of_bayesian_calculations.html">Inferring probabilities, a second example of Bayesian calculations</a></h1>
+        <div class="section">
+            <span id="bayes-second-example"/><h1><a href="2014/10/24/inferring_probabilities_a_second_example_of_bayesian_calculations.html">Inferring probabilities, a second example of Bayesian calculations</a></h1>
 <p>In this post I will focus on an example of inferring probabilities given a
 short data series.  I will start by tackling the theory of how
 to do the desired inference in a Bayesian way and will end by implementing
@@ -147,6 +221,7 @@ including nice plots of the <strong>prior</strong>, <strong>likelihood</strong> 
  
  
 
+        </div>
         <div class="postmeta">
         <div class="author">
             <span>Posted by Chris Strelioff</span>
@@ -162,7 +237,8 @@ including nice plots of the <strong>prior</strong>, <strong>likelihood</strong> 
         </div></div><div class="separator post_separator"></div><div class="timestamp postmeta">
             <span>September 16, 2014</span>
         </div>
-        <h1><a href="2014/09/16/python_3_4_on_ubuntu_14_04_using_virtual_environments.html">Python 3.4 on Ubuntu 14.04 using virtual environments</a></h1>
+        <div class="section">
+            <h1><a href="2014/09/16/python_3_4_on_ubuntu_14_04_using_virtual_environments.html">Python 3.4 on Ubuntu 14.04 using virtual environments</a></h1>
 <p>In a previous post discussing <a class="reference internal" href="2014/09/04/virtualenv_and_virtualenvwrapper_on_ubuntu_14_04.html#virtualenvs-on-ubuntu-14-04"><em>virtualenv and virtualenvwrapper on Ubuntu 14.04</em></a> I talked about
 using virtual environments with the default Python version– this is Python
 2.7.6 for Ubuntu 14.04.  However, both Python 2.7 and 3.4 are available on
@@ -188,6 +264,7 @@ working with Python 3 code.</p>
  
  
 
+        </div>
         <div class="postmeta">
         <div class="author">
             <span>Posted by Chris Strelioff</span>
@@ -203,7 +280,8 @@ working with Python 3 code.</p>
         </div></div><div class="separator post_separator"></div><div class="timestamp postmeta">
             <span>September 11, 2014</span>
         </div>
-        <span id="bayes-medical-tests"/><h1><a href="2014/09/11/medical_tests_a_first_example_of_bayesian_calculations.html">Medical tests, a first example of Bayesian calculations</a></h1>
+        <div class="section">
+            <span id="bayes-medical-tests"/><h1><a href="2014/09/11/medical_tests_a_first_example_of_bayesian_calculations.html">Medical tests, a first example of Bayesian calculations</a></h1>
 <p>In this post I will discuss a first example of a Bayesian calculation using a
 well-known example of testing for breast cancer. I choose this example for a
 few reasons:</p>
@@ -230,6 +308,7 @@ problems.</li>
  
  
 
+        </div>
         <div class="postmeta">
         <div class="author">
             <span>Posted by Chris Strelioff</span>
@@ -245,7 +324,8 @@ problems.</li>
         </div></div><div class="separator post_separator"></div><div class="timestamp postmeta">
             <span>September 04, 2014</span>
         </div>
-        <span id="virtualenvs-on-ubuntu-14-04"/><h1><a href="2014/09/04/virtualenv_and_virtualenvwrapper_on_ubuntu_14_04.html">virtualenv and virtualenvwrapper on Ubuntu 14.04</a></h1>
+        <div class="section">
+            <span id="virtualenvs-on-ubuntu-14-04"/><h1><a href="2014/09/04/virtualenv_and_virtualenvwrapper_on_ubuntu_14_04.html">virtualenv and virtualenvwrapper on Ubuntu 14.04</a></h1>
 <p>In this post I’ll go over my attempt to setup virtual environments for
 Python development.  Most Python users probably don’t want to use virtual
 environments and should just set up a single user environment that works for
@@ -260,6 +340,7 @@ things as the minimal Python requirements for each project.</p>
  
  
 
+        </div>
         <div class="postmeta">
         <div class="author">
             <span>Posted by Chris Strelioff</span>
@@ -275,12 +356,13 @@ things as the minimal Python requirements for each project.</p>
         </div></div><div class="separator post_separator"></div><div class="timestamp postmeta">
             <span>September 02, 2014</span>
         </div>
-        <h1><a href="2014/09/02/installing_virtualbox_on_ubuntu_14_04.html">Installing virtualbox on Ubuntu 14.04</a></h1>
-<p>In this post I will cover installing Oracle’s <a class="reference external" href="https://www.virtualbox.org">virtualbox</a> on Ubuntu 14.04.
-This will allow me to run Windows and <a class="reference external" href="http://www.tableausoftware.com">tableau</a>, a program for putting together
+        <div class="section">
+            <h1><a href="2014/09/02/installing_virtualbox_on_ubuntu_14_04.html">Installing virtualbox on Ubuntu 14.04</a></h1>
+<p>In this post I will cover installing Oracle’s <a class="reference external" href="https://www.virtualbox.org/">virtualbox</a> on Ubuntu 14.04.
+This will allow me to run Windows and <a class="reference external" href="http://www.tableausoftware.com/">tableau</a>, a program for putting together
 interactive visualizations.  If you are running Ubuntu and taking
 <a class="reference external" href="https://www.coursera.org/course/datasci">Coursera’s introduction to data science</a> class you might find this post useful
-as well.  However, having <a class="reference external" href="https://www.virtualbox.org">virtualbox</a> installed and available is always a good
+as well.  However, having <a class="reference external" href="https://www.virtualbox.org/">virtualbox</a> installed and available is always a good
 thing for those situations where Win or Mac are the only options.</p>
 <p class="readmorewrapper"><a class="readmore" href="2014/09/02/installing_virtualbox_on_ubuntu_14_04.html#more">Read more...</a></p> 
  
@@ -299,6 +381,7 @@ thing for those situations where Win or Mac are the only options.</p>
  
  
 
+        </div>
         <div class="postmeta">
         <div class="author">
             <span>Posted by Chris Strelioff</span>
@@ -314,7 +397,8 @@ thing for those situations where Win or Mac are the only options.</p>
         </div></div><div class="separator post_separator"></div><div class="timestamp postmeta">
             <span>August 26, 2014</span>
         </div>
-        <span id="id1"/><h1><a href="2014/08/26/joint_conditional_and_marginal_probabilities.html">Joint, conditional and marginal probabilities</a></h1>
+        <div class="section">
+            <span id="id1"/><h1><a href="2014/08/26/joint_conditional_and_marginal_probabilities.html">Joint, conditional and marginal probabilities</a></h1>
 <p>In this post I will discuss a topic that seems very dry at first but turns out
 to have many cool applications. While I will not discuss Bayesian inference in
 this post, understanding the relationship between joint, conditional and
@@ -326,6 +410,7 @@ As a result, I’ll will often refer back to this discussion in future posts.</p
  
  
 
+        </div>
         <div class="postmeta">
         <div class="author">
             <span>Posted by Chris Strelioff</span>
@@ -341,10 +426,11 @@ As a result, I’ll will often refer back to this discussion in future posts.</p
         </div></div><div class="separator post_separator"></div><div class="timestamp postmeta">
             <span>August 16, 2014</span>
         </div>
-        <h1><a href="2014/08/16/garmin_forerunner_and_ubuntu_14_04.html">Garmin forerunner and Ubuntu 14.04</a></h1>
+        <div class="section">
+            <h1><a href="2014/08/16/garmin_forerunner_and_ubuntu_14_04.html">Garmin forerunner and Ubuntu 14.04</a></h1>
 <p>This post is about getting running data off of a Garmin Forerunner 305 and
 uploaded to the Garmin Connect website.  This post follows my previous post on
-the <a class="reference external" href="http://livesoncoffee.wordpress.com/2013/10/21/garmin-forerunner-and-ubuntu-12-04-updated">Garmin forerunner and Ubuntu 12.04</a>. Basically I will repeat these
+the <a class="reference external" href="http://livesoncoffee.wordpress.com/2013/10/21/garmin-forerunner-and-ubuntu-12-04-updated/">Garmin forerunner and Ubuntu 12.04</a>. Basically I will repeat these
 previous instructions, making sure that everything can still be done
 on Ubuntu 14.04– the good news is that everything works on 14.04, so read on
 if you are interested.</p>
@@ -363,6 +449,7 @@ if you are interested.</p>
  
  
 
+        </div>
         <div class="postmeta">
         <div class="author">
             <span>Posted by Chris Strelioff</span>
@@ -375,48 +462,13 @@ if you are interested.</p>
         </div>
         <div class="comments">
             <a href="http://chrisstrelioff.ws/sandbox/2014/08/16/garmin_forerunner_and_ubuntu_14_04.html#disqus_thread" data-disqus-identifier="2014/08/16/garmin_forerunner_and_ubuntu_14_04">Leave a comment</a>
-        </div></div><div class="separator post_separator"></div><div class="timestamp postmeta">
-            <span>August 15, 2014</span>
-        </div>
-        <h1><a href="2014/08/15/install_r_on_ubuntu_14_04.html">Install R on Ubuntu 14.04</a></h1>
-<p>In this post I will go over installing R on Ubuntu 14.04 following the
-<a class="reference external" href="http://cran.r-project.org/bin/linux/ubuntu/README.html">installation instructions at cran</a>. I will also cover installing the packages
-required to do the <em>Topics in machine learning</em> assignment for
-<a class="reference external" href="https://www.coursera.org/course/datasci">Coursera’s Introduction to Data Science</a>.</p>
-<p class="readmorewrapper"><a class="readmore" href="2014/08/15/install_r_on_ubuntu_14_04.html#more">Read more...</a></p> 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
-
-        <div class="postmeta">
-        <div class="author">
-            <span>Posted by Chris Strelioff</span>
-        </div>
-        
-        <div class="tags">
-            <span>
-                Tags:
-                <a href="tags/r.html">R</a>, <a href="tags/my_ubuntu_setup.html">my ubuntu setup</a>, <a href="tags/caret.html">caret</a>, <a href="tags/rpart.html">rpart</a>, <a href="tags/tree.html">tree</a>, <a href="tags/randomforest.html">randomForest</a>, <a href="tags/e1071.html">e1071</a>, <a href="tags/ggplot2.html">ggplot2</a></span>
-        </div>
-        <div class="comments">
-            <a href="http://chrisstrelioff.ws/sandbox/2014/08/15/install_r_on_ubuntu_14_04.html#disqus_thread" data-disqus-identifier="2014/08/15/install_r_on_ubuntu_14_04">Leave a comment</a>
         </div></div><div class="archive_link">
         <a href="archive.html"> &mdash; Blog Archive &mdash; </a>
     </div><ul class="related clearfix">
             <li class="left"></li>
             <li class="right"><a href="page2.html">Older</a> &raquo; </li>
         </ul></article><aside class="sidebar"><section><div class="widget" id="searchbox" role="search">
-    <h1>Search</h1>
+    <h1><a href="#searchbox">Search</a></h1>
     <form action="search.html" method="get">
         <input type="text" name="q" />
         <button type="submit"><span class="fa fa-search"></span></button>
@@ -432,7 +484,9 @@ required to do the <em>Topics in machine learning</em> assignment for
 </section><section><div class="widget">
     <h1>Recent Posts</h1>
     <ul><li>
-            <a href="2014/11/26/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations.html">Inferring probabilities with a Beta prior, a third example of Bayesian calculations</a>
+            <a href="2014/12/11/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations.html">Inferring probabilities with a Beta prior, a third example of Bayesian calculations</a>
+        </li><li>
+            <a href="2014/12/10/installing_essentia_for_audio_feature_extraction.html">Installing essentia for audio feature extraction</a>
         </li><li>
             <a href="2014/11/13/getting_started_with_latent_dirichlet_allocation_in_python.html">Getting started with Latent Dirichlet Allocation in Python</a>
         </li><li>
@@ -449,12 +503,10 @@ required to do the <em>Topics in machine learning</em> assignment for
             <a href="2014/08/26/joint_conditional_and_marginal_probabilities.html">Joint, conditional and marginal probabilities</a>
         </li><li>
             <a href="2014/08/16/garmin_forerunner_and_ubuntu_14_04.html">Garmin forerunner and Ubuntu 14.04</a>
-        </li><li>
-            <a href="2014/08/15/install_r_on_ubuntu_14_04.html">Install R on Ubuntu 14.04</a>
         </li></ul>
 </div>
 </section><section><div class="widget">
-    <h1>Tags</h1><a href="tags/bayesian.html">Bayesian</a> (5), <a href="tags/beta.html">Beta</a> (1), <a href="tags/blog_setup.html">blog setup</a> (1), <a href="tags/bootstrap.html">bootstrap</a> (1), <a href="tags/bottleneck.html">bottleneck</a> (1), <a href="tags/caret.html">caret</a> (1), <a href="tags/cmpy.html">cmpy</a> (1), <a href="tags/conditional_probability.html">conditional probability</a> (4), <a href="tags/coursera.html">coursera</a> (1), <a href="tags/coursera_intro_to_data_science.html">coursera intro to data science</a> (3), <a href="tags/cython.html">cython</a> (1), <a href="tags/e1071.html">e1071</a> (1), <a href="tags/garmin.html">garmin</a> (1), <a href="tags/ggplot2.html">ggplot2</a> (1), <a href="tags/git.html">git</a> (1), <a href="tags/gnuplot.html">gnuplot</a> (1), <a href="tags/graphs.html">graphs</a> (1), <a href="tags/igraph.html">igraph</a> (1), <a href="tags/ipython.html">ipython</a> (1), <a href="tags/joint_probability.html">joint probability</a> (4), <a href="tags/latex.html">LaTeX</a> (1), <a href="tags/lda.html">LDA</a> (1), <a href="tags/machine_learning.html">machine learning</a> (1), <a href="tags/marginal_probability.html">marginal probability</a> (4), <a href="tags/matplotlib.html">matplotlib</a> (1), <a href="tags/my_python_setup.html">my python setup</a> (6), <a href="tags/my_ubuntu_setup.html">my ubuntu setup</a> (10), <a href="tags/networks.html">networks</a> (1), <a href="tags/networkx.html">networkx</a> (1), <a href="tags/numexpr.html">numexpr</a> (1), <a href="tags/numpy.html">numpy</a> (1), <a href="tags/octave.html">octave</a> (1), <a href="tags/openpyxl.html">openpyxl</a> (1), <a href="tags/pandas.html">pandas</a> (1), <a href="tags/patsy.html">patsy</a> (1), <a href="tags/pip.html">pip</a> (1), <a href="tags/pweave.html">pweave</a> (1), <a href="tags/pygraphviz.html">pygraphviz</a> (1), <a href="tags/pymc.html">pymc</a> (1), <a href="tags/python.html">Python</a> (1), <a href="tags/python.html">python</a> (4), <a href="tags/python_2_7.html">python 2.7</a> (5), <a href="tags/python_3_4.html">python 3.4</a> (1), <a href="tags/pyyaml.html">pyyaml</a> (1), <a href="tags/r.html">R</a> (1), <a href="tags/randomforest.html">randomForest</a> (1), <a href="tags/restview.html">restview</a> (1), <a href="tags/resume.html">resume</a> (1), <a href="tags/rpart.html">rpart</a> (1), <a href="tags/running.html">running</a> (1), <a href="tags/scikit_learn.html">scikit-learn</a> (1), <a href="tags/scipy.html">scipy</a> (1), <a href="tags/screen.html">screen</a> (1), <a href="tags/server_setup.html">server setup</a> (1), <a href="tags/social_networks.html">social networks</a> (1), <a href="tags/sphinx.html">sphinx</a> (1), <a href="tags/sql.html">sql</a> (1), <a href="tags/sqlite3.html">sqlite3</a> (1), <a href="tags/ssh.html">ssh</a> (1), <a href="tags/ssh_keys.html">ssh keys</a> (1), <a href="tags/statsmodels.html">statsmodels</a> (1), <a href="tags/sympy.html">sympy</a> (1), <a href="tags/tableau.html">tableau</a> (1), <a href="tags/tinkerer.html">tinkerer</a> (1), <a href="tags/topic_models.html">topic models</a> (1), <a href="tags/tree.html">tree</a> (1), <a href="tags/ubuntu_14_04.html">ubuntu 14.04</a> (7), <a href="tags/vim.html">vim</a> (1), <a href="tags/virtualbox.html">virtualbox</a> (1), <a href="tags/virtualenv.html">virtualenv</a> (3), <a href="tags/virtualenvwrapper.html">virtualenvwrapper</a> (2), <a href="tags/vps.html">VPS</a> (1), <a href="tags/yaml.html">yaml</a> (1)</div></section></aside></div> <!-- #main --></div> <!-- #main-container -->
+    <h1>Tags</h1><a href="tags/audio_features.html">audio features</a> (1), <a href="tags/bayesian.html">Bayesian</a> (5), <a href="tags/beta.html">Beta</a> (1), <a href="tags/blog_setup.html">blog setup</a> (1), <a href="tags/bootstrap.html">bootstrap</a> (1), <a href="tags/bottleneck.html">bottleneck</a> (1), <a href="tags/c.html">c++</a> (1), <a href="tags/caret.html">caret</a> (1), <a href="tags/cmpy.html">cmpy</a> (1), <a href="tags/conditional_probability.html">conditional probability</a> (4), <a href="tags/coursera.html">coursera</a> (1), <a href="tags/coursera_intro_to_data_science.html">coursera intro to data science</a> (3), <a href="tags/cython.html">cython</a> (1), <a href="tags/dsp.html">dsp</a> (1), <a href="tags/e1071.html">e1071</a> (1), <a href="tags/essentia.html">essentia</a> (1), <a href="tags/garmin.html">garmin</a> (1), <a href="tags/ggplot2.html">ggplot2</a> (1), <a href="tags/git.html">git</a> (1), <a href="tags/gnuplot.html">gnuplot</a> (1), <a href="tags/graphs.html">graphs</a> (1), <a href="tags/igraph.html">igraph</a> (1), <a href="tags/ipython.html">ipython</a> (1), <a href="tags/joint_probability.html">joint probability</a> (4), <a href="tags/latex.html">LaTeX</a> (1), <a href="tags/lda.html">LDA</a> (1), <a href="tags/machine_learning.html">machine learning</a> (1), <a href="tags/marginal_probability.html">marginal probability</a> (4), <a href="tags/matplotlib.html">matplotlib</a> (1), <a href="tags/mir.html">mir</a> (1), <a href="tags/my_python_setup.html">my python setup</a> (6), <a href="tags/my_ubuntu_setup.html">my ubuntu setup</a> (10), <a href="tags/networks.html">networks</a> (1), <a href="tags/networkx.html">networkx</a> (1), <a href="tags/numexpr.html">numexpr</a> (1), <a href="tags/numpy.html">numpy</a> (1), <a href="tags/octave.html">octave</a> (1), <a href="tags/openpyxl.html">openpyxl</a> (1), <a href="tags/pandas.html">pandas</a> (1), <a href="tags/patsy.html">patsy</a> (1), <a href="tags/pip.html">pip</a> (1), <a href="tags/pweave.html">pweave</a> (1), <a href="tags/pygraphviz.html">pygraphviz</a> (1), <a href="tags/pymc.html">pymc</a> (1), <a href="tags/python.html">Python</a> (1), <a href="tags/python.html">python</a> (5), <a href="tags/python_2_7.html">python 2.7</a> (5), <a href="tags/python_3_4.html">python 3.4</a> (1), <a href="tags/pyyaml.html">pyyaml</a> (1), <a href="tags/r.html">R</a> (1), <a href="tags/randomforest.html">randomForest</a> (1), <a href="tags/restview.html">restview</a> (1), <a href="tags/resume.html">resume</a> (1), <a href="tags/rpart.html">rpart</a> (1), <a href="tags/running.html">running</a> (1), <a href="tags/scikit_learn.html">scikit-learn</a> (1), <a href="tags/scipy.html">scipy</a> (1), <a href="tags/screen.html">screen</a> (1), <a href="tags/server_setup.html">server setup</a> (1), <a href="tags/social_networks.html">social networks</a> (1), <a href="tags/sphinx.html">sphinx</a> (1), <a href="tags/sql.html">sql</a> (1), <a href="tags/sqlite3.html">sqlite3</a> (1), <a href="tags/ssh.html">ssh</a> (1), <a href="tags/ssh_keys.html">ssh keys</a> (1), <a href="tags/statsmodels.html">statsmodels</a> (1), <a href="tags/sympy.html">sympy</a> (1), <a href="tags/tableau.html">tableau</a> (1), <a href="tags/tinkerer.html">tinkerer</a> (1), <a href="tags/topic_models.html">topic models</a> (1), <a href="tags/tree.html">tree</a> (1), <a href="tags/ubuntu_14_04.html">ubuntu 14.04</a> (7), <a href="tags/vim.html">vim</a> (1), <a href="tags/virtualbox.html">virtualbox</a> (1), <a href="tags/virtualenv.html">virtualenv</a> (3), <a href="tags/virtualenvwrapper.html">virtualenvwrapper</a> (2), <a href="tags/vps.html">VPS</a> (1), <a href="tags/yaml.html">yaml</a> (1)</div></section></aside></div> <!-- #main --></div> <!-- #main-container -->
 
         <div class="footer-container" role="contentinfo"><footer class="wrapper">&copy; Copyright 2014 Christopher Strelioff. Powered by <a href="http://www.tinkerer.me/">Tinkerer</a> and <a href="http://sphinx.pocoo.org/">Sphinx</a>.</footer></div> <!-- footer-container -->
 
