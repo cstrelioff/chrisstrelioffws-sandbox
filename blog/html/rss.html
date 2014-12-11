@@ -42,53 +42,23 @@ posterior) will now be a <a class="reference external" href="http://en.wikipedia
 <p>Some notes on the installation of <a class="reference external" href="http://essentia.upf.edu/">essentia</a>, a collection of c++ code with
 Python wrappers for audio feature extraction, following the <a class="reference external" href="http://essentia.upf.edu/documentation/installing.html">essentia
 installation guide</a>.</p>
-<p><strong>First</strong>, get the code from github– <a class="reference external" href="https://github.com/MTG/essentia">essentia github</a>.  I do this in a local
-directory on my machine called <span class="code docutils literal"><span class="pre">~/gitlocal</span></span> so that I remember where the
-github repository is located:</p>
-<div class="code bash highlight-python"><div class="highlight"><pre>$ cd ~/gitlocal
-$ git clone https://github.com/MTG/essentia.git
-</pre></div>
-</div>
-<p>This is a large amount of code, so be patient as the code downloads and use a
-good internet connection if possible.</p>
-<p><strong>Second</strong>, I make sure that all of the Ubuntu dependencies are installed using
-the following command:</p>
-<div class="code bash highlight-python"><div class="highlight"><pre>$ sudo apt-get install build-essential libyaml-dev libfftw3-dev
-$ sudo apt-get install libavcodec-dev libavformat-dev python-dev
-$ sudo apt-get install libsamplerate0-dev libtag1-dev
-</pre></div>
-</div>
-<p>I’ve divided the commands onto three lines for easier reading.</p>
-<p><strong>Third</strong>, <span class="code docutils literal"><span class="pre">numpy</span></span> and <span class="code docutils literal"><span class="pre">numpy-dev</span></span> are required for the use of
-<a class="reference external" href="http://essentia.upf.edu/">essentia</a> from Python. I have previously installed these using <span class="code docutils literal"><span class="pre">pip</span></span> as
-detailed elsewhere on the blog– take a look if you need help.</p>
-<p><strong>Fourth</strong>, we <em>configure</em> (note– I removed the <strong>–with-cpptests</strong> flag in
-this configure command as errors were created during compilation with the flag
-in place):</p>
-<div class="code bash highlight-python"><div class="highlight"><pre>$ ./waf configure --mode=release --with-python  --with-examples --with-vamp
-</pre></div>
-</div>
-<p>This finishes successfully, but I note that <strong>libswresample</strong> is not found–
-we’ll see if that matters. Next, we <em>compile</em>:</p>
-<div class="code bash highlight-python"><div class="highlight"><pre>$ ./waf
-</pre></div>
-</div>
-<p><strong>Fifth</strong>, we install using (the <strong>sudo</strong> is import for permission to do
-certain thing in the install process):</p>
-<div class="code bash highlight-python"><div class="highlight"><pre>$ sudo ./waf install
-</pre></div>
-</div>
-<p><strong>Finally</strong>, I try importing the Python package as follows:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">Python</span> <span class="mf">2.7</span><span class="o">.</span><span class="mi">6</span> <span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="n">Mar</span> <span class="mi">22</span> <span class="mi">2014</span><span class="p">,</span> <span class="mi">22</span><span class="p">:</span><span class="mi">59</span><span class="p">:</span><span class="mi">56</span><span class="p">)</span>
-<span class="p">[</span><span class="n">GCC</span> <span class="mf">4.8</span><span class="o">.</span><span class="mi">2</span><span class="p">]</span> <span class="n">on</span> <span class="n">linux2</span>
-<span class="n">Type</span> <span class="s">"help"</span><span class="p">,</span> <span class="s">"copyright"</span><span class="p">,</span> <span class="s">"credits"</span> <span class="ow">or</span> <span class="s">"license"</span> <span class="k">for</span> <span class="n">more</span> <span class="n">information</span><span class="o">.</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">essentia</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="k">print</span> <span class="n">essentia</span><span class="o">.</span><span class="n">__version__</span>
-<span class="mf">2.1</span><span class="o">-</span><span class="n">beta2</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="nb">exit</span><span class="p">()</span>
-</pre></div>
-</div>
-<p>That all look good, looks like things are installed.</p>
+<p class="readmorewrapper"><a class="readmore" href="http://chrisstrelioff.ws/sandbox/2014/12/10/installing_essentia_for_audio_feature_extraction.html#more">Read more...</a></p> 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
 ]]></description>
              <pubDate>Wed, 10 Dec 2014 00:00:00 -0800</pubDate>
         </item>

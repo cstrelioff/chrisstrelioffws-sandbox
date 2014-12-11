@@ -5,6 +5,8 @@ Some notes on the installation of `essentia`_, a collection of c++ code with
 Python wrappers for audio feature extraction, following the `essentia
 installation guide`_.
 
+.. more::
+
 **First**, get the code from github-- `essentia github`_.  I do this in a local
 directory on my machine called :code:`~/gitlocal` so that I remember where the
 github repository is located:
@@ -14,7 +16,7 @@ github repository is located:
     $ cd ~/gitlocal
     $ git clone https://github.com/MTG/essentia.git 
 
-This is a large amount of code, so be patient as the code downloads and use a
+This is a large amount of code, so, be patient as the code downloads and use a
 good internet connection if possible.
 
 **Second**, I make sure that all of the Ubuntu dependencies are installed using
@@ -32,29 +34,29 @@ I've divided the commands onto three lines for easier reading.
 `essentia`_ from Python. I have previously installed these using :code:`pip` as
 detailed elsewhere on the blog-- take a look if you need help.
 
-**Fourth**, we *configure* (note-- I removed the **--with-cpptests** flag in
-this configure command as errors were created during compilation with the flag
-in place):
+**Fourth**, we *configure*: 
 
 .. code:: bash
 
      $ ./waf configure --mode=release --with-python  --with-examples --with-vamp
 
-This finishes successfully, but I note that **libswresample** is not found--
-we'll see if that matters. Next, we *compile*:
+**Note--** I removed the :code:`--with-cpptests` flag in this configure command
+to avoid resulting errors.
+
+Next, we *compile*:
 
 .. code:: bash
 
     $ ./waf
 
-**Fifth**, we install using (the **sudo** is import for permission to do
-certain thing in the install process):
+**Fifth**, we install using:
 
 .. code:: bash
 
     $ sudo ./waf install
 
-**Finally**, I try importing the Python package as follows:
+**Finally**, I try importing the Python package to make sure that the install
+worked:
 
 .. code-block:: python
 
@@ -66,7 +68,7 @@ certain thing in the install process):
     2.1-beta2
     >>> exit()
 
-That all look good, looks like things are installed.
+Looks good, `essentia`_ is installed.
 
 
 .. _essentia: http://essentia.upf.edu/
