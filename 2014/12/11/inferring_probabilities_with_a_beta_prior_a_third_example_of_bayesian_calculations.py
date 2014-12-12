@@ -24,29 +24,6 @@ ax.set_ylabel('Beta PDF')
 ax.legend(loc='best', frameon=False, fontsize='large')
 plt.show()
 
-def cdf_lines(ax, beta, pval, color):
-    """Add CDF lines."""    
-    CDF = beta.cdf(pval)
-    ax.plot([pval, pval], [0.0, CDF],
-            '{}--'.format(color))
-    ax.plot([pval, 0.0], [CDF, CDF],
-            '{}--'.format(color))
-
-fig, ax = plt.subplots(1, 1)
-x = np.arange(0., 1., 0.01)
-
-ax.plot(x, beta.cdf(x, 1, 1), 'k-',
-        label=r'$\alpha_0=5, \alpha_1=5$')
-cdf_lines(ax, beta(1,1), 0.3, 'r')
-cdf_lines(ax, beta(1,1), 0.5, 'b')
-
-ax.set_xlabel('Probability of Zero')
-ax.set_ylabel('Beta CDF')
-
-# add legend and show
-ax.legend(loc='best', frameon=False, fontsize='large')
-plt.show()
-
 fig, ax = plt.subplots(1, 1)
 x = np.arange(0., 1., 0.01)
 
@@ -63,12 +40,11 @@ plt.show()
 fig, ax = plt.subplots(1, 1)
 x = np.arange(0., 1., 0.01)
 
-ax.plot(x, beta.cdf(x, 5, 5), 'k-',
-        label=r'$\alpha_0=5, \alpha_1=5$')
-cdf_lines(ax, beta(5,5), 0.3, 'r')
-cdf_lines(ax, beta(5,5), 0.5, 'b')
+# four different parameter settings
+ax.plot(x, beta.pdf(x, 2, 8), 'k-',
+        label=r'$\alpha_0=2, \alpha_1=8$')
 ax.set_xlabel('Probability of Zero')
-ax.set_ylabel('Beta CDF')
+ax.set_ylabel('Beta PDF')
 
 # add legend and show
 ax.legend(loc='best', frameon=False, fontsize='large')
@@ -152,7 +128,7 @@ class prior:
 
     def interval(self, prob):
         """End points for region of pdf containing `prob` of the
-        pdf.
+        pdf-- this uses the cdf and inverse.
         
         Ex: interval(0.95)
         """
@@ -200,15 +176,16 @@ class prior:
         plt.show()
 
 pri = prior(1, 1)
-print("Prior mean: {}".format(pri.mean()))
-cred_int = pri.interval(0.95)
-print("95% CI: {} -- {}".format(cred_int[0], cred_int[1]))
 pri.plot()
 
-pri = prior(2, 5)
 print("Prior mean: {}".format(pri.mean()))
 cred_int = pri.interval(0.95)
 print("95% CI: {} -- {}".format(cred_int[0], cred_int[1]))
+
+pri = prior(5, 5)
+pri.plot()
+
+pri = prior(2, 8)
 pri.plot()
 
 class posterior:
@@ -326,7 +303,7 @@ post1 = posterior(data1, prior1)
 post1.plot()
 
 # prior
-prior2 = prior(8, 12)
+prior2 = prior(4, 6)
 
 # posterior
 post2 = posterior(data1, prior2)
@@ -347,7 +324,7 @@ post3 = posterior(data2, prior3)
 post3.plot()
 
 # prior
-prior4 = prior(12,8)
+prior4 = prior(6,4)
 
 # posterior
 post4 = posterior(data2, prior4)

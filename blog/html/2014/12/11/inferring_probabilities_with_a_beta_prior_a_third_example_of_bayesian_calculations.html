@@ -124,19 +124,20 @@ have to set to reflect our prior assumptions/information about the value of
 <em>a probability density funtion for a probability really confuses people</em>.
 However, just think of <span class="math">\(p_{0}\)</span> as a parameter that we want to infer&#8211;
 ignore the fact that the parameter is a probability.</p>
-<p>In any case, it is worth spending some time and effort getting used to this
-prior and what it means. To help, I&#8217;ll go though some properties of the Beta
-Distribution.  However, note that the <strong>posterior pdf will also be a Beta
-Distribution</strong>, so it is worth the effort to get comfortable with the pdf.</p>
-<p>So, some properties are:</p>
-<ul class="simple">
-<li><strong>Prior mean</strong> Most people want a single number, or point estimate, to
-represent the results of inference.  However, in a Bayesian approach to
+<p>In any case, it is worth spending some time getting used to this
+prior and what it means. To help, I&#8217;ll go though some properties of the
+<a class="reference external" href="http://en.wikipedia.org/wiki/Beta_distribution">Beta Distribution</a>.  However, note that the <strong>posterior pdf will also be a
+Beta Distribution</strong>, so it is worth the effort to get comfortable with the pdf.</p>
+<p>So, some properties are (some of this material will be technical in nature, so
+skim it over at first and look at the Python code below if you find it too
+mathy):</p>
+<p><strong>Prior mean &#8211;</strong> Most people want a single number, or point estimate, to
+represent the results of inference or the information contained in the
+prior.  However, in a Bayesian approach to
 inference the prior and posterior are both pdf&#8217;s or pmf&#8217;s.  One way to get a
 point estimate is to take the <em>average</em> of the parameter of interest with
 respect to the prior or posterior.  For example, for the Beta prior we
-obtain:</li>
-</ul>
+obtain:</p>
 <div class="math">
 \[\begin{split}\begin{array}{ll}
   \mathbf{E}_{prior}[p_{0}] &amp; = &amp; \int_{0}^{1} \, dp_{0} \, p_{0} \,
@@ -148,10 +149,8 @@ posterior and should be used with care.  Many other properties (higher moments,
 variance, etc) can be calculated&#8211; see <a class="reference external" href="http://en.wikipedia.org/wiki/Beta_distribution">Beta Distribution</a> for more options.
 Also checkout this nice post on <a class="reference external" href="http://sumsar.net/blog/2014/10/probable-points-and-credible-intervals-part-one/">Probable Points and Credible Intervals</a> for
 ideas on how to summarize a posterior distribution (also relevant to priors).</p>
-<ul class="simple">
-<li><strong>The pdf is normalized.</strong> This means if we integrate <span class="math">\(p_{0}\)</span> from
-<span class="math">\(0\)</span> to <span class="math">\(1\)</span> we get one:</li>
-</ul>
+<p><strong>The pdf is normalized &#8211;</strong> This means if we integrate <span class="math">\(p_{0}\)</span> from
+<span class="math">\(0\)</span> to <span class="math">\(1\)</span> we get one:</p>
 <div class="math">
 \[\int_{0}^{1} \, dp_{0} \, P(p_{0} \vert \alpha_{0}, \alpha{1}) = 1\]</div>
 <p>This is true because of the following relationship:</p>
@@ -163,42 +162,70 @@ ideas on how to summarize a posterior distribution (also relevant to priors).</p
 <p>The above integral produces the <a class="reference external" href="http://en.wikipedia.org/wiki/Beta_function">Beta function</a> (the relation is also called
 the Euler integral).  For our purposes, the most import information is the
 <a class="reference external" href="http://en.wikipedia.org/wiki/Beta_distribution">Beta Distribution</a> is normalized on the <span class="math">\(0\)</span> to <span class="math">\(1\)</span> interval, as
-necessary for <span class="math">\(p_{0}\)</span>.</p>
-<ul>
-<li><p class="first"><strong>Prior assumptions/information can be reflected by setting
-hyper-parameters</strong>.  The hyper-parameters <span class="math">\(\alpha_{0}\)</span> and
+necessary for a probability like <span class="math">\(p_{0}\)</span>.</p>
+<p><strong>Prior assumptions and information can be reflected by setting
+hyper-parameters &#8211;</strong> The hyper-parameters <span class="math">\(\alpha_{0}\)</span> and
 <span class="math">\(\alpha_{1}\)</span> affect the shape of the pdf, enabling a flexible encoding
 of prior information.</p>
-<p>For example, no (a priori) preferred values of <span class="math">\(p_{0}\)</span> can be reflected
+<p>For example, no preferred values of <span class="math">\(p_{0}\)</span> can be reflected
 by using <span class="math">\(\alpha_{0}=1\)</span>, <span class="math">\(\alpha_{1}=1\)</span>. This pdf looks like</p>
-</li>
-</ul>
 <a class="reference internal image-reference" href="../../../_images/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations_figure2_1.png"><img alt="../../../_images/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations_figure2_1.png" src="../../../_images/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations_figure2_1.png" style="width: 15cm;" /></a>
-<p>and reflects the fact that a value of <span class="math">\(p_{0}\)</span> between 0.0 and 0.2 has
-the same prior probability as value between 0.6 and 0.8. To find these
-probabilities, we&#8217;d have to integrate the Beta pdf over the appropriate range.
-For example, we can look at the cumulative density function</p>
-<a class="reference internal image-reference" href="../../../_images/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations_figure4_1.png"><img alt="../../../_images/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations_figure4_1.png" src="../../../_images/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations_figure4_1.png" style="width: 15cm;" /></a>
 <p>Another prior could assign <span class="math">\(\alpha_{0}=5\)</span>, <span class="math">\(\alpha_{1}=5\)</span>, which
 prefers values near <span class="math">\(p_{0}=1/2\)</span> and looks like</p>
-<a class="reference internal image-reference" href="../../../_images/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations_figure5_1.png"><img alt="../../../_images/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations_figure5_1.png" src="../../../_images/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations_figure5_1.png" style="width: 15cm;" /></a>
-<p>The CDS for this prior looks different:</p>
-<a class="reference internal image-reference" href="../../../_images/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations_figure6_1.png"><img alt="../../../_images/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations_figure6_1.png" src="../../../_images/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations_figure6_1.png" style="width: 15cm;" /></a>
+<a class="reference internal image-reference" href="../../../_images/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations_figure3_1.png"><img alt="../../../_images/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations_figure3_1.png" src="../../../_images/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations_figure3_1.png" style="width: 15cm;" /></a>
+<p>Finally, we can get non-symmetric priors using <span class="math">\(\alpha_{0} \neq
+\alpha_{1}\)</span>, as can be seen with <span class="math">\(\alpha_{0}=2\)</span> and
+<span class="math">\(\alpha_{1}=8\)</span>:</p>
+<a class="reference internal image-reference" href="../../../_images/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations_figure4_1.png"><img alt="../../../_images/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations_figure4_1.png" src="../../../_images/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations_figure4_1.png" style="width: 15cm;" /></a>
+<p>Some things to remember about setting the hyper-parameters:</p>
 <ul class="simple">
-<li><strong>The Beta Distribution is a conjugate prior for this problem.</strong> This means
+<li>If <span class="math">\(\alpha_{0}=\alpha_{1}\)</span> the prior will be symmetric with prior mean
+equal to <span class="math">\(\mathbf{E}_{prior}[p_{0}] = 1/2\)</span>.</li>
+<li>If <span class="math">\(\alpha_{0} \neq \alpha_{1}\)</span> the prior will be asymmetric with a
+prior mean different from <span class="math">\(1/2\)</span>.</li>
+<li>The <em>strength</em> of the prior is related to the sum
+<span class="math">\(\alpha_{0}+\alpha_{1}\)</span>. Compare the alpha sum with
+<span class="math">\(n_{0} + n_{1}\)</span> from the data, treating the alpha&#8217;s as fake counts.
+The relative size of these sums controls the effects of the prior and
+likelihood on the shape of the posterior.  This will become clear in the
+Python examples below.</li>
+</ul>
+<p><strong>The cumulative distribution function (cdf) &#8211;</strong> The cdf (see <a class="reference external" href="http://en.wikipedia.org/wiki/Cumulative_distribution_function">cumulative
+distribution function</a> at wikipedia for more info) for the
+<a class="reference external" href="http://en.wikipedia.org/wiki/Beta_distribution">Beta Distribution</a> let&#8217;s us calculate the probability that <span class="math">\(p_{0}\)</span> is
+less than or equal to a value <span class="math">\(x\)</span>.  To be specific, the cdf is defined:</p>
+<div class="math">
+\[\begin{split}\begin{array}{ll}
+P(p_{0} \leq x \vert \alpha_{0}, \alpha_{1})
+&amp; = &amp;
+\int_{0}^{x} P(p_{0} \vert \alpha_{0}, \alpha_{1} ) \\
+&amp; = &amp; I_{x}(\alpha_{0}, \alpha_{1})
+\end{array}\end{split}\]</div>
+<p>The integral is also called the <em>incomplete Beta ingtegral</em> and denoted
+<span class="math">\(I_{x}(\alpha_{0}, \alpha_{1})\)</span>.</p>
+<p>If we want the probability that <span class="math">\(p_{0}\)</span> is between the values
+<span class="math">\(x_{l}\)</span> and <span class="math">\(x_{h}\)</span> we can use the cdf to calculate this:</p>
+<div class="math">
+\[\begin{split}\begin{array}{ll}
+P(x_{l} \lt p_{0} \leq x_{h} \vert \alpha_{0}, \alpha_{1})
+&amp; = &amp;
+P(p_{0} \leq x_{h} \vert \alpha_{0}, \alpha_{1}) \\
+&amp; - &amp;
+P(p_{0} \leq x_{l} \vert \alpha_{0}, \alpha_{1}) \\
+&amp; = &amp; I_{x_{h}}(\alpha_{0}, \alpha_{1})
+    - I_{x_{l}}(\alpha_{0}, \alpha_{1})
+\end{array}\end{split}\]</div>
+<p>The incomplete Beta integral, or cdf, and it&#8217;s inverse allows for the
+calculation of a credible interval from the prior or posterior.  Using these
+tools the value of <span class="math">\(p_{0}\)</span> can be said to be within a certain range with
+95% probability&#8211; again, we&#8217;ll use Python code to plot this below.</p>
+<p><strong>The Beta Distribution is a conjugate prior for this problem &#8211;</strong> This means
 that the posterior will have the same mathematical form as the prior (it will
-also be a <a class="reference external" href="http://en.wikipedia.org/wiki/Beta_distribution">Beta Distribution</a>) with
-updated hyper-parameters.  This mathematical &#8216;resonance&#8217; is really nice and
-let&#8217;s us do full Bayesian inference without MCMC.</li>
-</ul>
-<p>Some final notes before moving on to Bayes&#8217; Theorem and the posterior for this
-problem:</p>
-<ul class="simple">
-<li>I&#8217;ve used different notation for the Beta: <span class="math">\((\alpha_{0}, \alpha_{1})\)</span>
-instead of the usual <span class="math">\((\alpha, \beta)\)</span>.  As I&#8217;ll discuss further below,
-this notation makes it easier to compare the hyper-parameters with
-<em>fake counts</em> and relate the values with data <span class="math">\(n_{0}\)</span> and <span class="math">\(n_{1}\)</span>.</li>
-</ul>
+also be a <a class="reference external" href="http://en.wikipedia.org/wiki/Beta_distribution">Beta Distribution</a>) with updated hyper-parameters.  This
+mathematical &#8216;resonance&#8217; is really nice and let&#8217;s us do full Bayesian inference
+without MCMC.</p>
+<p>Okay, enough about the prior and the <a class="reference external" href="http://en.wikipedia.org/wiki/Beta_distribution">Beta Distribution</a>, now let&#8217;s talk about
+Bayes&#8217; Theorem and the posterior pdf for this problem.</p>
 </div>
 <div class="section" id="bayes-theorem-and-the-posterior">
 <h2>Bayes&#8217; Theorem and the Posterior</h2>
@@ -223,7 +250,7 @@ hyper-parameters</em> <span class="math">\((\alpha_{0}, \alpha_{1})\)</span>.</p
   }\]</div>
 <p>where the posterior
 <span class="math">\(\color{blue}{P(p_{0} \vert D, \alpha_{0}, \alpha_{1})}\)</span> is blue, the
-likelihood <span class="math">\(P(D \vert \hat{p}_{0})\)</span> is black, and the prior
+likelihood <span class="math">\(P(D \vert p_{0})\)</span> is black, and the prior
 <span class="math">\(\color{red}{P(p_{0} \vert \alpha_{0}, \alpha_{1})}\)</span> is red.
 Notice that the normalizing <em>marginal likelihood</em> or <em>evidence</em> (denominator in
 the above equation) is now an integral.  This is the price of using continuous
@@ -319,6 +346,12 @@ as we need for inferring a probability like <span class="math">\(p_{0}\)</span>.
                            P(p_{0} \vert D, \alpha_{0}, \alpha_{1}) \\
   &amp; = &amp; \frac{\alpha_{0}+n_{0}}{\alpha_{0}+\alpha_{1}+n_{0}+n_{1}}
 \end{array}\end{split}\]</div>
+<ul class="simple">
+<li>The cdf for the posterior is just like for the prior because we still have a
+<a class="reference external" href="http://en.wikipedia.org/wiki/Beta_distribution">Beta Distribution</a> &#8211; except, now the parameters are updated with data.  In
+any case, we can find credible intervals with the incomplete Beta integral
+and it&#8217;s inverse, as discussed above.</li>
+</ul>
 </div>
 <div class="section" id="inference-code-in-python">
 <h2>Inference code in Python</h2>
@@ -404,7 +437,11 @@ this case, to create some nice plots with minimal tweaking.</p>
 </div>
 <p><strong>Prior</strong></p>
 <p>Our prior class will basically be a wrapper around <span class="code docutils literal"><span class="pre">scipy.stats.beta</span></span>
-with a plotting method.</p>
+with a plotting method.  Notice that the <span class="code docutils literal"><span class="pre">plot()</span></span> method gets the Beta
+Distribution mean and uses the <span class="code docutils literal"><span class="pre">interval()</span></span> method from
+<span class="code docutils literal"><span class="pre">scipy.stats.beta</span></span> to get a region with 95% probability&#8211; this is done,
+behind the scenes, using the incomplete Beta integral and it&#8217;s inverse as
+discussed above.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">prior</span><span class="p">:</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alpha0</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">alpha1</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Beta prior for binary data.&quot;&quot;&quot;</span>
@@ -415,7 +452,7 @@ with a plotting method.</p>
 
     <span class="k">def</span> <span class="nf">interval</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prob</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;End points for region of pdf containing `prob` of the</span>
-<span class="sd">        pdf.</span>
+<span class="sd">        pdf-- this uses the cdf and inverse.</span>
 
 <span class="sd">        Ex: interval(0.95)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -466,27 +503,33 @@ with a plotting method.</p>
 <p>Let&#8217;s plot some Beta pdfs with a range of parameters using the new code. First,
 the uniform prior</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">pri</span> <span class="o">=</span> <span class="n">prior</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="s">&quot;Prior mean: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pri</span><span class="o">.</span><span class="n">mean</span><span class="p">()))</span>
+<span class="n">pri</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../../../_images/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations_figure8_1.png"><img alt="../../../_images/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations_figure8_1.png" src="../../../_images/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations_figure8_1.png" style="width: 15cm;" /></a>
+<p>The vertical line with the dot shows the location of the mean of the pdf.  The
+shaded region indicates the (symmetric) region with 95% probability for the
+given values of <span class="math">\(\alpha_{0}\)</span> and <span class="math">\(\alpha_{1}\)</span>.  If you want the
+actual values for the mean and the credible interval, these can be obtained as
+well:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">print</span><span class="p">(</span><span class="s">&quot;Prior mean: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pri</span><span class="o">.</span><span class="n">mean</span><span class="p">()))</span>
 <span class="n">cred_int</span> <span class="o">=</span> <span class="n">pri</span><span class="o">.</span><span class="n">interval</span><span class="p">(</span><span class="mf">0.95</span><span class="p">)</span>
 <span class="k">print</span><span class="p">(</span><span class="s">&quot;95% CI: {} -- {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cred_int</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">cred_int</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
-<span class="n">pri</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
 </pre></div>
 </div>
 <div class="highlight-python"><div class="highlight"><pre>Prior mean: 0.5
 95% CI: 0.025 -- 0.975
 </pre></div>
 </div>
-<a class="reference internal image-reference" href="../../../_images/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations_figure10_1.png"><img alt="../../../_images/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations_figure10_1.png" src="../../../_images/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations_figure10_1.png" style="width: 15cm;" /></a>
-<p>Second, a prior with mean <span class="math">\(\mathbf{E}_{prior} = 2/(2+5) \approx 0.29\)</span>:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">pri</span> <span class="o">=</span> <span class="n">prior</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="s">&quot;Prior mean: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pri</span><span class="o">.</span><span class="n">mean</span><span class="p">()))</span>
-<span class="n">cred_int</span> <span class="o">=</span> <span class="n">pri</span><span class="o">.</span><span class="n">interval</span><span class="p">(</span><span class="mf">0.95</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="s">&quot;95% CI: {} -- {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cred_int</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">cred_int</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+<p>The other prior examples from above also work:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">pri</span> <span class="o">=</span> <span class="n">prior</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
 <span class="n">pri</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
 </pre></div>
 </div>
-<div class="highlight-python"><div class="highlight"><pre>Prior mean: 0.285714285714
-95% CI: 0.0432718682927 -- 0.641234578998
+<a class="reference internal image-reference" href="../../../_images/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations_figure10_1.png"><img alt="../../../_images/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations_figure10_1.png" src="../../../_images/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations_figure10_1.png" style="width: 15cm;" /></a>
+<p>and</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">pri</span> <span class="o">=</span> <span class="n">prior</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
+<span class="n">pri</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
 </pre></div>
 </div>
 <a class="reference internal image-reference" href="../../../_images/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations_figure11_1.png"><img alt="../../../_images/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations_figure11_1.png" src="../../../_images/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations_figure11_1.png" style="width: 15cm;" /></a>
@@ -606,7 +649,9 @@ posterior from these elements.</p>
 </div>
 <div class="section" id="examples">
 <h2>Examples</h2>
-<p>Let&#8217;s do an example</p>
+<p>Let&#8217;s start with an example using the data at the start of the post and a
+uniform prior.  You can also compare the result with example from the previous
+post using a set of candidate probabilities&#8211; <a class="reference internal" href="../../10/24/inferring_probabilities_a_second_example_of_bayesian_calculations.html#bayes-second-example"><em>Inferring probabilities, a second example of Bayesian calculations</em></a></p>
 <div class="highlight-python"><div class="highlight"><pre><span class="c"># data</span>
 <span class="n">data1</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
 
@@ -619,11 +664,21 @@ posterior from these elements.</p>
 </pre></div>
 </div>
 <a class="reference internal image-reference" href="../../../_images/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations_figure13_1.png"><img alt="../../../_images/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations_figure13_1.png" src="../../../_images/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations_figure13_1.png" style="width: 15cm;" /></a>
-<p>Next, an example where the prior is not uniform and produced a biased picture
-due to this setting (again, there should be a good reason for this prior
+<p>Things to note here:</p>
+<ul class="simple">
+<li>The prior is uniform.  This means that the likelihood and the posterior have
+the same shape.</li>
+<li>The 95% credible interval is shown for both the prior and the posterior&#8211;
+note how the information about <span class="math">\(p_{0}\)</span> has been updated with this short
+data series.</li>
+</ul>
+<p>Next, let&#8217;s consider the same data with a prior that is not uniform. The
+dataset is length 10, so <span class="math">\(n_{0}+n_{1}=10\)</span>.  Let&#8217;s set a prior with
+<span class="math">\(\alpha_{0}+\alpha_{1}=10\)</span> but the prior is peaked in a different
+location from the likelihood (maybe an expert has said this should be the prior
 setting):</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="c"># prior</span>
-<span class="n">prior2</span> <span class="o">=</span> <span class="n">prior</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span>
+<span class="n">prior2</span> <span class="o">=</span> <span class="n">prior</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
 
 <span class="c"># posterior</span>
 <span class="n">post2</span> <span class="o">=</span> <span class="n">posterior</span><span class="p">(</span><span class="n">data1</span><span class="p">,</span> <span class="n">prior2</span><span class="p">)</span>
@@ -631,7 +686,13 @@ setting):</p>
 </pre></div>
 </div>
 <a class="reference internal image-reference" href="../../../_images/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations_figure14_1.png"><img alt="../../../_images/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations_figure14_1.png" src="../../../_images/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations_figure14_1.png" style="width: 15cm;" /></a>
-<p>And a final example:</p>
+<p>Well, obviously the data and the expert disagree at this point.  However,
+because the prior is set with weight 10 and the data series is length 10 the
+posterior peaks midway between the peaks in the prior and likelihood.
+Try playing with this effect to better understand the interplay between the
+prior hyper-parameters, the length of the dataset and the resulting posterior.</p>
+<p>As a final example we consider two variants of the last example from
+<a class="reference internal" href="../../10/24/inferring_probabilities_a_second_example_of_bayesian_calculations.html#bayes-second-example"><em>Inferring probabilities, a second example of Bayesian calculations</em></a>.  First we use a uniform prior:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="c"># set probability of 0</span>
 <span class="n">p0</span> <span class="o">=</span> <span class="mf">0.23</span>
 <span class="c"># set rng seed to 42</span>
@@ -648,9 +709,13 @@ setting):</p>
 </pre></div>
 </div>
 <a class="reference internal image-reference" href="../../../_images/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations_figure15_1.png"><img alt="../../../_images/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations_figure15_1.png" src="../../../_images/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations_figure15_1.png" style="width: 15cm;" /></a>
-<p>a bad prior, but more data (using the data from above example)</p>
+<p>Notice that the likelihood and posterior peak in the same place, just as we
+would expect.  However, the peak is much stronger due to the longer dataset
+(500 values).</p>
+<p>Finally we use a &#8216;bad prior&#8217; on the same dataset.  In this case we&#8217;ll keep the
+strength of the prior at 10, that is <span class="math">\(\alpha_{0}+\alpha_{1}=10\)</span>:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="c"># prior</span>
-<span class="n">prior4</span> <span class="o">=</span> <span class="n">prior</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">8</span><span class="p">)</span>
+<span class="n">prior4</span> <span class="o">=</span> <span class="n">prior</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span>
 
 <span class="c"># posterior</span>
 <span class="n">post4</span> <span class="o">=</span> <span class="n">posterior</span><span class="p">(</span><span class="n">data2</span><span class="p">,</span> <span class="n">prior4</span><span class="p">)</span>
@@ -658,6 +723,14 @@ setting):</p>
 </pre></div>
 </div>
 <a class="reference internal image-reference" href="../../../_images/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations_figure16_1.png"><img alt="../../../_images/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations_figure16_1.png" src="../../../_images/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations_figure16_1.png" style="width: 15cm;" /></a>
+<p>Notice that the likelihood and posterior are very similar despite the prior
+that peaks in the wrong place.  This examples demonstrates that a reasonable
+amount of data should produce decent inference if the prior has not been set
+too strong.  In general it&#8217;s good to have
+<span class="math">\(n_{0}+n_{1} \gt \alpha_{0} + \alpha_{1}\)</span> and to consider the shapes of
+both the prior and posterior.</p>
+<p>That&#8217;s it for this post.  As always, comments, questions, and corrections as
+welcome!</p>
 </div>
 </div>
 

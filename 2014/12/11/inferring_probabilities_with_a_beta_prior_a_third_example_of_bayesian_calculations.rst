@@ -89,19 +89,22 @@ have to set to reflect our prior assumptions/information about the value of
 However, just think of :math:`p_{0}` as a parameter that we want to infer--
 ignore the fact that the parameter is a probability.
 
-In any case, it is worth spending some time and effort getting used to this
-prior and what it means. To help, I'll go though some properties of the Beta
-Distribution.  However, note that the **posterior pdf will also be a Beta
-Distribution**, so it is worth the effort to get comfortable with the pdf.
+In any case, it is worth spending some time getting used to this
+prior and what it means. To help, I'll go though some properties of the
+`Beta Distribution`_.  However, note that the **posterior pdf will also be a
+Beta Distribution**, so it is worth the effort to get comfortable with the pdf.
 
-So, some properties are:
+So, some properties are (some of this material will be technical in nature, so
+skim it over at first and look at the Python code below if you find it too
+mathy):
 
-* **Prior mean** Most people want a single number, or point estimate, to
-  represent the results of inference.  However, in a Bayesian approach to
-  inference the prior and posterior are both pdf's or pmf's.  One way to get a
-  point estimate is to take the *average* of the parameter of interest with
-  respect to the prior or posterior.  For example, for the Beta prior we
-  obtain:
+**Prior mean --** Most people want a single number, or point estimate, to
+represent the results of inference or the information contained in the
+prior.  However, in a Bayesian approach to
+inference the prior and posterior are both pdf's or pmf's.  One way to get a
+point estimate is to take the *average* of the parameter of interest with
+respect to the prior or posterior.  For example, for the Beta prior we
+obtain:
 
 .. math::
 
@@ -117,8 +120,8 @@ variance, etc) can be calculated-- see `Beta Distribution`_ for more options.
 Also checkout this nice post on `Probable Points and Credible Intervals`_ for
 ideas on how to summarize a posterior distribution (also relevant to priors).
 
-* **The pdf is normalized.** This means if we integrate :math:`p_{0}` from
-  :math:`0` to :math:`1` we get one:
+**The pdf is normalized --** This means if we integrate :math:`p_{0}` from
+:math:`0` to :math:`1` we get one:
 
 .. math::
 
@@ -136,16 +139,15 @@ This is true because of the following relationship:
 The above integral produces the `Beta function`_ (the relation is also called
 the Euler integral).  For our purposes, the most import information is the
 `Beta Distribution`_ is normalized on the :math:`0` to :math:`1` interval, as
-necessary for :math:`p_{0}`.
+necessary for a probability like :math:`p_{0}`.
 
-* **Prior assumptions/information can be reflected by setting
-  hyper-parameters**.  The hyper-parameters :math:`\alpha_{0}` and
-  :math:`\alpha_{1}` affect the shape of the pdf, enabling a flexible encoding
-  of prior information.
+**Prior assumptions and information can be reflected by setting
+hyper-parameters --** The hyper-parameters :math:`\alpha_{0}` and
+:math:`\alpha_{1}` affect the shape of the pdf, enabling a flexible encoding
+of prior information.
 
-  For example, no (a priori) preferred values of :math:`p_{0}` can be reflected
-  by using :math:`\alpha_{0}=1`, :math:`\alpha_{1}=1`. This pdf looks like
-
+For example, no preferred values of :math:`p_{0}` can be reflected
+by using :math:`\alpha_{0}=1`, :math:`\alpha_{1}=1`. This pdf looks like
 
 
 
@@ -156,13 +158,18 @@ necessary for :math:`p_{0}`.
 
 
 
-and reflects the fact that a value of :math:`p_{0}` between 0.0 and 0.2 has
-the same prior probability as value between 0.6 and 0.8. To find these
-probabilities, we'd have to integrate the Beta pdf over the appropriate range.
-For example, we can look at the cumulative density function
+Another prior could assign :math:`\alpha_{0}=5`, :math:`\alpha_{1}=5`, which
+prefers values near :math:`p_{0}=1/2` and looks like
+
+
+.. image:: figs/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations_figure3_1.*
+   :width: 15 cm
 
 
 
+Finally, we can get non-symmetric priors using :math:`\alpha_{0} \neq
+\alpha_{1}`, as can be seen with :math:`\alpha_{0}=2` and
+:math:`\alpha_{1}=8`:
 
 
 .. image:: figs/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations_figure4_1.*
@@ -170,38 +177,66 @@ For example, we can look at the cumulative density function
 
 
 
+Some things to remember about setting the hyper-parameters:
 
-Another prior could assign :math:`\alpha_{0}=5`, :math:`\alpha_{1}=5`, which
-prefers values near :math:`p_{0}=1/2` and looks like
+* If :math:`\alpha_{0}=\alpha_{1}` the prior will be symmetric with prior mean
+  equal to :math:`\mathbf{E}_{prior}[p_{0}] = 1/2`.
 
+* If :math:`\alpha_{0} \neq \alpha_{1}` the prior will be asymmetric with a
+  prior mean different from :math:`1/2`.
 
-.. image:: figs/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations_figure5_1.*
-   :width: 15 cm
+* The *strength* of the prior is related to the sum
+  :math:`\alpha_{0}+\alpha_{1}`. Compare the alpha sum with
+  :math:`n_{0} + n_{1}` from the data, treating the alpha's as fake counts.
+  The relative size of these sums controls the effects of the prior and
+  likelihood on the shape of the posterior.  This will become clear in the
+  Python examples below.
 
+**The cumulative distribution function (cdf) --** The cdf (see `cumulative
+distribution function`_ at wikipedia for more info) for the
+`Beta Distribution`_ let's us calculate the probability that :math:`p_{0}` is
+less than or equal to a value :math:`x`.  To be specific, the cdf is defined:
 
+.. math::
 
-The CDS for this prior looks different:
+    \begin{array}{ll}
+    P(p_{0} \leq x \vert \alpha_{0}, \alpha_{1})
+    & = &
+    \int_{0}^{x} P(p_{0} \vert \alpha_{0}, \alpha_{1} ) \\
+    & = & I_{x}(\alpha_{0}, \alpha_{1})
+    \end{array}
 
+The integral is also called the *incomplete Beta ingtegral* and denoted
+:math:`I_{x}(\alpha_{0}, \alpha_{1})`.
 
-.. image:: figs/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations_figure6_1.*
-   :width: 15 cm
+If we want the probability that :math:`p_{0}` is between the values
+:math:`x_{l}` and :math:`x_{h}` we can use the cdf to calculate this:
 
+.. math::
 
+    \begin{array}{ll}
+    P(x_{l} \lt p_{0} \leq x_{h} \vert \alpha_{0}, \alpha_{1})
+    & = &
+    P(p_{0} \leq x_{h} \vert \alpha_{0}, \alpha_{1}) \\
+    & - &
+    P(p_{0} \leq x_{l} \vert \alpha_{0}, \alpha_{1}) \\
+    & = & I_{x_{h}}(\alpha_{0}, \alpha_{1})
+        - I_{x_{l}}(\alpha_{0}, \alpha_{1})
+    \end{array}
 
-* **The Beta Distribution is a conjugate prior for this problem.** This means
-  that the posterior will have the same mathematical form as the prior (it will
-  also be a `Beta Distribution`_) with
-  updated hyper-parameters.  This mathematical 'resonance' is really nice and
-  let's us do full Bayesian inference without MCMC.
+The incomplete Beta integral, or cdf, and it's inverse allows for the
+calculation of a credible interval from the prior or posterior.  Using these
+tools the value of :math:`p_{0}` can be said to be within a certain range with
+95% probability-- again, we'll use Python code to plot this below.
 
-Some final notes before moving on to Bayes' Theorem and the posterior for this
-problem:
+**The Beta Distribution is a conjugate prior for this problem --** This means
+that the posterior will have the same mathematical form as the prior (it will
+also be a `Beta Distribution`_) with updated hyper-parameters.  This
+mathematical 'resonance' is really nice and let's us do full Bayesian inference
+without MCMC.
 
-* I've used different notation for the Beta: :math:`(\alpha_{0}, \alpha_{1})`
-  instead of the usual :math:`(\alpha, \beta)`.  As I'll discuss further below,
-  this notation makes it easier to compare the hyper-parameters with
-  *fake counts* and relate the values with data :math:`n_{0}` and :math:`n_{1}`.
-
+Okay, enough about the prior and the `Beta Distribution`_, now let's talk about
+Bayes' Theorem and the posterior pdf for this problem.
 
 Bayes' Theorem and the Posterior
 --------------------------------
@@ -234,7 +269,7 @@ In this setting Bayes' Theorem takes the form:
 
 where the posterior
 :math:`\color{blue}{P(p_{0} \vert D, \alpha_{0}, \alpha_{1})}` is blue, the
-likelihood :math:`P(D \vert \hat{p}_{0})` is black, and the prior
+likelihood :math:`P(D \vert p_{0})` is black, and the prior
 :math:`\color{red}{P(p_{0} \vert \alpha_{0}, \alpha_{1})}` is red.
 Notice that the normalizing *marginal likelihood* or *evidence* (denominator in
 the above equation) is now an integral.  This is the price of using continuous
@@ -351,6 +386,11 @@ before moving to implementing this in Python, a couple of notes:
       & = & \frac{\alpha_{0}+n_{0}}{\alpha_{0}+\alpha_{1}+n_{0}+n_{1}}
     \end{array}
 
+* The cdf for the posterior is just like for the prior because we still have a
+  `Beta Distribution`_ -- except, now the parameters are updated with data.  In
+  any case, we can find credible intervals with the incomplete Beta integral
+  and it's inverse, as discussed above.
+
 Inference code in Python
 ------------------------
 
@@ -451,7 +491,11 @@ The likelihood is exactly the same as for the previous example-- see
 **Prior**
 
 Our prior class will basically be a wrapper around :code:`scipy.stats.beta`
-with a plotting method.
+with a plotting method.  Notice that the :code:`plot()` method gets the Beta
+Distribution mean and uses the :code:`interval()` method from
+:code:`scipy.stats.beta` to get a region with 95% probability-- this is done,
+behind the scenes, using the incomplete Beta integral and it's inverse as
+discussed above.
 
 
 .. code-block:: python
@@ -466,7 +510,7 @@ with a plotting method.
     
         def interval(self, prob):
             """End points for region of pdf containing `prob` of the
-            pdf.
+            pdf-- this uses the cdf and inverse.
     
             Ex: interval(0.95)
             """
@@ -523,10 +567,26 @@ the uniform prior
 .. code-block:: python
 
     pri = prior(1, 1)
+    pri.plot()
+    
+
+.. image:: figs/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations_figure8_1.*
+   :width: 15 cm
+
+
+
+The vertical line with the dot shows the location of the mean of the pdf.  The
+shaded region indicates the (symmetric) region with 95% probability for the
+given values of :math:`\alpha_{0}` and :math:`\alpha_{1}`.  If you want the
+actual values for the mean and the credible interval, these can be obtained as
+well:
+
+
+.. code-block:: python
+
     print("Prior mean: {}".format(pri.mean()))
     cred_int = pri.interval(0.95)
     print("95% CI: {} -- {}".format(cred_int[0], cred_int[1]))
-    pri.plot()
     
 
 ::
@@ -536,28 +596,29 @@ the uniform prior
     
     
 
+
+
+The other prior examples from above also work:
+
+
+.. code-block:: python
+
+    pri = prior(5, 5)
+    pri.plot()
+    
+
 .. image:: figs/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations_figure10_1.*
    :width: 15 cm
 
 
 
-Second, a prior with mean :math:`\mathbf{E}_{prior} = 2/(2+5) \approx 0.29`:
+and
 
 
 .. code-block:: python
 
-    pri = prior(2, 5)
-    print("Prior mean: {}".format(pri.mean()))
-    cred_int = pri.interval(0.95)
-    print("95% CI: {} -- {}".format(cred_int[0], cred_int[1]))
+    pri = prior(2, 8)
     pri.plot()
-    
-
-::
-
-    Prior mean: 0.285714285714
-    95% CI: 0.0432718682927 -- 0.641234578998
-    
     
 
 .. image:: figs/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations_figure11_1.*
@@ -690,7 +751,9 @@ That's it with the base code, let do some examples.
 Examples
 --------
 
-Let's do an example
+Let's start with an example using the data at the start of the post and a
+uniform prior.  You can also compare the result with example from the previous
+post using a set of candidate probabilities-- :ref:`bayes second example`
 
 
 .. code-block:: python
@@ -711,15 +774,25 @@ Let's do an example
 
 
 
-Next, an example where the prior is not uniform and produced a biased picture
-due to this setting (again, there should be a good reason for this prior
+Things to note here:
+
+* The prior is uniform.  This means that the likelihood and the posterior have
+  the same shape.
+* The 95% credible interval is shown for both the prior and the posterior--
+  note how the information about :math:`p_{0}` has been updated with this short
+  data series.
+
+Next, let's consider the same data with a prior that is not uniform. The
+dataset is length 10, so :math:`n_{0}+n_{1}=10`.  Let's set a prior with
+:math:`\alpha_{0}+\alpha_{1}=10` but the prior is peaked in a different
+location from the likelihood (maybe an expert has said this should be the prior
 setting):
 
 
 .. code-block:: python
 
     # prior
-    prior2 = prior(8, 12)
+    prior2 = prior(4, 6)
     
     # posterior
     post2 = posterior(data1, prior2)
@@ -731,7 +804,14 @@ setting):
 
 
 
-And a final example:
+Well, obviously the data and the expert disagree at this point.  However,
+because the prior is set with weight 10 and the data series is length 10 the
+posterior peaks midway between the peaks in the prior and likelihood.
+Try playing with this effect to better understand the interplay between the
+prior hyper-parameters, the length of the dataset and the resulting posterior.
+
+As a final example we consider two variants of the last example from
+:ref:`bayes second example`.  First we use a uniform prior:
 
 
 .. code-block:: python
@@ -756,13 +836,18 @@ And a final example:
 
 
 
-a bad prior, but more data (using the data from above example)
+Notice that the likelihood and posterior peak in the same place, just as we
+would expect.  However, the peak is much stronger due to the longer dataset
+(500 values).
+
+Finally we use a 'bad prior' on the same dataset.  In this case we'll keep the
+strength of the prior at 10, that is :math:`\alpha_{0}+\alpha_{1}=10`:
 
 
 .. code-block:: python
 
     # prior
-    prior4 = prior(12,8)
+    prior4 = prior(6,4)
     
     # posterior
     post4 = posterior(data2, prior4)
@@ -774,11 +859,22 @@ a bad prior, but more data (using the data from above example)
 
 
 
+Notice that the likelihood and posterior are very similar despite the prior
+that peaks in the wrong place.  This examples demonstrates that a reasonable
+amount of data should produce decent inference if the prior has not been set
+too strong.  In general it's good to have
+:math:`n_{0}+n_{1} \gt \alpha_{0} + \alpha_{1}` and to consider the shapes of 
+both the prior and posterior.
+
+That's it for this post.  As always, comments, questions, and corrections as
+welcome!
+
 .. _Beta Distribution: http://en.wikipedia.org/wiki/Beta_distribution
 .. _Beta function: http://en.wikipedia.org/wiki/Beta_function
 
 .. _probability mass function: http://en.wikipedia.org/wiki/Probability_mass_function
 .. _probability density function: http://en.wikipedia.org/wiki/Probability_density_function
+.. _cumulative distribution function: http://en.wikipedia.org/wiki/Cumulative_distribution_function
 .. _Bernoulli Process: http://en.wikipedia.org/wiki/Bernoulli_process
 
 .. _Probable Points and Credible Intervals: http://sumsar.net/blog/2014/10/probable-points-and-credible-intervals-part-one/
