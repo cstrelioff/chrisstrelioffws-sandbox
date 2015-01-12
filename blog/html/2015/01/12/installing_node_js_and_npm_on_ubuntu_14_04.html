@@ -1,0 +1,196 @@
+<!DOCTYPE html><!--[if lt IE 7]>      <html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:og="http://ogp.me/ns#"
+    xmlns:fb="https://www.facebook.com/2008/fbml" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:og="http://ogp.me/ns#"
+    xmlns:fb="https://www.facebook.com/2008/fbml" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:og="http://ogp.me/ns#"
+    xmlns:fb="https://www.facebook.com/2008/fbml" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:og="http://ogp.me/ns#"
+    xmlns:fb="https://www.facebook.com/2008/fbml" class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" content="Christopher Strelioff's blog">
+        <meta name="viewport" content="width=device-width">
+        <title>Installing Node.js and npm on Ubuntu 14.04 &mdash; chris&#39; sandbox</title>
+            <link rel="stylesheet" href="../../../_static/normalize.css" type="text/css">
+            <link rel="stylesheet" href="../../../_static/sphinx.css" type="text/css">
+            <link rel="stylesheet" href="../../../_static/main.css" type="text/css">
+            <link rel="stylesheet" href="../../../_static/flat.css" type="text/css">
+            <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+            <link rel="stylesheet" href="../../../_static/font-awesome.min.css" type="text/css">
+        <link rel="stylesheet" href="../../../_static/style.css" type="text/css" /><link rel="shortcut icon" href="../../../_static/tinkerer.ico" /><!-- Load modernizr and JQuery -->
+        <script src="../../../_static/vendor/modernizr-2.6.2.min.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="../../../_static/vendor/jquery-1.8.2.min.js"><\/script>')</script>
+        <script src="../../../_static/plugins.js"></script>
+        <script src="../../../_static/main.js"></script>
+        <link rel="next" title="Inferring probabilities with a Beta prior, a third example of Bayesian calculations" href="../../../2014/12/11/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations.html" /><link rel="alternate" type="application/rss+xml" title="RSS" href="../../../rss.html" /><script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '1.5',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script><script type="text/javascript" src="../../../_static/underscore.js"></script><script type="text/javascript" src="../../../_static/doctools.js"></script><script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script type="text/javascript" src="../../../_static/disqus.js"></script><script type="text/javascript" src="../../../_static/google_analytics.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            // Scroll to content if on small screen
+            if (screen.width < 480)
+            {
+                $(document).scrollTop(document.getElementsByTagName("article")[0].offsetTop - 44);
+            }
+        });
+    </script></head>
+    <body role="document">
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+
+      <div id="container"><header role="banner">
+    <hgroup>
+      <h1><a href="../../../index.html">chris&#39; sandbox</a></h1><h2>python, R, ubuntu, bayesian methods, machine learning and more...</h2></hgroup>
+  </header>
+<div class="main-container" role="main"><div class="main wrapper body clearfix"><article><div class="timestamp postmeta">
+            <span>January 12, 2015</span>
+        </div>
+    <div class="section" id="installing-node-js-and-npm-on-ubuntu-14-04">
+<h1>Installing Node.js and npm on Ubuntu 14.04</h1>
+<p>I&#8217;ve decided to start being systematic about learning <em>javascript</em>, with a
+focus on getting good with <a class="reference external" href="http://d3js.org/">d3js</a>.  I&#8217;ll be installing <a class="reference external" href="https://github.com/joyent/node/">nodejs</a> and npm (node
+package manager) as a way to get access to a javascript console and, for later,
+a powerful javascript environment. As always, <em>constructive</em> comments and
+questions are welcome and much appreciated.</p>
+<div id="more"> </div><p>I&#8217;ll be using the instructions at the <a class="reference external" href="https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager">nodejs github wiki</a> that allows for the
+use, and updating, of more current versions of nodejs and npm.  It is worth
+noting that both nodejs and npm are in the Ubuntu repository and can be
+installed with the usual <span class="code docutils literal"><span class="pre">sudo</span> <span class="pre">apt-get</span> <span class="pre">install</span></span>.  However, installing
+this way leaves the user stuck with older versions of the relevant software.</p>
+<p>So, following the <a class="reference external" href="https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager">nodejs github wiki</a>, the install is as simple as:</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>$ curl -sL https://deb.nodesource.com/setup | sudo bash -
+$ sudo apt-get install -y nodejs
+</pre></div>
+</div>
+<p>That&#8217;s it, we&#8217;re done. A check of the nodejs version gets:</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>$ node --version
+v0.10.35
+</pre></div>
+</div>
+<p>and, for npm:</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>$ npm --version
+1.4.28
+</pre></div>
+</div>
+<p>Finally, some examples of how <em>I will use</em> nodejs to learn javascript.
+<strong>First</strong>, I can use the console by starting node with no arguments:</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>$ node
+</pre></div>
+</div>
+<p>Next, print <em>Hello world!</em> and exit:</p>
+<div class="code javascript highlight-python"><div class="highlight"><pre>&gt; console.log(&quot;Hello world!&quot;)
+Hello word!
+undefined
+&gt; process.exit()
+</pre></div>
+</div>
+<p>This provides access to the javascript console and makes it possible for me
+to try out simple commands.</p>
+<p><strong>Second</strong>, for longer chunks of code it is nice to be able to execute a file
+from the command line, just like I would with <em>bash</em> or <em>Python</em>. To do this,
+create the file <strong>helloworld.js</strong> with the following code:</p>
+<div class="code javascript highlight-python"><div class="highlight"><pre>#! /usr/bin/env node
+// helloworld.js
+
+console.log(&quot;Hello World!&quot;)
+</pre></div>
+</div>
+<p>Notice that I&#8217;ve added a <em>shebang</em> to the top of the file that uses <em>node</em> to
+execute the file.  Next, make the file executable:</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>$ chmod u+x helloworld.js
+</pre></div>
+</div>
+<p>Then, execute the file from the bash prompt:</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>$ ./helloworld.js
+Hello World!
+</pre></div>
+</div>
+<p>Of course, you can also skip making the file executable and call node directly:</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>$ node helloworld.js
+Hello World!
+</pre></div>
+</div>
+<p>Either way, using this second setup makes it much easier (at least for me) to
+work with larger and more complex javascript code&#8211; very cool. If you are
+looking for more examples, starting at the level above and moving to more
+advanced material try of this <a class="reference external" href="http://blog.modulus.io/absolute-beginners-guide-to-nodejs">beginners nodejs post</a>.</p>
+<p>If you know of good (online) learning resources for <em>javascript</em>, <em>node</em> and/or
+<em>d3</em> please leave comments for everyone that reads the post&#8211; thanks!</p>
+</div>
+
+    <div class="postmeta">
+        <div class="author">
+            <span>Posted by Chris Strelioff</span>
+        </div>
+        
+        <div class="tags">
+            <span>
+                Tags:
+                <a href="../../../tags/javascript.html">javascript</a>, <a href="../../../tags/nodejs.html">nodejs</a>, <a href="../../../tags/npm.html">npm</a>, <a href="../../../tags/d3.html">d3</a></span>
+        </div>
+        </div><ul class="related clearfix">
+            <li class="left"></li>
+            <li class="right"><a href="../../../2014/12/11/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations.html">Inferring probabilities with a Beta prior, a third example of Bayesian calculations</a> &raquo; </li>
+        </ul><div id="disqus_thread"></div><script type="text/javascript">    var disqus_shortname = "chrissandbox";    var disqus_identifier = "2015/01/12/installing_node_js_and_npm_on_ubuntu_14_04";    disqus_thread();</script><noscript>Please enable JavaScript to view the    <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></article><aside class="sidebar"><section><div class="widget" id="searchbox" role="search">
+    <h1><a href="#searchbox">Search</a></h1>
+    <form action="../../../search.html" method="get">
+        <input type="text" name="q" />
+        <button type="submit"><span class="fa fa-search"></span></button>
+    </form>
+</div></section><section><div class="widget">
+  <h1>Pages</h1>
+  <ul>
+  <li>
+      <a href="../../../index.html">Home</a>
+    </li>
+  </ul>
+</div>
+</section><section><div class="widget">
+    <h1>Recent Posts</h1>
+    <ul><li>
+            <a href="#">Installing Node.js and npm on Ubuntu 14.04</a>
+        </li><li>
+            <a href="../../../2014/12/11/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations.html">Inferring probabilities with a Beta prior, a third example of Bayesian calculations</a>
+        </li><li>
+            <a href="../../../2014/12/10/installing_essentia_for_audio_feature_extraction.html">Installing essentia for audio feature extraction</a>
+        </li><li>
+            <a href="../../../2014/11/13/getting_started_with_latent_dirichlet_allocation_in_python.html">Getting started with Latent Dirichlet Allocation in Python</a>
+        </li><li>
+            <a href="../../../2014/10/24/inferring_probabilities_a_second_example_of_bayesian_calculations.html">Inferring probabilities, a second example of Bayesian calculations</a>
+        </li><li>
+            <a href="../../../2014/09/16/python_3_4_on_ubuntu_14_04_using_virtual_environments.html">Python 3.4 on Ubuntu 14.04 using virtual environments</a>
+        </li><li>
+            <a href="../../../2014/09/11/medical_tests_a_first_example_of_bayesian_calculations.html">Medical tests, a first example of Bayesian calculations</a>
+        </li><li>
+            <a href="../../../2014/09/04/virtualenv_and_virtualenvwrapper_on_ubuntu_14_04.html">virtualenv and virtualenvwrapper on Ubuntu 14.04</a>
+        </li><li>
+            <a href="../../../2014/09/02/installing_virtualbox_on_ubuntu_14_04.html">Installing virtualbox on Ubuntu 14.04</a>
+        </li><li>
+            <a href="../../../2014/08/26/joint_conditional_and_marginal_probabilities.html">Joint, conditional and marginal probabilities</a>
+        </li></ul>
+</div>
+</section><section><div class="widget">
+    <h1>Tags</h1><a href="../../../tags/audio_features.html">audio features</a> (1), <a href="../../../tags/bayesian.html">Bayesian</a> (5), <a href="../../../tags/beta.html">Beta</a> (1), <a href="../../../tags/blog_setup.html">blog setup</a> (1), <a href="../../../tags/bootstrap.html">bootstrap</a> (1), <a href="../../../tags/bottleneck.html">bottleneck</a> (1), <a href="../../../tags/c.html">c++</a> (1), <a href="../../../tags/caret.html">caret</a> (1), <a href="../../../tags/cmpy.html">cmpy</a> (1), <a href="../../../tags/conditional_probability.html">conditional probability</a> (4), <a href="../../../tags/coursera.html">coursera</a> (1), <a href="../../../tags/coursera_intro_to_data_science.html">coursera intro to data science</a> (3), <a href="../../../tags/cython.html">cython</a> (1), <a href="../../../tags/d3.html">d3</a> (1), <a href="../../../tags/dsp.html">dsp</a> (1), <a href="../../../tags/e1071.html">e1071</a> (1), <a href="../../../tags/essentia.html">essentia</a> (1), <a href="../../../tags/garmin.html">garmin</a> (1), <a href="../../../tags/ggplot2.html">ggplot2</a> (1), <a href="../../../tags/git.html">git</a> (1), <a href="../../../tags/gnuplot.html">gnuplot</a> (1), <a href="../../../tags/graphs.html">graphs</a> (1), <a href="../../../tags/igraph.html">igraph</a> (1), <a href="../../../tags/ipython.html">ipython</a> (1), <a href="../../../tags/javascript.html">javascript</a> (1), <a href="../../../tags/joint_probability.html">joint probability</a> (4), <a href="../../../tags/latex.html">LaTeX</a> (1), <a href="../../../tags/lda.html">LDA</a> (1), <a href="../../../tags/machine_learning.html">machine learning</a> (1), <a href="../../../tags/marginal_probability.html">marginal probability</a> (4), <a href="../../../tags/matplotlib.html">matplotlib</a> (1), <a href="../../../tags/mir.html">mir</a> (1), <a href="../../../tags/my_python_setup.html">my python setup</a> (6), <a href="../../../tags/my_ubuntu_setup.html">my ubuntu setup</a> (10), <a href="../../../tags/networks.html">networks</a> (1), <a href="../../../tags/networkx.html">networkx</a> (1), <a href="../../../tags/nodejs.html">nodejs</a> (1), <a href="../../../tags/npm.html">npm</a> (1), <a href="../../../tags/numexpr.html">numexpr</a> (1), <a href="../../../tags/numpy.html">numpy</a> (1), <a href="../../../tags/octave.html">octave</a> (1), <a href="../../../tags/openpyxl.html">openpyxl</a> (1), <a href="../../../tags/pandas.html">pandas</a> (1), <a href="../../../tags/patsy.html">patsy</a> (1), <a href="../../../tags/pip.html">pip</a> (1), <a href="../../../tags/pweave.html">pweave</a> (1), <a href="../../../tags/pygraphviz.html">pygraphviz</a> (1), <a href="../../../tags/pymc.html">pymc</a> (1), <a href="../../../tags/python.html">Python</a> (1), <a href="../../../tags/python.html">python</a> (5), <a href="../../../tags/python_2_7.html">python 2.7</a> (5), <a href="../../../tags/python_3_4.html">python 3.4</a> (1), <a href="../../../tags/pyyaml.html">pyyaml</a> (1), <a href="../../../tags/r.html">R</a> (1), <a href="../../../tags/randomforest.html">randomForest</a> (1), <a href="../../../tags/restview.html">restview</a> (1), <a href="../../../tags/resume.html">resume</a> (1), <a href="../../../tags/rpart.html">rpart</a> (1), <a href="../../../tags/running.html">running</a> (1), <a href="../../../tags/scikit_learn.html">scikit-learn</a> (1), <a href="../../../tags/scipy.html">scipy</a> (1), <a href="../../../tags/screen.html">screen</a> (1), <a href="../../../tags/server_setup.html">server setup</a> (1), <a href="../../../tags/social_networks.html">social networks</a> (1), <a href="../../../tags/sphinx.html">sphinx</a> (1), <a href="../../../tags/sql.html">sql</a> (1), <a href="../../../tags/sqlite3.html">sqlite3</a> (1), <a href="../../../tags/ssh.html">ssh</a> (1), <a href="../../../tags/ssh_keys.html">ssh keys</a> (1), <a href="../../../tags/statsmodels.html">statsmodels</a> (1), <a href="../../../tags/sympy.html">sympy</a> (1), <a href="../../../tags/tableau.html">tableau</a> (1), <a href="../../../tags/tinkerer.html">tinkerer</a> (1), <a href="../../../tags/topic_models.html">topic models</a> (1), <a href="../../../tags/tree.html">tree</a> (1), <a href="../../../tags/ubuntu_14_04.html">ubuntu 14.04</a> (7), <a href="../../../tags/vim.html">vim</a> (1), <a href="../../../tags/virtualbox.html">virtualbox</a> (1), <a href="../../../tags/virtualenv.html">virtualenv</a> (3), <a href="../../../tags/virtualenvwrapper.html">virtualenvwrapper</a> (2), <a href="../../../tags/vps.html">VPS</a> (1), <a href="../../../tags/yaml.html">yaml</a> (1)</div></section></aside></div> <!-- #main --></div> <!-- #main-container -->
+
+        <div class="footer-container" role="contentinfo"><footer class="wrapper">&copy; Copyright 2014 Christopher Strelioff. Powered by <a href="http://www.tinkerer.me/">Tinkerer</a> and <a href="http://sphinx.pocoo.org/">Sphinx</a>.</footer></div> <!-- footer-container -->
+
+      </div> <!--! end of #container --><!--[if lt IE 7 ]>
+          <script src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js"></script>
+          <script>window.attachEvent('onload',function(){CFInstall.check({mode:'overlay'})})</script>
+        <![endif]-->
+    </body>
+</html>

@@ -3,9 +3,9 @@ Installing Node.js and npm on Ubuntu 14.04
 
 I've decided to start being systematic about learning *javascript*, with a
 focus on getting good with `d3js`_.  I'll be installing `nodejs`_ and npm (node
-package manager) as a way to get access to a javascript console. And, later, a
-powerful javascript environment.  Follow along if you're interested-- as always
-(constructive) comments for me or other readers are appreciated.
+package manager) as a way to get access to a javascript console and, for later,
+a powerful javascript environment. As always, *constructive* comments and
+questions are welcome and much appreciated.
 
 .. more::
 
@@ -53,10 +53,11 @@ Next, print *Hello world!* and exit:
     > process.exit()
 
 This provides access to the javascript console and makes it possible for me
-to try out simple commands. **Second**, for longer chunks of code it is nice
-to be able to execute a file from the command line, just like I would with
-*bash* or *Python*. To do this, create the file **helloworld.js** with the
-following contents:
+to try out simple commands.
+
+**Second**, for longer chunks of code it is nice to be able to execute a file
+from the command line, just like I would with *bash* or *Python*. To do this,
+create the file **helloworld.js** with the following code:
 
 .. code:: javascript
 
@@ -79,10 +80,20 @@ Then, execute the file from the bash prompt:
     $ ./helloworld.js
     Hello World!
 
-Using this second setup it is much easier to work with larger and more complex
-javascript code-- very cool. If you are looking for more examples, starting at
-the level above and moving to more advanced material try of this
-`beginners nodejs post`_. That's it, enjoy and leave comments!
+Of course, you can also skip making the file executable and call node directly:
+
+.. code:: bash
+
+    $ node helloworld.js
+    Hello World!
+
+Either way, using this second setup makes it much easier (at least for me) to
+work with larger and more complex javascript code-- very cool. If you are
+looking for more examples, starting at the level above and moving to more
+advanced material try of this `beginners nodejs post`_.
+
+If you know of good (online) learning resources for *javascript*, *node* and/or
+*d3* please leave comments for everyone that reads the post-- thanks!
 
 .. _beginners nodejs post: http://blog.modulus.io/absolute-beginners-guide-to-nodejs
 .. _nodejs: https://github.com/joyent/node/
