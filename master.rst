@@ -4,6 +4,7 @@ Sitemap
 .. toctree::
    :maxdepth: 1
 
+   2015/02/17/using_python_to_query_data_from_socrata
    2015/01/12/installing_node_js_and_npm_on_ubuntu_14_04
    2014/12/11/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations
    2014/12/10/installing_essentia_for_audio_feature_extraction
