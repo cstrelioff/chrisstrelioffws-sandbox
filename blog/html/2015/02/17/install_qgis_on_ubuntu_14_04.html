@@ -15,7 +15,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
         <meta name="description" content="Christopher Strelioff's blog">
         <meta name="viewport" content="width=device-width">
-        <title>Install sqlite3 on Ubuntu 14.04 &mdash; chris&#39; sandbox</title>
+        <title>Install QGIS on Ubuntu 14.04 &mdash; chris&#39; sandbox</title>
             <link rel="stylesheet" href="../../../_static/normalize.css" type="text/css">
             <link rel="stylesheet" href="../../../_static/sphinx.css" type="text/css">
             <link rel="stylesheet" href="../../../_static/main.css" type="text/css">
@@ -28,7 +28,7 @@
         <script>window.jQuery || document.write('<script src="../../../_static/vendor/jquery-1.8.2.min.js"><\/script>')</script>
         <script src="../../../_static/plugins.js"></script>
         <script src="../../../_static/main.js"></script>
-        <link rel="next" title="Install and use sphinx-bootstrap-theme on Ubuntu 14.04" href="../07/install_and_use_sphinx_bootstrap_theme_on_ubuntu_14_04.html" /><link rel="prev" title="Python and YAML on Ubuntu 14.04" href="../12/python_and_yaml_on_ubuntu_14_04.html" /><link rel="alternate" type="application/rss+xml" title="RSS" href="../../../rss.html" /><script type="text/javascript">
+        <link rel="next" title="Using Python to query data from Socrata" href="using_python_to_query_data_from_socrata.html" /><link rel="alternate" type="application/rss+xml" title="RSS" href="../../../rss.html" /><script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
         VERSION:     '1.5',
@@ -57,21 +57,36 @@
       <h1><a href="../../../index.html">chris&#39; sandbox</a></h1><h2>python, R, ubuntu, bayesian methods, machine learning and more...</h2></hgroup>
   </header>
 <div class="main-container" role="main"><div class="main wrapper body clearfix"><article><div class="timestamp postmeta">
-            <span>July 10, 2014</span>
+            <span>February 17, 2015</span>
         </div>
-    <div class="section" id="install-sqlite3-on-ubuntu-14-04">
-<h1>Install sqlite3 on Ubuntu 14.04</h1>
-<p>The second assignment for <a class="reference external" href="https://www.coursera.org/course/datasci">Coursera&#8217;s Introduction to Data Science</a> focuses
-on databases and relational algebra.  The programming assignments are done with
-sqlite3, so I need to install it on my Ubuntu 14.04 machine.</p>
-<div id="more"> </div><p>Following a nice <a class="reference external" href="https://www.digitalocean.com/community/tutorials/how-and-when-to-use-sqlite">sqlite tutorial at digitalocean</a>, I&#8217;ll install the
-version in the Ubuntu repository using the typical commands:</p>
-<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>sudo apt-get install sqlite3 libsqlite3-dev
+    <div class="section" id="install-qgis-on-ubuntu-14-04">
+<h1>Install QGIS on Ubuntu 14.04</h1>
+<p>In this post I will cover my install process for <a class="reference external" href="http://www2.qgis.org/en/site/index.html">QGIS</a> on Ubuntu 14.04.
+<a class="reference external" href="http://www2.qgis.org/en/site/index.html">QGIS</a> is a tool for creating maps and working with geospatial information. The
+<a class="reference external" href="http://www2.qgis.org/en/site/forusers/alldownloads.html#ubuntu">official QGIS installation instructions</a> provide three different ways to
+install the software. I&#8217;ll be using the <a class="reference external" href="https://wiki.ubuntu.com/UbuntuGIS">UbuntuGIS</a> ppa to get access to more
+recent versions of the relevant GIS software, including <a class="reference external" href="http://www2.qgis.org/en/site/index.html">QGIS</a>.</p>
+<div id="more"> </div><p>The <em>unstable ppa</em> seems to be the one to use (I tried the stable ppa, which
+does not seem to work; at least for Ubuntu 14.04).  Before starting, note that
+this process downloads about <strong>90MB</strong> of software so a decent connection is
+suggested.  The install goes as follows:</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>$ sudo apt-get install python-software-properties
+$ sudo add-apt-repository ppa:ubuntugis/ubuntugis-unstable
+$ sudo apt-get update
+$ sudo apt-get install qgis python-qgis qgis-plugin-grass
 </pre></div>
 </div>
-<p>At this point, we&#8217;re ready to go with the assignment. For those that are
-interested, the <a class="reference external" href="https://www.digitalocean.com/community/tutorials/how-and-when-to-use-sqlite">sqlite tutorial at digitalocean</a> goes through simple examples
-including creating a database and doing simple queries.</p>
+<p>This installed without issues for me.  To get to the <a class="reference external" href="http://www2.qgis.org/en/site/index.html">QGIS</a> desktop:</p>
+<ul class="simple">
+<li>Hit the <em>Super Key</em> (aka the <em>Windows Key</em>) or click on the top button on the
+launcher and search for <a class="reference external" href="http://www2.qgis.org/en/site/index.html">QGIS</a>.</li>
+<li>The <a class="reference external" href="http://www2.qgis.org/en/site/index.html">QGIS</a> desktop icon should come up&#8211; click the icon and <a class="reference external" href="http://www2.qgis.org/en/site/index.html">QGIS</a> should
+start up.</li>
+<li>When the program is running its icon will display on the launcher. <strong>If you
+want the icon to be available on the launcher at all times</strong>, <em>right-click on
+the icon</em>, then select <em>Lock to launcher</em> and you&#8217;re good to go.</li>
+</ul>
+<p>That&#8217;s all for now.  As always, leave questions and comments below.</p>
 </div>
 
     <div class="postmeta">
@@ -82,12 +97,12 @@ including creating a database and doing simple queries.</p>
         <div class="tags">
             <span>
                 Tags:
-                <a href="../../../tags/my_ubuntu_setup.html">my ubuntu setup</a>, <a href="../../../tags/sqlite3.html">sqlite3</a>, <a href="../../../tags/coursera_intro_to_data_science.html">coursera intro to data science</a>, <a href="../../../tags/sql.html">sql</a></span>
+                <a href="../../../tags/ubuntu_14_04.html">ubuntu 14.04</a>, <a href="../../../tags/gis.html">gis</a>, <a href="../../../tags/qgis.html">qgis</a>, <a href="../../../tags/open_oakland.html">Open Oakland</a></span>
         </div>
         </div><ul class="related clearfix">
-            <li class="left"> &laquo; <a href="../12/python_and_yaml_on_ubuntu_14_04.html">Python and YAML on Ubuntu 14.04</a></li>
-            <li class="right"><a href="../07/install_and_use_sphinx_bootstrap_theme_on_ubuntu_14_04.html">Install and use sphinx-bootstrap-theme on Ubuntu 14.04</a> &raquo; </li>
-        </ul><div id="disqus_thread"></div><script type="text/javascript">    var disqus_shortname = "chrissandbox";    var disqus_identifier = "2014/07/10/install_sqlite3_on_ubuntu_14_04";    disqus_thread();</script><noscript>Please enable JavaScript to view the    <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></article><aside class="sidebar"><section><div class="widget" id="searchbox" role="search">
+            <li class="left"></li>
+            <li class="right"><a href="using_python_to_query_data_from_socrata.html">Using Python to query data from Socrata</a> &raquo; </li>
+        </ul><div id="disqus_thread"></div><script type="text/javascript">    var disqus_shortname = "chrissandbox";    var disqus_identifier = "2015/02/17/install_qgis_on_ubuntu_14_04";    disqus_thread();</script><noscript>Please enable JavaScript to view the    <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></article><aside class="sidebar"><section><div class="widget" id="searchbox" role="search">
     <h1><a href="#searchbox">Search</a></h1>
     <form action="../../../search.html" method="get">
         <input type="text" name="q" />
@@ -104,25 +119,25 @@ including creating a database and doing simple queries.</p>
 </section><section><div class="widget">
     <h1>Recent Posts</h1>
     <ul><li>
-            <a href="../../../2015/02/17/install_qgis_on_ubuntu_14_04.html">Install QGIS on Ubuntu 14.04</a>
+            <a href="#">Install QGIS on Ubuntu 14.04</a>
         </li><li>
-            <a href="../../../2015/02/17/using_python_to_query_data_from_socrata.html">Using Python to query data from Socrata</a>
+            <a href="using_python_to_query_data_from_socrata.html">Using Python to query data from Socrata</a>
         </li><li>
-            <a href="../../../2015/01/12/installing_node_js_and_npm_on_ubuntu_14_04.html">Installing Node.js and npm on Ubuntu 14.04</a>
+            <a href="../../01/12/installing_node_js_and_npm_on_ubuntu_14_04.html">Installing Node.js and npm on Ubuntu 14.04</a>
         </li><li>
-            <a href="../../12/11/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations.html">Inferring probabilities with a Beta prior, a third example of Bayesian calculations</a>
+            <a href="../../../2014/12/11/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations.html">Inferring probabilities with a Beta prior, a third example of Bayesian calculations</a>
         </li><li>
-            <a href="../../12/10/installing_essentia_for_audio_feature_extraction.html">Installing essentia for audio feature extraction</a>
+            <a href="../../../2014/12/10/installing_essentia_for_audio_feature_extraction.html">Installing essentia for audio feature extraction</a>
         </li><li>
-            <a href="../../11/13/getting_started_with_latent_dirichlet_allocation_in_python.html">Getting started with Latent Dirichlet Allocation in Python</a>
+            <a href="../../../2014/11/13/getting_started_with_latent_dirichlet_allocation_in_python.html">Getting started with Latent Dirichlet Allocation in Python</a>
         </li><li>
-            <a href="../../10/24/inferring_probabilities_a_second_example_of_bayesian_calculations.html">Inferring probabilities, a second example of Bayesian calculations</a>
+            <a href="../../../2014/10/24/inferring_probabilities_a_second_example_of_bayesian_calculations.html">Inferring probabilities, a second example of Bayesian calculations</a>
         </li><li>
-            <a href="../../09/16/python_3_4_on_ubuntu_14_04_using_virtual_environments.html">Python 3.4 on Ubuntu 14.04 using virtual environments</a>
+            <a href="../../../2014/09/16/python_3_4_on_ubuntu_14_04_using_virtual_environments.html">Python 3.4 on Ubuntu 14.04 using virtual environments</a>
         </li><li>
-            <a href="../../09/11/medical_tests_a_first_example_of_bayesian_calculations.html">Medical tests, a first example of Bayesian calculations</a>
+            <a href="../../../2014/09/11/medical_tests_a_first_example_of_bayesian_calculations.html">Medical tests, a first example of Bayesian calculations</a>
         </li><li>
-            <a href="../../09/04/virtualenv_and_virtualenvwrapper_on_ubuntu_14_04.html">virtualenv and virtualenvwrapper on Ubuntu 14.04</a>
+            <a href="../../../2014/09/04/virtualenv_and_virtualenvwrapper_on_ubuntu_14_04.html">virtualenv and virtualenvwrapper on Ubuntu 14.04</a>
         </li></ul>
 </div>
 </section><section><div class="widget">
