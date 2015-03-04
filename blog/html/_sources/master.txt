@@ -4,6 +4,7 @@ Sitemap
 .. toctree::
    :maxdepth: 1
 
+   2015/03/03/installing_pysoundfile_on_ubuntu_14_04
    2015/02/17/install_qgis_on_ubuntu_14_04
    2015/02/17/using_python_to_query_data_from_socrata
    2015/01/12/installing_node_js_and_npm_on_ubuntu_14_04
