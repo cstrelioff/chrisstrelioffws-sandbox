@@ -197,7 +197,7 @@ Some final notes:
   complicated queries, call `SoQL`_ (`Socrata`_ query language).  Check the
   links out for more of what is possible.
 
-* The code for this example is `available on github`_ as
+* The code for this example is available at `this gist`_ as
   :code:`ex004_socrata_api.py`
 
 That's it for this post.  As always, leave comments and corrections in the
@@ -213,7 +213,7 @@ comments below.
 .. _Socrata: http://www.socrata.com/
 .. _SODA: http://dev.socrata.com/consumers/getting-started.html
 .. _SoQL: http://dev.socrata.com/docs/queries.html
-.. _available on github: https://github.com/cstrelioff/chrisstrelioffws-sandbox-examples
+.. _this gist: https://gist.github.com/cstrelioff/aec738d406b1a45f0ed3
 
 .. author:: default
 .. categories:: none
