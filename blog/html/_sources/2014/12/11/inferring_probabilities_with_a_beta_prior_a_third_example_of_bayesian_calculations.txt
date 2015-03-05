@@ -395,7 +395,7 @@ Inference code in Python
 ------------------------
 
 **Note:** code available as :code:`ex003_bayes.py` at
-`github examples repository`_.
+`this gist`_ (updated to gist Mar 5, 2015).
 
 Let's do some Python.  First, we do some import of packages that we will use
 to calculate and plot prior, likelihood and posterior.  Notice that
@@ -879,7 +879,7 @@ welcome!
 
 .. _Probable Points and Credible Intervals: http://sumsar.net/blog/2014/10/probable-points-and-credible-intervals-part-one/
 
-.. _github examples repository: https://github.com/cstrelioff/chrisstrelioffws-sandbox-examples
+.. _this gist: https://gist.github.com/cstrelioff/70fbbdefd525df046fa6
 
 .. author:: default
 .. categories:: none
