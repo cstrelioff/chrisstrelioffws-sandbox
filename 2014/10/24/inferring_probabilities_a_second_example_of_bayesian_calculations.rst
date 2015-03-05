@@ -347,7 +347,7 @@ Writing the inference code in Python
 ------------------------------------
 
 This code will be available as a single Python script, :code:`ex001_bayes.py`,
-at a `github examples repository`_ I've setup to host such things.  You should
+at this `github gist`_ (edit: changed to gist Mar 5, 2015).  You should
 grab it and try to following along.
 
 First, the code has some imports -- just :code:`numpy` and :code:`matplotlib`.
@@ -693,7 +693,7 @@ questions, comments and corrections!
 .. _Bernoulli Process: http://en.wikipedia.org/wiki/Bernoulli_process
 .. _Binomial Distribution: http://en.wikipedia.org/wiki/Binomial_distribution
 .. _Bernoulli Trial: http://en.wikipedia.org/wiki/Bernoulli_trial
-.. _github examples repository: https://github.com/cstrelioff/chrisstrelioffws-sandbox-examples
+.. _github gist: https://gist.github.com/cstrelioff/4f52108353580ef4f2d9
 
 .. author:: default
 .. categories:: none
