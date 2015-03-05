@@ -86,7 +86,7 @@ An Example
 The example at the `lda`_ github repository looks at corpus of Reuters news
 releases-- let's replicate this and add some details to better understand what
 is going on. A script containing all of the code to follow, called
-:code:`ex002_lda.py`, is available at my `examples github repository`_.
+:code:`ex002_lda.py`, is available at `this gist`_.
 To get started, we do some imports:
 
 .. code-block:: python
@@ -481,7 +481,7 @@ That's it! As always, leave comments and questions below.
 .. _Blei etal 2003: http://jmlr.org/papers/v3/blei03a.html
 .. _Wallach etal 2009: http://papers.nips.cc/paper/3854-rethinking-lda-why-priors-matter
 .. _lda: https://github.com/ariddell/lda
-.. _examples github repository: https://github.com/cstrelioff/chrisstrelioffws-sandbox-examples
+.. _this gist: https://gist.github.com/cstrelioff/38b1d16a1253c962b7d7 
 
 .. author:: default
 .. categories:: none
