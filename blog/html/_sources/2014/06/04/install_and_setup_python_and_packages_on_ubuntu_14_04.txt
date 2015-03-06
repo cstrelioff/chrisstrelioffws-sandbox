@@ -172,6 +172,13 @@ these.
 
    $ sudo apt-get install libfreetype6 libfreetype6-dev
 
+* More fonts (for matplotlib on Ubuntu Server 14.04-- see comment at end of
+  post) -- added 2015/03/06
+
+.. code-block:: bash
+
+   $ sudo apt-get install libxft-dev
+
 * Graphviz for pygraphviz, networkx, etc.
 
 .. code-block:: bash
@@ -1006,6 +1013,6 @@ That's it, machine-learn away!
 
 .. author:: default
 .. categories:: none
-.. tags:: python 2.7, ubuntu 14.04, my python setup, my ubuntu setup, pip, virtualenv, numpy, scipy, matplotlib, sympy, ipython, pygraphviz, networkx, pandas, numexpr, bottleneck, openpyxl, pymc, statsmodels, patsy, cython, cmpy, restview, tinkerer, pweave, scikit-learn
+.. tags:: python 2.7, ubuntu 14.04, python, my ubuntu setup, pip, virtualenv, numpy, scipy, matplotlib, sympy, ipython, pygraphviz, networkx, pandas, numexpr, bottleneck, openpyxl, pymc, statsmodels, patsy, cython, cmpy, restview, tinkerer, pweave, scikit-learn
 
 .. comments::
