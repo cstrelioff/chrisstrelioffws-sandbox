@@ -20,7 +20,7 @@ description = 'Christopher Strelioff\'s blog'
 author = 'Chris Strelioff'
 
 # Change this to your copyright string
-copyright = '2014 Christopher Strelioff'
+copyright = '2014-2015 Christopher Strelioff'
 
 # Change this to your blog root URL (required for RSS feed)
 website = 'http://chrisstrelioff.ws/sandbox/'

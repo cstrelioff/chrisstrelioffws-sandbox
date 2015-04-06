@@ -4,6 +4,7 @@ Sitemap
 .. toctree::
    :maxdepth: 1
 
+   2015/04/03/getting_started_with_responsive_websites_and_javascript
    2015/03/03/installing_pysoundfile_on_ubuntu_14_04
    2015/02/17/install_qgis_on_ubuntu_14_04
    2015/02/17/using_python_to_query_data_from_socrata

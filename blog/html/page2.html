@@ -57,6 +57,50 @@
       <h1><a href="index.html">chris&#39; sandbox</a></h1><h2>python, R, ubuntu, bayesian methods, machine learning and more...</h2></hgroup>
   </header>
 <div class="main-container" role="main"><div class="main wrapper body clearfix"><article><div class="timestamp postmeta">
+            <span>September 11, 2014</span>
+        </div>
+        <div class="section">
+            <span id="bayes-medical-tests"/><h1><a href="2014/09/11/medical_tests_a_first_example_of_bayesian_calculations.html">Medical tests, a first example of Bayesian calculations</a></h1>
+<p>In this post I will discuss a first example of a Bayesian calculation using a
+well-known example of testing for breast cancer. I choose this example for a
+few reasons:</p>
+<ul class="simple">
+<li>The answer often surprises people and supposedly many doctors get this
+wrong.</li>
+<li>The problem provides a nice example of updating a <strong>prior</strong> (information
+before) to a <strong>posterior</strong> (information after).  This is really essential to
+understanding Bayesian thinking and I will emphasize this idea, making a
+point of connecting the concept to mathematical notation.</li>
+<li>The calculations are relatively simple (at least compared with other
+examples). If you understood my post on
+<a class="reference internal" href="2014/08/26/joint_conditional_and_marginal_probabilities.html#joint-conditional-and-marginal-probabilities"><em>Joint, conditional and marginal probabilities</em></a>, you should have no
+problems.</li>
+</ul>
+<p class="readmorewrapper"><a class="readmore" href="2014/09/11/medical_tests_a_first_example_of_bayesian_calculations.html#more">Read more...</a></p> 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        </div>
+        <div class="postmeta">
+        <div class="author">
+            <span>Posted by Chris Strelioff</span>
+        </div>
+        
+        <div class="tags">
+            <span>
+                Tags:
+                <a href="tags/joint_probability.html">joint probability</a>, <a href="tags/conditional_probability.html">conditional probability</a>, <a href="tags/marginal_probability.html">marginal probability</a>, <a href="tags/bayesian.html">Bayesian</a></span>
+        </div>
+        <div class="comments">
+            <a href="http://chrisstrelioff.ws/sandbox/2014/09/11/medical_tests_a_first_example_of_bayesian_calculations.html#disqus_thread" data-disqus-identifier="2014/09/11/medical_tests_a_first_example_of_bayesian_calculations">Leave a comment</a>
+        </div></div><div class="separator post_separator"></div><div class="timestamp postmeta">
             <span>September 04, 2014</span>
         </div>
         <div class="section">
@@ -355,37 +399,6 @@ from Twitter for generating responsive websites.</p>
         </div>
         <div class="comments">
             <a href="http://chrisstrelioff.ws/sandbox/2014/07/07/install_and_use_sphinx_bootstrap_theme_on_ubuntu_14_04.html#disqus_thread" data-disqus-identifier="2014/07/07/install_and_use_sphinx_bootstrap_theme_on_ubuntu_14_04">Leave a comment</a>
-        </div></div><div class="separator post_separator"></div><div class="timestamp postmeta">
-            <span>July 02, 2014</span>
-        </div>
-        <div class="section">
-            <h1><a href="2014/07/02/install_oauth2_python_package_on_ubuntu_14_04.html">Install oauth2 Python package on Ubuntu 14.04</a></h1>
-<p>The first assignment for <a class="reference external" href="https://www.coursera.org/course/datasci">Coursera’s Introduction to Data Science</a> focuses on
-sentiment analysis of twitter data.  To do this the <a class="reference external" href="https://pypi.python.org/pypi/oauth2/1.5.211">oauth2</a> package needs to be
-installed. Following the style outlined in my <a class="reference internal" href="2014/06/04/install_and_setup_python_and_packages_on_ubuntu_14_04.html#initial-python-setup"><em>Install Python packages on Ubuntu 14.04</em></a> post,
-I will use pip to install the package as a user:</p>
-<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>pip install --user oauth2
-</pre></div>
-</div>
-<p class="readmorewrapper"><a class="readmore" href="2014/07/02/install_oauth2_python_package_on_ubuntu_14_04.html#more">Read more...</a></p> 
- 
- 
- 
- 
-
-        </div>
-        <div class="postmeta">
-        <div class="author">
-            <span>Posted by Chris Strelioff</span>
-        </div>
-        
-        <div class="tags">
-            <span>
-                Tags:
-                <a href="tags/my_ubuntu_setup.html">my ubuntu setup</a>, <a href="tags/my_python_setup.html">my python setup</a>, <a href="tags/python_2_7.html">python 2.7</a>, <a href="tags/coursera_intro_to_data_science.html">coursera intro to data science</a></span>
-        </div>
-        <div class="comments">
-            <a href="http://chrisstrelioff.ws/sandbox/2014/07/02/install_oauth2_python_package_on_ubuntu_14_04.html#disqus_thread" data-disqus-identifier="2014/07/02/install_oauth2_python_package_on_ubuntu_14_04">Leave a comment</a>
         </div></div><div class="archive_link">
         <a href="archive.html"> &mdash; Blog Archive &mdash; </a>
     </div><ul class="related clearfix">
@@ -408,6 +421,8 @@ I will use pip to install the package as a user:</p>
 </section><section><div class="widget">
     <h1>Recent Posts</h1>
     <ul><li>
+            <a href="2015/04/03/getting_started_with_responsive_websites_and_javascript.html">Getting started with responsive websites and JavaScript</a>
+        </li><li>
             <a href="2015/03/03/installing_pysoundfile_on_ubuntu_14_04.html">Installing PySoundFile on Ubuntu 14.04</a>
         </li><li>
             <a href="2015/02/17/install_qgis_on_ubuntu_14_04.html">Install QGIS on Ubuntu 14.04</a>
@@ -425,14 +440,12 @@ I will use pip to install the package as a user:</p>
             <a href="2014/10/24/inferring_probabilities_a_second_example_of_bayesian_calculations.html">Inferring probabilities, a second example of Bayesian calculations</a>
         </li><li>
             <a href="2014/09/16/python_3_4_on_ubuntu_14_04_using_virtual_environments.html">Python 3.4 on Ubuntu 14.04 using virtual environments</a>
-        </li><li>
-            <a href="2014/09/11/medical_tests_a_first_example_of_bayesian_calculations.html">Medical tests, a first example of Bayesian calculations</a>
         </li></ul>
 </div>
 </section><section><div class="widget">
-    <h1>Tags</h1><a href="tags/api.html">api</a> (1), <a href="tags/audio.html">audio</a> (1), <a href="tags/audio_features.html">audio features</a> (1), <a href="tags/bayesian.html">Bayesian</a> (5), <a href="tags/beta.html">Beta</a> (1), <a href="tags/blog_setup.html">blog setup</a> (1), <a href="tags/bootstrap.html">bootstrap</a> (1), <a href="tags/bottleneck.html">bottleneck</a> (1), <a href="tags/c.html">c++</a> (1), <a href="tags/caret.html">caret</a> (1), <a href="tags/cmpy.html">cmpy</a> (1), <a href="tags/conditional_probability.html">conditional probability</a> (4), <a href="tags/coursera.html">coursera</a> (1), <a href="tags/coursera_intro_to_data_science.html">coursera intro to data science</a> (3), <a href="tags/cython.html">cython</a> (1), <a href="tags/d3.html">d3</a> (1), <a href="tags/dsp.html">dsp</a> (1), <a href="tags/e1071.html">e1071</a> (1), <a href="tags/essentia.html">essentia</a> (1), <a href="tags/garmin.html">garmin</a> (1), <a href="tags/ggplot2.html">ggplot2</a> (1), <a href="tags/gis.html">gis</a> (1), <a href="tags/git.html">git</a> (1), <a href="tags/gnuplot.html">gnuplot</a> (1), <a href="tags/graphs.html">graphs</a> (1), <a href="tags/igraph.html">igraph</a> (1), <a href="tags/ipython.html">ipython</a> (1), <a href="tags/javascript.html">javascript</a> (1), <a href="tags/joint_probability.html">joint probability</a> (4), <a href="tags/json.html">json</a> (1), <a href="tags/latex.html">LaTeX</a> (1), <a href="tags/lda.html">LDA</a> (1), <a href="tags/machine_learning.html">machine learning</a> (1), <a href="tags/marginal_probability.html">marginal probability</a> (4), <a href="tags/matplotlib.html">matplotlib</a> (1), <a href="tags/mir.html">mir</a> (1), <a href="tags/music.html">music</a> (1), <a href="tags/my_python_setup.html">my python setup</a> (5), <a href="tags/my_ubuntu_setup.html">my ubuntu setup</a> (10), <a href="tags/networks.html">networks</a> (1), <a href="tags/networkx.html">networkx</a> (1), <a href="tags/nodejs.html">nodejs</a> (1), <a href="tags/npm.html">npm</a> (1), <a href="tags/numexpr.html">numexpr</a> (1), <a href="tags/numpy.html">numpy</a> (1), <a href="tags/octave.html">octave</a> (1), <a href="tags/open_oakland.html">Open Oakland</a> (2), <a href="tags/openpyxl.html">openpyxl</a> (1), <a href="tags/pandas.html">pandas</a> (1), <a href="tags/patsy.html">patsy</a> (1), <a href="tags/pip.html">pip</a> (1), <a href="tags/pweave.html">pweave</a> (1), <a href="tags/pygraphviz.html">pygraphviz</a> (1), <a href="tags/pymc.html">pymc</a> (1), <a href="tags/pysoundfile.html">PySoundFile</a> (1), <a href="tags/python.html">python</a> (8), <a href="tags/python.html">Python</a> (1), <a href="tags/python_2_7.html">python 2.7</a> (5), <a href="tags/python_3_4.html">python 3.4</a> (1), <a href="tags/pyyaml.html">pyyaml</a> (1), <a href="tags/qgis.html">qgis</a> (1), <a href="tags/r.html">R</a> (1), <a href="tags/randomforest.html">randomForest</a> (1), <a href="tags/restview.html">restview</a> (1), <a href="tags/resume.html">resume</a> (1), <a href="tags/rpart.html">rpart</a> (1), <a href="tags/running.html">running</a> (1), <a href="tags/scikit_learn.html">scikit-learn</a> (1), <a href="tags/scipy.html">scipy</a> (1), <a href="tags/screen.html">screen</a> (1), <a href="tags/server_setup.html">server setup</a> (1), <a href="tags/social_networks.html">social networks</a> (1), <a href="tags/socrata.html">Socrata</a> (1), <a href="tags/sound.html">sound</a> (1), <a href="tags/sphinx.html">sphinx</a> (1), <a href="tags/sql.html">sql</a> (1), <a href="tags/sqlite3.html">sqlite3</a> (1), <a href="tags/ssh.html">ssh</a> (1), <a href="tags/ssh_keys.html">ssh keys</a> (1), <a href="tags/statsmodels.html">statsmodels</a> (1), <a href="tags/sympy.html">sympy</a> (1), <a href="tags/tableau.html">tableau</a> (1), <a href="tags/tinkerer.html">tinkerer</a> (1), <a href="tags/topic_models.html">topic models</a> (1), <a href="tags/tree.html">tree</a> (1), <a href="tags/ubuntu_14_04.html">ubuntu 14.04</a> (8), <a href="tags/vim.html">vim</a> (1), <a href="tags/virtualbox.html">virtualbox</a> (1), <a href="tags/virtualenv.html">virtualenv</a> (3), <a href="tags/virtualenvwrapper.html">virtualenvwrapper</a> (2), <a href="tags/vps.html">VPS</a> (1), <a href="tags/yaml.html">yaml</a> (1)</div></section></aside></div> <!-- #main --></div> <!-- #main-container -->
+    <h1>Tags</h1><a href="tags/api.html">api</a> (1), <a href="tags/audio.html">audio</a> (1), <a href="tags/audio_features.html">audio features</a> (1), <a href="tags/bayesian.html">Bayesian</a> (5), <a href="tags/beta.html">Beta</a> (1), <a href="tags/blog_setup.html">blog setup</a> (1), <a href="tags/bootstrap.html">bootstrap</a> (1), <a href="tags/bottleneck.html">bottleneck</a> (1), <a href="tags/c.html">c++</a> (1), <a href="tags/caret.html">caret</a> (1), <a href="tags/cmpy.html">cmpy</a> (1), <a href="tags/conditional_probability.html">conditional probability</a> (4), <a href="tags/coursera.html">coursera</a> (1), <a href="tags/coursera_intro_to_data_science.html">coursera intro to data science</a> (3), <a href="tags/css.html">css</a> (1), <a href="tags/cython.html">cython</a> (1), <a href="tags/d3.html">d3</a> (1), <a href="tags/dsp.html">dsp</a> (1), <a href="tags/e1071.html">e1071</a> (1), <a href="tags/essentia.html">essentia</a> (1), <a href="tags/garmin.html">garmin</a> (1), <a href="tags/ggplot2.html">ggplot2</a> (1), <a href="tags/gis.html">gis</a> (1), <a href="tags/git.html">git</a> (1), <a href="tags/gnuplot.html">gnuplot</a> (1), <a href="tags/graphs.html">graphs</a> (1), <a href="tags/html5.html">html5</a> (1), <a href="tags/igraph.html">igraph</a> (1), <a href="tags/ipython.html">ipython</a> (1), <a href="tags/javascript.html">javascript</a> (2), <a href="tags/joint_probability.html">joint probability</a> (4), <a href="tags/json.html">json</a> (1), <a href="tags/latex.html">LaTeX</a> (1), <a href="tags/lda.html">LDA</a> (1), <a href="tags/machine_learning.html">machine learning</a> (1), <a href="tags/marginal_probability.html">marginal probability</a> (4), <a href="tags/matplotlib.html">matplotlib</a> (1), <a href="tags/mir.html">mir</a> (1), <a href="tags/music.html">music</a> (1), <a href="tags/my_python_setup.html">my python setup</a> (5), <a href="tags/my_ubuntu_setup.html">my ubuntu setup</a> (10), <a href="tags/networks.html">networks</a> (1), <a href="tags/networkx.html">networkx</a> (1), <a href="tags/nodejs.html">nodejs</a> (1), <a href="tags/npm.html">npm</a> (1), <a href="tags/numexpr.html">numexpr</a> (1), <a href="tags/numpy.html">numpy</a> (1), <a href="tags/octave.html">octave</a> (1), <a href="tags/open_oakland.html">Open Oakland</a> (2), <a href="tags/openpyxl.html">openpyxl</a> (1), <a href="tags/pandas.html">pandas</a> (1), <a href="tags/patsy.html">patsy</a> (1), <a href="tags/pip.html">pip</a> (1), <a href="tags/pweave.html">pweave</a> (1), <a href="tags/pygraphviz.html">pygraphviz</a> (1), <a href="tags/pymc.html">pymc</a> (1), <a href="tags/pysoundfile.html">PySoundFile</a> (1), <a href="tags/python.html">python</a> (8), <a href="tags/python.html">Python</a> (1), <a href="tags/python_2_7.html">python 2.7</a> (5), <a href="tags/python_3_4.html">python 3.4</a> (1), <a href="tags/pyyaml.html">pyyaml</a> (1), <a href="tags/qgis.html">qgis</a> (1), <a href="tags/r.html">R</a> (1), <a href="tags/randomforest.html">randomForest</a> (1), <a href="tags/restview.html">restview</a> (1), <a href="tags/resume.html">resume</a> (1), <a href="tags/rpart.html">rpart</a> (1), <a href="tags/running.html">running</a> (1), <a href="tags/scikit_learn.html">scikit-learn</a> (1), <a href="tags/scipy.html">scipy</a> (1), <a href="tags/screen.html">screen</a> (1), <a href="tags/server_setup.html">server setup</a> (1), <a href="tags/social_networks.html">social networks</a> (1), <a href="tags/socrata.html">Socrata</a> (1), <a href="tags/sound.html">sound</a> (1), <a href="tags/sphinx.html">sphinx</a> (1), <a href="tags/sql.html">sql</a> (1), <a href="tags/sqlite3.html">sqlite3</a> (1), <a href="tags/ssh.html">ssh</a> (1), <a href="tags/ssh_keys.html">ssh keys</a> (1), <a href="tags/statsmodels.html">statsmodels</a> (1), <a href="tags/sympy.html">sympy</a> (1), <a href="tags/tableau.html">tableau</a> (1), <a href="tags/tinkerer.html">tinkerer</a> (1), <a href="tags/topic_models.html">topic models</a> (1), <a href="tags/tree.html">tree</a> (1), <a href="tags/ubuntu_14_04.html">ubuntu 14.04</a> (8), <a href="tags/vim.html">vim</a> (1), <a href="tags/virtualbox.html">virtualbox</a> (1), <a href="tags/virtualenv.html">virtualenv</a> (3), <a href="tags/virtualenvwrapper.html">virtualenvwrapper</a> (2), <a href="tags/vps.html">VPS</a> (1), <a href="tags/yaml.html">yaml</a> (1)</div></section></aside></div> <!-- #main --></div> <!-- #main-container -->
 
-        <div class="footer-container" role="contentinfo"><footer class="wrapper">&copy; Copyright 2014 Christopher Strelioff. Powered by <a href="http://www.tinkerer.me/">Tinkerer</a> and <a href="http://sphinx.pocoo.org/">Sphinx</a>.</footer></div> <!-- footer-container -->
+        <div class="footer-container" role="contentinfo"><footer class="wrapper">&copy; Copyright 2014-2015 Christopher Strelioff. Powered by <a href="http://www.tinkerer.me/">Tinkerer</a> and <a href="http://sphinx.pocoo.org/">Sphinx</a>.</footer></div> <!-- footer-container -->
 
       </div> <!--! end of #container --><script type="text/javascript">    var disqus_shortname = "chrissandbox";    disqus_count();</script><!--[if lt IE 7 ]>
           <script src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js"></script>
