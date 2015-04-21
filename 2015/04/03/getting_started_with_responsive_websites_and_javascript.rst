@@ -1,3 +1,5 @@
+.. _responsive website:
+
 Getting started with responsive websites and JavaScript
 =======================================================
 
