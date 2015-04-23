@@ -1,3 +1,5 @@
+.. _MySQL setup on Ubuntu 14.04:
+
 Installing MySQL on Ubuntu 14.04
 ================================
 
@@ -155,8 +157,8 @@ With these commands, the user **username** should be able to access the new
 :code:`testdb`.  To revoke some of the privileges, the command would be
 something like the following::
 
-    myysql> REVOKE CREATE, DROP, ALTER, INDEX 
-         -> INDEX ON testdb.* TO 'username'@'localhost';
+    mysql> REVOKE CREATE, DROP, ALTER, INDEX 
+        -> INDEX ON testdb.* TO 'username'@'localhost';
 
 Of course, this would be followed by a :code:`FLUSH PRIVILIGES;` to make the
 changes active.
