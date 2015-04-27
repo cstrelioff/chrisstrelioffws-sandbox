@@ -92,7 +92,7 @@ should look something like (excluding the request for a password)::
     +------------------+
 
 
-Finally, for setup of this database, we can validate the database with with md5
+Finally, for setup of this database, we can validate the database with md5
 using:
 
 .. code-block:: bash
