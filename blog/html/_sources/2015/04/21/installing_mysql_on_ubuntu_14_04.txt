@@ -172,7 +172,7 @@ the coming weeks and months, so check back.  As always, corrections, comments
 and questions are welcome.
 
 .. _mysql apt repo: http://dev.mysql.com/downloads/repo/apt/
-.. _Jump Start MySQL: https://learnable.comd/books/jsmysql1/
+.. _Jump Start MySQL: https://learnable.com/books/jump-start-mysql
 
 .. author:: default
 .. categories:: none

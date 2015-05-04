@@ -5,19 +5,50 @@
         <link>http://chrisstrelioff.ws/sandbox/</link>
         <description>python, R, ubuntu, bayesian methods, machine learning and more...</description>
         <language>en-us</language>
-        <pubDate>Wed, 22 Apr 2015 00:00:00 -0700</pubDate>
+        <pubDate>Thu, 30 Apr 2015 00:00:00 -0700</pubDate>
         
+        <item>
+            <link>http://chrisstrelioff.ws/sandbox/2015/04/30/joins_and_some_views_in_mysql.html</link>
+            <guid>http://chrisstrelioff.ws/sandbox/2015/04/30/joins_and_some_views_in_mysql.html</guid>
+            <title><![CDATA[JOINs, and some VIEWs, in MySQL]]></title>
+            <description><![CDATA[<h1>JOINs, and some VIEWs, in MySQL</h1>
+<p>This is the third in a series of posts on MySQL, starting with
+<a class="reference internal" href="http://chrisstrelioff.ws/sandbox/2015/04/21/installing_mysql_on_ubuntu_14_04.html#mysql-setup-on-ubuntu-14-04"><em>Installing MySQL on Ubuntu 14.04</em></a> and <a class="reference internal" href="http://chrisstrelioff.ws/sandbox/2015/04/22/employees_database_for_mysql_setup_and_simple_queries.html#mysql-employees-database-setup"><em>Employees database for MySQL, setup and simple queries</em></a>.
+The second post also covered simple queries using SELECT, LIMIT, ORDER BY, etc.
+If you are starting out, you should start with these posts.  In this post I will
+go over multi-table queries, using JOINs (with some help from VIEWs).  As you
+might expect, I’ll use the <a class="reference external" href="http://dev.mysql.com/doc/employee/en/index.html">employees sample database</a>, setup in the previous
+post. If that sounds like fun, or at least useful, follow along.</p>
+<p class="readmorewrapper"><a class="readmore" href="http://chrisstrelioff.ws/sandbox/2015/04/30/joins_and_some_views_in_mysql.html#more">Read more...</a></p> 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+]]></description>
+             <pubDate>Thu, 30 Apr 2015 00:00:00 -0700</pubDate>
+        </item>
+    
         <item>
             <link>http://chrisstrelioff.ws/sandbox/2015/04/22/employees_database_for_mysql_setup_and_simple_queries.html</link>
             <guid>http://chrisstrelioff.ws/sandbox/2015/04/22/employees_database_for_mysql_setup_and_simple_queries.html</guid>
             <title><![CDATA[Employees database for MySQL, setup and simple queries]]></title>
-            <description><![CDATA[<h1>Employees database for MySQL, setup and simple queries</h1>
+            <description><![CDATA[<span id="mysql-employees-database-setup"/><h1>Employees database for MySQL, setup and simple queries</h1>
 <p>In a recent post I covered <a class="reference internal" href="http://chrisstrelioff.ws/sandbox/2015/04/21/installing_mysql_on_ubuntu_14_04.html#mysql-setup-on-ubuntu-14-04"><em>Installing MySQL on Ubuntu 14.04</em></a>.  In this post
 I will cover downloading and setting up the <a class="reference external" href="http://dev.mysql.com/doc/employee/en/index.html">employees sample database</a> that
 will be used for the example queries in this, and other posts, on my blog.  As
-mentioned in the previous post, I’m using <a class="reference external" href="https://learnable.comd/books/jsmysql1/">Jump Start MySQL</a> as a guide book
+mentioned in the previous post, I’m using <a class="reference external" href="https://learnable.com/books/jump-start-mysql">Jump Start MySQL</a> as a guide book
 for these posts– you should check it out for more examples.  More specifically,
-<a class="reference external" href="https://learnable.comd/books/jsmysql1/">Jump Start MySQL</a> uses the <a class="reference external" href="http://dev.mysql.com/doc/sakila/en/index.html">sakila sample database</a> (DVD store database),
+<a class="reference external" href="https://learnable.com/books/jump-start-mysql">Jump Start MySQL</a> uses the <a class="reference external" href="http://dev.mysql.com/doc/sakila/en/index.html">sakila sample database</a> (DVD store database),
 providing another set of examples with a different database.</p>
 <p class="readmorewrapper"><a class="readmore" href="http://chrisstrelioff.ws/sandbox/2015/04/22/employees_database_for_mysql_setup_and_simple_queries.html#more">Read more...</a></p> 
  
@@ -48,7 +79,7 @@ providing another set of examples with a different database.</p>
 repository available at the <a class="reference external" href="http://dev.mysql.com/downloads/repo/apt/">mysql apt repo</a>. The idea is to setup a repository
 that allows our MySQL to be current– in this case MySQL 5.6.  The
 instructions I’m documenting here are derived from the above link, as well as
-the nice book <a class="reference external" href="https://learnable.comd/books/jsmysql1/">Jump Start MySQL</a> (April 2015).  If this is of interest to you,
+the nice book <a class="reference external" href="https://learnable.com/books/jump-start-mysql">Jump Start MySQL</a> (April 2015).  If this is of interest to you,
 follow along and be sure checkout the resources mentioned above.</p>
 <p class="readmorewrapper"><a class="readmore" href="http://chrisstrelioff.ws/sandbox/2015/04/21/installing_mysql_on_ubuntu_14_04.html#more">Read more...</a></p> 
  

@@ -1,3 +1,5 @@
+.. _MySQL employees database setup:
+
 Employees database for MySQL, setup and simple queries
 ======================================================
 
@@ -373,8 +375,7 @@ corrections, comments and questions are welcome.
 
 .. _launchpad download page: https://launchpad.net/test-db/+download
 
-.. _Jump Start MySQL: https://learnable.comd/books/jsmysql1/
-
+.. _Jump Start MySQL: https://learnable.com/books/jump-start-mysql
 
 .. author:: default
 .. categories:: none

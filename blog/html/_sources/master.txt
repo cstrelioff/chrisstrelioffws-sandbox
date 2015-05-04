@@ -4,6 +4,7 @@ Sitemap
 .. toctree::
    :maxdepth: 1
 
+   2015/04/30/joins_and_some_views_in_mysql
    2015/04/22/employees_database_for_mysql_setup_and_simple_queries
    2015/04/21/installing_mysql_on_ubuntu_14_04
    2015/04/03/getting_started_with_responsive_websites_and_javascript
