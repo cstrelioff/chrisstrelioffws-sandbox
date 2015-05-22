@@ -1,3 +1,5 @@
+.. _prob prog lea 1:
+
 Probabilistic programming with Python and Lea
 =============================================
 
