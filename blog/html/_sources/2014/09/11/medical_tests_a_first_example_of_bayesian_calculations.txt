@@ -3,6 +3,10 @@
 Medical tests, a first example of Bayesian calculations
 =======================================================
 
+**[edit: 2015, May 26]** I have a post that runs through all of these
+calculations using Python and a package named Lea-- check it out:
+:ref:`bayes medical tests with python`!
+
 In this post I will discuss a first example of a Bayesian calculation using a
 well-known example of testing for breast cancer. I choose this example for a
 few reasons:
