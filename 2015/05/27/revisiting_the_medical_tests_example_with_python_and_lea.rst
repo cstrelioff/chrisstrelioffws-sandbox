@@ -22,18 +22,16 @@ First, let's restate the problem::
     mammography in a routine screening.  What is the
     probability that she actually has breast cancer?
 
-As discussed in the previous post, this is an interesting and important problem
-to think about because many people, including doctors, tend to get this wrong.
-Often people assume that a positive mammogram means that breast cancer is
-certain, or at least very likely.  Given the probabilities stated above, that
-assumption is not correct-- let's revisit this important problem.
+This is an interesting and important problem to think about because many people
+get this wrong. Often people assume that a positive mammogram means
+that breast cancer is certain, or at least very likely.  Given the
+probabilities stated above, that assumption is incorrect-- let's revisit this
+important problem.
 
 I'll be using `Lea`_, a package for probabilistic programming, to answer this
 question and provide some context.  See my post :ref:`prob prog lea 1` for
-installation instructions and a first example of using the `Lea`_ package.
-
-Our first step is to import `Lea`_ (this post is using version 2.1.1, the
-current version as I write this post) and some convenience functions:
+installation instructions and a first example of using the `Lea`_ package. Our
+first step is to import `Lea`_ and some convenience functions:
 
 
 .. code-block:: python
@@ -44,8 +42,17 @@ current version as I write this post) and some convenience functions:
 
 
 
+Some notes:
+
+* This post is using `Lea`_ version 2.1.1, the current version at this time
+
+* A gist, containing all  of the code is available
+  `here <https://gist.github.com/cstrelioff/d0d424510c6d467173d4>`_
+
 Next, following the by-hand post :ref:`bayes medical tests`, we define the
-(prior) probability of cancer for women at age 40:
+probability of cancer for women at age 40 (this can be considered the *prior*
+in this problem-- the probability of cancer before data from the mammogram
+is available):
 
 
 .. code-block:: python
@@ -75,7 +82,7 @@ Next, following the by-hand post :ref:`bayes medical tests`, we define the
 This corresponds to :math:`P(C=\textrm{yes}) = 0.01` and
 :math:`P(C=\textrm{no}) = 0.99` in the previous post.  These values reflect
 the probability of cancer in this age group after extensive investigation to be
-sure that cancer is present, not just a mammogram.
+sure that cancer is present.
 
 Next, we have to define *two distributions* that describe the ability of
 the mammogram to detect cancer accurately:
@@ -143,8 +150,7 @@ These probabilities correspond to
 :math:`P(M=\textrm{pos} \vert C=\textrm{no}) = 0.096` and
 :math:`P(M=\textrm{neg} \vert C=\textrm{no}) = 0.904`.  So, if a woman *does
 not have cancer* the probability of a positive mammogram is 9.6%--of course,
-these are **false positives**. You should check and make sure these results
-match the information given in the statement of the problem.
+these are **false positives**.
 
 Finally, at least for the setup, we need to connect the probabilities of cancer
 and the mammogram using `Lea`_.  To do this we use a conditional probability
@@ -216,8 +222,8 @@ Well, they do provide information-- but, not certainty-- about the presence of
 cancer.
 
 We can calculate the conditional probability that the original question asks
-for using `Lea`_: what is probability of cancer **given** a positive mammogram
-(this is :math:`P(C=\textrm{yes} \vert M=\textrm{pos})`?
+for using `Lea`_: what is probability of cancer **given** a positive
+mammogram?
 
 
 .. code-block:: python
@@ -241,10 +247,13 @@ for using `Lea`_: what is probability of cancer **given** a positive mammogram
 
 
 
-The code does not make clear that Bayes' Theorem is being used in the
-calculation, but that's what is done to get the desired conditional
-probability-- see the previous post and the by-hand calculations to see how
-this works.
+As we can see, this calculation provides both
+:math:`P(C=\textrm{yes} \vert M=\textrm{pos})` and
+:math:`P(C=\textrm{yes} \vert M=\textrm{pos})`.
+The code does not make it clear
+that Bayes' Theorem is being used in the calculation, but that's what is done
+to get the desired conditional probability-- see the previous post and the
+by-hand calculations to see how this works.
 
 From the result we can see that the probability of cancer given a positive
 mammogram is about 8%, that is
@@ -263,7 +272,7 @@ Note, a negative mammogram also provides information:
 .. code-block:: python
 
     # prob cancer GIVEN mammogram==neg
-    print('\nExtra Infor',
+    print('\nExtra Info',
           'P(C|M=neg)',
           cancer.given(mammograms == 'neg').asPct(),
           sep='\n')
@@ -272,7 +281,7 @@ Note, a negative mammogram also provides information:
 ::
 
     
-    Extra Infor
+    Extra Info
     P(C|M=neg)
      no :  99.8 %
     yes :   0.2 %

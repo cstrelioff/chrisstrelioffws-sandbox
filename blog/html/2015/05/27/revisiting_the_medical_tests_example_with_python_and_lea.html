@@ -57,7 +57,7 @@
       <h1><a href="../../../index.html">chris&#39; sandbox</a></h1><h2>python, R, ubuntu, bayesian methods, machine learning and more...</h2></hgroup>
   </header>
 <div class="main-container" role="main"><div class="main wrapper body clearfix"><article><div class="timestamp postmeta">
-            <span>May 22, 2015</span>
+            <span>May 27, 2015</span>
         </div>
     <div class="section" id="revisiting-the-medical-tests-example-with-python-and-lea">
 <span id="bayes-medical-tests-with-python"></span><h1>Revisiting the medical tests example with Python and Lea</h1>
@@ -77,22 +77,29 @@ mammography in a routine screening.  What is the
 probability that she actually has breast cancer?
 </pre></div>
 </div>
-<p>As discussed in the previous post, this is an interesting and important problem
-to think about because many people, including doctors, tend to get this wrong.
-Often people assume that a positive mammogram means that breast cancer is
-certain, or at least very likely.  Given the probabilities stated above, that
-assumption is not correct&#8211; let&#8217;s revisit this important problem.</p>
+<p>This is an interesting and important problem to think about because many people
+get this wrong. Often people assume that a positive mammogram means
+that breast cancer is certain, or at least very likely.  Given the
+probabilities stated above, that assumption is incorrect&#8211; let&#8217;s revisit this
+important problem.</p>
 <p>I&#8217;ll be using <a class="reference external" href="https://code.google.com/p/lea/">Lea</a>, a package for probabilistic programming, to answer this
 question and provide some context.  See my post <a class="reference internal" href="../04/probabilistic_programming_with_python_and_lea.html#prob-prog-lea-1"><em>Probabilistic programming with Python and Lea</em></a> for
-installation instructions and a first example of using the <a class="reference external" href="https://code.google.com/p/lea/">Lea</a> package.</p>
-<p>Our first step is to import <a class="reference external" href="https://code.google.com/p/lea/">Lea</a> (this post is using version 2.1.1, the
-current version as I write this post) and some convenience functions:</p>
+installation instructions and a first example of using the <a class="reference external" href="https://code.google.com/p/lea/">Lea</a> package. Our
+first step is to import <a class="reference external" href="https://code.google.com/p/lea/">Lea</a> and some convenience functions:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span>
 <span class="kn">from</span> <span class="nn">lea</span> <span class="kn">import</span> <span class="n">Lea</span>
 </pre></div>
 </div>
+<p>Some notes:</p>
+<ul class="simple">
+<li>This post is using <a class="reference external" href="https://code.google.com/p/lea/">Lea</a> version 2.1.1, the current version at this time</li>
+<li>A gist, containing all  of the code is available
+<a class="reference external" href="https://gist.github.com/cstrelioff/d0d424510c6d467173d4">here</a></li>
+</ul>
 <p>Next, following the by-hand post <a class="reference internal" href="../../../2014/09/11/medical_tests_a_first_example_of_bayesian_calculations.html#bayes-medical-tests"><em>Medical tests, a first example of Bayesian calculations</em></a>, we define the
-(prior) probability of cancer for women at age 40:</p>
+probability of cancer for women at age 40 (this can be considered the <em>prior</em>
+in this problem&#8211; the probability of cancer before data from the mammogram
+is available):</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="c"># define cancer dist</span>
 <span class="n">cancer</span> <span class="o">=</span> <span class="n">Lea</span><span class="o">.</span><span class="n">fromValFreqs</span><span class="p">((</span><span class="s">&#39;yes&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
                           <span class="p">(</span><span class="s">&#39;no&#39;</span><span class="p">,</span>  <span class="mi">99</span><span class="p">))</span>
@@ -112,7 +119,7 @@ yes :   1.0 %
 <p>This corresponds to <span class="math">\(P(C=\textrm{yes}) = 0.01\)</span> and
 <span class="math">\(P(C=\textrm{no}) = 0.99\)</span> in the previous post.  These values reflect
 the probability of cancer in this age group after extensive investigation to be
-sure that cancer is present, not just a mammogram.</p>
+sure that cancer is present.</p>
 <p>Next, we have to define <em>two distributions</em> that describe the ability of
 the mammogram to detect cancer accurately:</p>
 <ul class="simple">
@@ -162,8 +169,7 @@ pos :   9.6 %
 <span class="math">\(P(M=\textrm{pos} \vert C=\textrm{no}) = 0.096\)</span> and
 <span class="math">\(P(M=\textrm{neg} \vert C=\textrm{no}) = 0.904\)</span>.  So, if a woman <em>does
 not have cancer</em> the probability of a positive mammogram is 9.6%&#8211;of course,
-these are <strong>false positives</strong>. You should check and make sure these results
-match the information given in the statement of the problem.</p>
+these are <strong>false positives</strong>.</p>
 <p>Finally, at least for the setup, we need to connect the probabilities of cancer
 and the mammogram using <a class="reference external" href="https://code.google.com/p/lea/">Lea</a>.  To do this we use a conditional probability
 table:</p>
@@ -212,8 +218,8 @@ P(M, C)
 Well, they do provide information&#8211; but, not certainty&#8211; about the presence of
 cancer.</p>
 <p>We can calculate the conditional probability that the original question asks
-for using <a class="reference external" href="https://code.google.com/p/lea/">Lea</a>: what is probability of cancer <strong>given</strong> a positive mammogram
-(this is <span class="math">\(P(C=\textrm{yes} \vert M=\textrm{pos})\)</span>?</p>
+for using <a class="reference external" href="https://code.google.com/p/lea/">Lea</a>: what is probability of cancer <strong>given</strong> a positive
+mammogram?</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="c"># prob cancer GIVEN mammogram==pos</span>
 <span class="k">print</span><span class="p">(</span><span class="s">&#39;</span><span class="se">\n</span><span class="s">The Answer&#39;</span><span class="p">,</span>
       <span class="s">&#39;P(C|M=pos)&#39;</span><span class="p">,</span>
@@ -227,10 +233,13 @@ P(C|M=pos)
 yes :   7.8 %
 </pre></div>
 </div>
-<p>The code does not make clear that Bayes&#8217; Theorem is being used in the
-calculation, but that&#8217;s what is done to get the desired conditional
-probability&#8211; see the previous post and the by-hand calculations to see how
-this works.</p>
+<p>As we can see, this calculation provides both
+<span class="math">\(P(C=\textrm{yes} \vert M=\textrm{pos})\)</span> and
+<span class="math">\(P(C=\textrm{yes} \vert M=\textrm{pos})\)</span>.
+The code does not make it clear
+that Bayes&#8217; Theorem is being used in the calculation, but that&#8217;s what is done
+to get the desired conditional probability&#8211; see the previous post and the
+by-hand calculations to see how this works.</p>
 <p>From the result we can see that the probability of cancer given a positive
 mammogram is about 8%, that is
 <span class="math">\(P(C=\textrm{yes} \vert M=\textrm{pos})=0.078\)</span>.
@@ -243,13 +252,13 @@ all this is that many women with <em>no cancer</em> will get positive mammograms
 leading to further (unneeded tests).</p>
 <p>Note, a negative mammogram also provides information:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="c"># prob cancer GIVEN mammogram==neg</span>
-<span class="k">print</span><span class="p">(</span><span class="s">&#39;</span><span class="se">\n</span><span class="s">Extra Infor&#39;</span><span class="p">,</span>
+<span class="k">print</span><span class="p">(</span><span class="s">&#39;</span><span class="se">\n</span><span class="s">Extra Info&#39;</span><span class="p">,</span>
       <span class="s">&#39;P(C|M=neg)&#39;</span><span class="p">,</span>
       <span class="n">cancer</span><span class="o">.</span><span class="n">given</span><span class="p">(</span><span class="n">mammograms</span> <span class="o">==</span> <span class="s">&#39;neg&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">asPct</span><span class="p">(),</span>
       <span class="n">sep</span><span class="o">=</span><span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-python"><div class="highlight"><pre>Extra Infor
+<div class="highlight-python"><div class="highlight"><pre>Extra Info
 P(C|M=neg)
  no :  99.8 %
 yes :   0.2 %
@@ -276,7 +285,7 @@ always, comments and questions are very welcome.</p>
         </div><ul class="related clearfix">
             <li class="left"></li>
             <li class="right"><a href="../04/probabilistic_programming_with_python_and_lea.html">Probabilistic programming with Python and Lea</a> &raquo; </li>
-        </ul><div id="disqus_thread"></div><script type="text/javascript">    var disqus_shortname = "chrissandbox";    var disqus_identifier = "2015/05/22/revisiting_the_medical_tests_example_with_python_and_lea";    disqus_thread();</script><noscript>Please enable JavaScript to view the    <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></article><aside class="sidebar"><section><div class="widget" id="searchbox" role="search">
+        </ul><div id="disqus_thread"></div><script type="text/javascript">    var disqus_shortname = "chrissandbox";    var disqus_identifier = "2015/05/27/revisiting_the_medical_tests_example_with_python_and_lea";    disqus_thread();</script><noscript>Please enable JavaScript to view the    <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></article><aside class="sidebar"><section><div class="widget" id="searchbox" role="search">
     <h1><a href="#searchbox">Search</a></h1>
     <form action="../../../search.html" method="get">
         <input type="text" name="q" />

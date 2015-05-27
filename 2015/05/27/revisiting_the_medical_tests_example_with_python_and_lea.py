@@ -53,7 +53,7 @@ print('\nThe Answer',
       sep='\n')
 
 # prob cancer GIVEN mammogram==neg
-print('\nExtra Infor',
+print('\nExtra Info',
       'P(C|M=neg)',
       cancer.given(mammograms == 'neg').asPct(),
       sep='\n')

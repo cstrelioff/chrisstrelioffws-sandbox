@@ -4,7 +4,7 @@ Sitemap
 .. toctree::
    :maxdepth: 1
 
-   2015/05/22/revisiting_the_medical_tests_example_with_python_and_lea
+   2015/05/27/revisiting_the_medical_tests_example_with_python_and_lea
    2015/05/04/probabilistic_programming_with_python_and_lea
    2015/04/30/joins_and_some_views_in_mysql
    2015/04/22/employees_database_for_mysql_setup_and_simple_queries
