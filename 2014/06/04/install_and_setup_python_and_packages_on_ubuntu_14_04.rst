@@ -20,6 +20,7 @@ As you can see, using ``python`` points to Python 2.7.6 by default.  However,
 ``python2`` and ``python3`` can be used to access the desired version. I will
 focus on installing packages for Python 2.7.6 here.
 
+
 .. more::
 
 Strategy
@@ -52,6 +53,26 @@ on a machine where I don't have sudo privileges--say an Ubuntu cluster.
 However, I will need **sudo** to install non-Python libraries, Fortran
 compilers, etc. that the Python packages employ. On a cluster, the SysAdmin
 would have to to do this part for me and other users.
+
+**--start edit: 2015, June 1st --**
+
+Recently use of pip on Ubuntu 14.04 has started to issue a warning that ends
+with *InsecurePlatformWarning*.  After some searching around, I've found that
+this is related to SSL and the urllib3 in Python 2.7.6, the version on Ubuntu
+14.04--
+`see here if you want the details <https://github.com/pypa/pip/issues/2681>`_.
+As suggested in the discussion linked above, this can be fixed with
+the following installs (I'll use the --user switch, as in the examples below)
+
+.. code-block:: bash
+
+    $ pip install --user pyopenssl ndg-httpsclient pyasn1 
+
+With that we're secured and the warnings go away. If you are just starting out,
+try installing pip, as below, and return to this install if use of pip gives
+you warnings. 
+
+**--end edit: 2015, June 1st --**
 
 pip_
 ----

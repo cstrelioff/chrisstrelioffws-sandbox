@@ -102,6 +102,21 @@ on a machine where I don&#8217;t have sudo privileges&#8211;say an Ubuntu cluste
 However, I will need <strong>sudo</strong> to install non-Python libraries, Fortran
 compilers, etc. that the Python packages employ. On a cluster, the SysAdmin
 would have to to do this part for me and other users.</p>
+<p><strong>&#8211;start edit: 2015, June 1st &#8211;</strong></p>
+<p>Recently use of pip on Ubuntu 14.04 has started to issue a warning that ends
+with <em>InsecurePlatformWarning</em>.  After some searching around, I&#8217;ve found that
+this is related to SSL and the urllib3 in Python 2.7.6, the version on Ubuntu
+14.04&#8211;
+<a class="reference external" href="https://github.com/pypa/pip/issues/2681">see here if you want the details</a>.
+As suggested in the discussion linked above, this can be fixed with
+the following installs (I&#8217;ll use the &#8211;user switch, as in the examples below)</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>pip install --user pyopenssl ndg-httpsclient pyasn1
+</pre></div>
+</div>
+<p>With that we&#8217;re secured and the warnings go away. If you are just starting out,
+try installing pip, as below, and return to this install if use of pip gives
+you warnings.</p>
+<p><strong>&#8211;end edit: 2015, June 1st &#8211;</strong></p>
 </div>
 <div class="section" id="pip">
 <h2><a class="reference external" href="http://pip.readthedocs.org/en/latest/index.html">pip</a></h2>
