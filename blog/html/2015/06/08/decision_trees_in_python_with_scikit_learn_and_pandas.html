@@ -1,0 +1,532 @@
+<!DOCTYPE html><!--[if lt IE 7]>      <html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:og="http://ogp.me/ns#"
+    xmlns:fb="https://www.facebook.com/2008/fbml" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:og="http://ogp.me/ns#"
+    xmlns:fb="https://www.facebook.com/2008/fbml" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:og="http://ogp.me/ns#"
+    xmlns:fb="https://www.facebook.com/2008/fbml" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:og="http://ogp.me/ns#"
+    xmlns:fb="https://www.facebook.com/2008/fbml" class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" content="Christopher Strelioff's blog">
+        <meta name="viewport" content="width=device-width">
+        <title>Decision trees in python with scikit-learn and pandas &mdash; chris&#39; sandbox</title>
+            <link rel="stylesheet" href="../../../_static/normalize.css" type="text/css">
+            <link rel="stylesheet" href="../../../_static/sphinx.css" type="text/css">
+            <link rel="stylesheet" href="../../../_static/main.css" type="text/css">
+            <link rel="stylesheet" href="../../../_static/flat.css" type="text/css">
+            <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+            <link rel="stylesheet" href="../../../_static/font-awesome.min.css" type="text/css">
+        <link rel="stylesheet" href="../../../_static/jsdemo.css" type="text/css" /><link rel="stylesheet" href="../../../_static/style.css" type="text/css" /><link rel="shortcut icon" href="../../../_static/tinkerer.ico" /><!-- Load modernizr and JQuery -->
+        <script src="../../../_static/vendor/modernizr-2.6.2.min.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="../../../_static/vendor/jquery-1.8.2.min.js"><\/script>')</script>
+        <script src="../../../_static/plugins.js"></script>
+        <script src="../../../_static/main.js"></script>
+        <link rel="next" title="Revisiting the medical tests example with Python and Lea" href="../../05/27/revisiting_the_medical_tests_example_with_python_and_lea.html" /><link rel="alternate" type="application/rss+xml" title="RSS" href="../../../rss.html" /><script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '1.5',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script><script type="text/javascript" src="../../../_static/underscore.js"></script><script type="text/javascript" src="../../../_static/doctools.js"></script><script type="text/javascript" src="../../../_static/jsdemo.js"></script><script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script type="text/javascript" src="../../../_static/disqus.js"></script><script type="text/javascript" src="../../../_static/google_analytics.js"></script><script type="text/javascript" src="../../../_static/d3.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            // Scroll to content if on small screen
+            if (screen.width < 480)
+            {
+                $(document).scrollTop(document.getElementsByTagName("article")[0].offsetTop - 44);
+            }
+        });
+    </script></head>
+    <body role="document">
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+
+      <div id="container"><header role="banner">
+    <hgroup>
+      <h1><a href="../../../index.html">chris&#39; sandbox</a></h1><h2>python, R, ubuntu, bayesian methods, machine learning and more...</h2></hgroup>
+  </header>
+<div class="main-container" role="main"><div class="main wrapper body clearfix"><article><div class="timestamp postmeta">
+            <span>June 08, 2015</span>
+        </div>
+    <div class="section" id="decision-trees-in-python-with-scikit-learn-and-pandas">
+<h1>Decision trees in python with scikit-learn and pandas</h1>
+<p>In this post I will cover decision trees (for classification) in
+python, using scikit-learn and pandas.  The emphasis will be on the basics
+and understanding the resulting decision tree. I will cover:</p>
+<ul class="simple">
+<li>Importing a csv file using pandas,</li>
+<li>Using pandas to prep the data for the scikit-leaarn decision tree code,</li>
+<li>Drawing the tree, and</li>
+<li>Producing pseudocode that represents the tree.</li>
+</ul>
+<p>The last two parts will go over what the tree has actually found&#8211; this is one
+of the really nice parts of a decision tree: the findings can be inspected and
+we can learn something about the patterns in our data. If this sounds
+interesting to you, read on. Also, if you have other ideas about how to do
+related things please leave comments below!</p>
+<div id="more"> </div><div class="section" id="gist">
+<h2>gist</h2>
+<p>Before we get going, the code is <a class="reference external" href="https://gist.github.com/cstrelioff/8fefa9a43e82d96e9f0c">available as a gist</a>, so you don&#8217;t
+have to copy and paste (unless you want to).  I&#8217;ll go through the functions and
+usage from scratch here&#8211; usage of the gist code is detailed there in a README
+file.</p>
+</div>
+<div class="section" id="imports">
+<h2>imports</h2>
+<p>So, first we do some imports, including the <span class="code docutils literal"><span class="pre">print_function</span></span> for
+python3-style print statements. I also import the usual suspects, using common
+abbreviations, which I&#8217;ll discuss below:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">sklearn.tree</span> <span class="kn">import</span> <span class="n">DecisionTreeClassifier</span><span class="p">,</span> <span class="n">export_graphviz</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="data-with-pandas">
+<h2>data with pandas</h2>
+<p>Next, we need some data to consider. I&#8217;ll use the famous iris data set, that
+has various measurements for a variety of different iris types.  I think both
+pandas and sckit-learn have easy import options for this data, but I&#8217;m going
+to write a function to import from a csv file, using pandas.  The point of this
+to demonstrate how pandas can be used with scikit-learn.  So, we define a
+function for getting the iris data:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">get_iris_data</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Get the iris data, from local csv or pandas repo.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s">&quot;iris.csv&quot;</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&quot;-- iris.csv found locally&quot;</span><span class="p">)</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s">&quot;iris.csv&quot;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&quot;-- trying to download from github&quot;</span><span class="p">)</span>
+        <span class="n">fn</span> <span class="o">=</span> <span class="s">&quot;https://raw.githubusercontent.com/pydata/pandas/&quot;</span> <span class="o">+</span> \
+             <span class="s">&quot;master/pandas/tests/data/iris.csv&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="nb">exit</span><span class="p">(</span><span class="s">&quot;-- Unable to download iris.csv&quot;</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">&quot;iris.csv&quot;</span><span class="p">,</span> <span class="s">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">&quot;-- writing to local iris.csv file&quot;</span><span class="p">)</span>
+            <span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">df</span>
+</pre></div>
+</div>
+<p>Notes:</p>
+<ul class="simple">
+<li>This function first tries to read the data locally, using pandas. This is why
+I import <span class="code docutils literal"><span class="pre">os</span></span> above: to make use of the <span class="code docutils literal"><span class="pre">os.path.exists()</span></span>
+method. If the <strong>iris.csv</strong> file is found in the local directory, pandas is
+used to read the file using <span class="code docutils literal"><span class="pre">pd.read_csv()</span></span>&#8211; note that pandas has been
+import using <span class="code docutils literal"><span class="pre">import</span> <span class="pre">pandas</span> <span class="pre">as</span> <span class="pre">pd</span></span>. This is typical usage for the
+package.</li>
+<li>If a local <strong>iris.csv</strong> is <em>not found</em>, pandas is used to grab the data from
+a url and a local copy is saved for future runs. A <span class="code docutils literal"><span class="pre">try</span></span> and
+<span class="code docutils literal"><span class="pre">except</span></span> are used to exit and provide a note if there are problems&#8211;
+maybe the user is not connected to the internet?</li>
+</ul>
+<p>Hopefully the above codes gives a sense of how to load a csv data file,
+locally as well as from a remote location.  The next step is to get the data
+and use the <span class="code docutils literal"><span class="pre">head()</span></span> and <span class="code docutils literal"><span class="pre">tail()</span></span> methods to see what the data is
+like&#8211; these show the start and end of the dataframe, respectively.  So, first
+get the data:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">df</span> <span class="o">=</span> <span class="n">get_iris_data</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre>-- iris.csv found locally
+</pre></div>
+</div>
+<p>then, head and tail:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">print</span><span class="p">(</span><span class="s">&quot;* df.head()&quot;</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">(),</span> <span class="n">sep</span><span class="o">=</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s">&quot;</span><span class="se">\n\n</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s">&quot;* df.tail()&quot;</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">tail</span><span class="p">(),</span> <span class="n">sep</span><span class="o">=</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s">&quot;</span><span class="se">\n\n</span><span class="s">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre>* df.head()
+   SepalLength  SepalWidth  PetalLength  PetalWidth         Name
+0          5.1         3.5          1.4         0.2  Iris-setosa
+1          4.9         3.0          1.4         0.2  Iris-setosa
+2          4.7         3.2          1.3         0.2  Iris-setosa
+3          4.6         3.1          1.5         0.2  Iris-setosa
+4          5.0         3.6          1.4         0.2  Iris-setosa
+
+* df.tail()
+     SepalLength  SepalWidth  PetalLength  PetalWidth            Name
+145          6.7         3.0          5.2         2.3  Iris-virginica
+146          6.3         2.5          5.0         1.9  Iris-virginica
+147          6.5         3.0          5.2         2.0  Iris-virginica
+148          6.2         3.4          5.4         2.3  Iris-virginica
+149          5.9         3.0          5.1         1.8  Iris-virginica
+</pre></div>
+</div>
+<p>From this information we can talk about our goal: to predict <strong>Name</strong> (or, type
+of iris) given the features <strong>SepalLength</strong>,  <strong>SepalWidth</strong>,  <strong>PetalLength</strong>
+and <strong>PetalWidth</strong>.  We can use pandas to show the three iris types:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">print</span><span class="p">(</span><span class="s">&quot;* iris types:&quot;</span><span class="p">,</span> <span class="n">df</span><span class="p">[</span><span class="s">&quot;Name&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">(),</span> <span class="n">sep</span><span class="o">=</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre>* iris types:
+[&#39;Iris-setosa&#39; &#39;Iris-versicolor&#39; &#39;Iris-virginica&#39;]
+</pre></div>
+</div>
+</div>
+<div class="section" id="preprocessing">
+<h2>preprocessing</h2>
+<p>In order to pass this data into scikit-learn we need to encode the <strong>Names</strong> to
+integers. To do this we&#8217;ll write another function and return the modified data
+frame as well as a list of the target (class) names:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">encode_target</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">target_column</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Add column to df with integers for the target.</span>
+
+<span class="sd">    Args</span>
+<span class="sd">    ----</span>
+<span class="sd">    df -- pandas DataFrame.</span>
+<span class="sd">    target_column -- column to map to int, producing</span>
+<span class="sd">                     new Target column.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    df_mod -- modified DataFrame.</span>
+<span class="sd">    targets -- list of target names.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">df_mod</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">targets</span> <span class="o">=</span> <span class="n">df_mod</span><span class="p">[</span><span class="n">target_column</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+    <span class="n">map_to_int</span> <span class="o">=</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="n">n</span> <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">targets</span><span class="p">)}</span>
+    <span class="n">df_mod</span><span class="p">[</span><span class="s">&quot;Target&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_mod</span><span class="p">[</span><span class="n">target_column</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">map_to_int</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">(</span><span class="n">df_mod</span><span class="p">,</span> <span class="n">targets</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Let&#8217;s see what we have (I&#8217;ll show just <strong>Name</strong> and <strong>Target</strong> columns to
+prevent wrapping):</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">df2</span><span class="p">,</span> <span class="n">targets</span> <span class="o">=</span> <span class="n">encode_target</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s">&quot;Name&quot;</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s">&quot;* df2.head()&quot;</span><span class="p">,</span> <span class="n">df2</span><span class="p">[[</span><span class="s">&quot;Target&quot;</span><span class="p">,</span> <span class="s">&quot;Name&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">head</span><span class="p">(),</span>
+      <span class="n">sep</span><span class="o">=</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s">&quot;</span><span class="se">\n\n</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s">&quot;* df2.tail()&quot;</span><span class="p">,</span> <span class="n">df2</span><span class="p">[[</span><span class="s">&quot;Target&quot;</span><span class="p">,</span> <span class="s">&quot;Name&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">tail</span><span class="p">(),</span>
+      <span class="n">sep</span><span class="o">=</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s">&quot;</span><span class="se">\n\n</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s">&quot;* targets&quot;</span><span class="p">,</span> <span class="n">targets</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s">&quot;</span><span class="se">\n\n</span><span class="s">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre>* df2.head()
+   Target         Name
+0       0  Iris-setosa
+1       0  Iris-setosa
+2       0  Iris-setosa
+3       0  Iris-setosa
+4       0  Iris-setosa
+
+* df2.tail()
+     Target            Name
+145       2  Iris-virginica
+146       2  Iris-virginica
+147       2  Iris-virginica
+148       2  Iris-virginica
+149       2  Iris-virginica
+
+* targets
+[&#39;Iris-setosa&#39; &#39;Iris-versicolor&#39; &#39;Iris-virginica&#39;]
+</pre></div>
+</div>
+<p>Looks good, <strong>Iris-setosa</strong> has been mapped to zero, <strong>Iris-versicolor</strong> to
+one, and <strong>Iris-virginica</strong> to three. Next, we get the names of the feature
+columns:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">features</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">df2</span><span class="o">.</span><span class="n">columns</span><span class="p">[:</span><span class="mi">4</span><span class="p">])</span>
+<span class="k">print</span><span class="p">(</span><span class="s">&quot;* features:&quot;</span><span class="p">,</span> <span class="n">features</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre>* features:
+[&#39;SepalLength&#39;, &#39;SepalWidth&#39;, &#39;PetalLength&#39;, &#39;PetalWidth&#39;]
+</pre></div>
+</div>
+</div>
+<div class="section" id="fitting-the-decision-tree-with-scikit-learn">
+<h2>fitting the decision tree with scikit-learn</h2>
+<p>Now we can fit the decision tree, using the <span class="code docutils literal"><span class="pre">DecisionTreeClassifier</span></span>
+imported above, as follows:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">y</span> <span class="o">=</span> <span class="n">df2</span><span class="p">[</span><span class="s">&quot;Target&quot;</span><span class="p">]</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">df2</span><span class="p">[</span><span class="n">features</span><span class="p">]</span>
+<span class="n">dt</span> <span class="o">=</span> <span class="n">DecisionTreeClassifier</span><span class="p">(</span><span class="n">min_samples_split</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">99</span><span class="p">)</span>
+<span class="n">dt</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Notes:</p>
+<ul class="simple">
+<li>We pull the <span class="code docutils literal"><span class="pre">X</span></span> and <span class="code docutils literal"><span class="pre">y</span></span> data from the pandas dataframe using
+simple indexing.</li>
+<li>The decision tree, imported at the start of the post, is initialized with
+two parameters: <span class="code docutils literal"><span class="pre">min_samples_split=20</span></span> requires 20 samples in a node
+for it to be split (this will make more sense when we see the result) and
+<span class="code docutils literal"><span class="pre">random_state=99</span></span> to seed the random number generator.</li>
+</ul>
+</div>
+<div class="section" id="visualizing-the-tree">
+<h2>visualizing the tree</h2>
+<p>We can produce a graphic (if <a class="reference external" href="http://www.graphviz.org/">graphviz</a> is available on your system&#8211; if not
+check the site and see if you can install) using the following function:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">visualize_tree</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="n">feature_names</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Create tree png using graphviz.</span>
+
+<span class="sd">    Args</span>
+<span class="sd">    ----</span>
+<span class="sd">    tree -- scikit-learn DecsisionTree.</span>
+<span class="sd">    feature_names -- list of feature names.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">&quot;dt.dot&quot;</span><span class="p">,</span> <span class="s">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">export_graphviz</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="n">out_file</span><span class="o">=</span><span class="n">f</span><span class="p">,</span>
+                        <span class="n">feature_names</span><span class="o">=</span><span class="n">feature_names</span><span class="p">)</span>
+
+    <span class="n">command</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;dot&quot;</span><span class="p">,</span> <span class="s">&quot;-Tpng&quot;</span><span class="p">,</span> <span class="s">&quot;dt.dot&quot;</span><span class="p">,</span> <span class="s">&quot;-o&quot;</span><span class="p">,</span> <span class="s">&quot;dt.png&quot;</span><span class="p">]</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">subprocess</span><span class="o">.</span><span class="n">check_call</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="nb">exit</span><span class="p">(</span><span class="s">&quot;Could not run dot, ie graphviz, to &quot;</span>
+             <span class="s">&quot;produce visualization&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Notes:</p>
+<ul class="simple">
+<li>The <span class="code docutils literal"><span class="pre">export_graphviz</span></span> method, imported from scikit-learn above, writes
+a dot file.  This file is used to produce the graphic.</li>
+<li><span class="code docutils literal"><span class="pre">subprocess</span></span>, imported above, is used to process the dot file and
+generate the graphic <strong>dt.png</strong>&#8211; see the example below.</li>
+</ul>
+<p>So, running the function:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">visualize_tree</span><span class="p">(</span><span class="n">dt</span><span class="p">,</span> <span class="n">features</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>results in (click on the figure to see a larger version)</p>
+<div class="figure">
+<a class="reference internal image-reference" href="../../../_images/dt.png"><img alt="../../../_images/dt.png" src="../../../_images/dt.png" style="width: 15cm;" /></a>
+</div>
+<p>Okay, what does this all mean?  Well, we can use this figure to understand
+the patterns found by the decision tree:</p>
+<ul class="simple">
+<li>Imagine that all data (all rows) start in a <em>single bin</em> at the top of the
+tree.</li>
+<li>All features are considered to see how the data can be split in the most
+informative way&#8211; this uses the gini measure by default, but this can be
+changed to entropy if you prefer; see
+<a class="reference external" href="http://scikit-learn.org/stable/modules/generated/sklearn.tree.DecisionTreeClassifier.html#sklearn.tree.DecisionTreeClassifier">decision tree classifier documentation</a>.</li>
+<li>At the top we see the most informative condition is
+<strong>PetalLength &lt;= 2.4500</strong>. If this condition is <em>true</em>, take the left
+branch to get to the 50 samples of <strong>value = [50. 0. 0.]</strong>. This means there
+are 50 examples of class/target 0, in this case <strong>Iris-setosa</strong>.
+Unfortunately, the default scikit-learn export to graphviz/dot does not seem
+to be able to include this information (but see below).  The other 100
+samples, of the 150 total, go to the right bin.</li>
+<li>This splitting continues until</li>
+</ul>
+<ol class="arabic simple">
+<li>The split creates a bin with only one class&#8211; for example the bin with
+50 Iris-setosa is not split again.</li>
+<li>Or, the resulting bin has less than 20 samples&#8211; this is because we set
+the <span class="code docutils literal"><span class="pre">min_samples_split=20</span></span> when initializing the decision tree. If we
+<strong>had not set this value</strong>, the tree would keep splitting until all bins
+have a single class.</li>
+</ol>
+<p>So, that&#8217;s it for the visualization&#8211; you should be able to trace, from top to
+bottom, and see how the rules discussed above were applied to the iris data.</p>
+</div>
+<div class="section" id="psuedocode-for-the-decision-tree">
+<h2>psuedocode for the decision tree</h2>
+<p>Finally let&#8217;s consider generation of psuedocode that represents the learned
+decision tree.  In particular, the target names (classes) and feature names
+should be included in the output so that it is simple to follow the patterns
+found.  The function below is based on
+<a class="reference external" href="http://stackoverflow.com/a/30104792">the answer to a stackoverflow question</a>.
+I&#8217;ve made some additions to the function to meet the requirements I&#8217;ve
+stated above:</p>
+<ul class="simple">
+<li>The target names can be passed to the function and are included in the
+output. The output now shows both the features used for branching conditions
+as well as the class, or classes, found in the resulting node/bin.</li>
+<li>The <strong>if</strong>/<strong>else</strong> structure has indenting, using the <span class="code docutils literal"><span class="pre">spacer_base</span></span>
+argument to make the output easier to read (I think).</li>
+</ul>
+<p>That said, the function is:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">get_code</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="n">feature_names</span><span class="p">,</span> <span class="n">target_names</span><span class="p">,</span>
+             <span class="n">spacer_base</span><span class="o">=</span><span class="s">&quot;    &quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Produce psuedo-code for decision tree.</span>
+
+<span class="sd">    Args</span>
+<span class="sd">    ----</span>
+<span class="sd">    tree -- scikit-leant DescisionTree.</span>
+<span class="sd">    feature_names -- list of feature names.</span>
+<span class="sd">    target_names -- list of target (class) names.</span>
+<span class="sd">    spacer_base -- used for spacing code (default: &quot;    &quot;).</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    based on http://stackoverflow.com/a/30104792.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">left</span>      <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">tree_</span><span class="o">.</span><span class="n">children_left</span>
+    <span class="n">right</span>     <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">tree_</span><span class="o">.</span><span class="n">children_right</span>
+    <span class="n">threshold</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">tree_</span><span class="o">.</span><span class="n">threshold</span>
+    <span class="n">features</span>  <span class="o">=</span> <span class="p">[</span><span class="n">feature_names</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">tree</span><span class="o">.</span><span class="n">tree_</span><span class="o">.</span><span class="n">feature</span><span class="p">]</span>
+    <span class="n">value</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">tree_</span><span class="o">.</span><span class="n">value</span>
+
+    <span class="k">def</span> <span class="nf">recurse</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">threshold</span><span class="p">,</span> <span class="n">features</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">depth</span><span class="p">):</span>
+        <span class="n">spacer</span> <span class="o">=</span> <span class="n">spacer_base</span> <span class="o">*</span> <span class="n">depth</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">threshold</span><span class="p">[</span><span class="n">node</span><span class="p">]</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">2</span><span class="p">):</span>
+            <span class="k">print</span><span class="p">(</span><span class="n">spacer</span> <span class="o">+</span> <span class="s">&quot;if ( &quot;</span> <span class="o">+</span> <span class="n">features</span><span class="p">[</span><span class="n">node</span><span class="p">]</span> <span class="o">+</span> <span class="s">&quot; &lt;= &quot;</span> <span class="o">+</span> \
+                  <span class="nb">str</span><span class="p">(</span><span class="n">threshold</span><span class="p">[</span><span class="n">node</span><span class="p">])</span> <span class="o">+</span> <span class="s">&quot; ) {&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">left</span><span class="p">[</span><span class="n">node</span><span class="p">]</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                    <span class="n">recurse</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">threshold</span><span class="p">,</span> <span class="n">features</span><span class="p">,</span>
+                            <span class="n">left</span><span class="p">[</span><span class="n">node</span><span class="p">],</span> <span class="n">depth</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+            <span class="k">print</span><span class="p">(</span><span class="n">spacer</span> <span class="o">+</span> <span class="s">&quot;}</span><span class="se">\n</span><span class="s">&quot;</span> <span class="o">+</span> <span class="n">spacer</span> <span class="o">+</span><span class="s">&quot;else {&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">right</span><span class="p">[</span><span class="n">node</span><span class="p">]</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                    <span class="n">recurse</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">threshold</span><span class="p">,</span> <span class="n">features</span><span class="p">,</span>
+                            <span class="n">right</span><span class="p">[</span><span class="n">node</span><span class="p">],</span> <span class="n">depth</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+            <span class="k">print</span><span class="p">(</span><span class="n">spacer</span> <span class="o">+</span> <span class="s">&quot;}&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">target</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="n">node</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">target</span><span class="p">)[</span><span class="mi">1</span><span class="p">],</span>
+                            <span class="n">target</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">target</span><span class="p">)]):</span>
+                <span class="n">target_name</span> <span class="o">=</span> <span class="n">target_names</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="n">target_count</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+                <span class="k">print</span><span class="p">(</span><span class="n">spacer</span> <span class="o">+</span> <span class="s">&quot;return &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">target_name</span><span class="p">)</span> <span class="o">+</span> \
+                      <span class="s">&quot; ( &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">target_count</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot; examples )&quot;</span><span class="p">)</span>
+
+    <span class="n">recurse</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">threshold</span><span class="p">,</span> <span class="n">features</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>and the resulting output for application to the iris data is:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">get_code</span><span class="p">(</span><span class="n">dt</span><span class="p">,</span> <span class="n">features</span><span class="p">,</span> <span class="n">targets</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre>if ( PetalLength &lt;= 2.45000004768 ) {
+    return Iris-setosa ( 50 examples )
+}
+else {
+    if ( PetalWidth &lt;= 1.75 ) {
+        if ( PetalLength &lt;= 4.94999980927 ) {
+            if ( PetalWidth &lt;= 1.65000009537 ) {
+                return Iris-versicolor ( 47 examples )
+            }
+            else {
+                return Iris-virginica ( 1 examples )
+            }
+        }
+        else {
+            return Iris-versicolor ( 2 examples )
+            return Iris-virginica ( 4 examples )
+        }
+    }
+    else {
+        if ( PetalLength &lt;= 4.85000038147 ) {
+            return Iris-versicolor ( 1 examples )
+            return Iris-virginica ( 2 examples )
+        }
+        else {
+            return Iris-virginica ( 43 examples )
+        }
+    }
+}
+</pre></div>
+</div>
+<p>This should be compared with the graphic output above&#8211; this is just a different
+representation of the learned decision tree.  However, I think the addition of
+target/classes and features really make this useful.</p>
+<p>Okay, that&#8217;s it for this post.  There are many topics I have not covered, but I
+think that I&#8217;ve provided some useful code for understanding a decision tree
+learned with scikit-learn. Useful links at the <a class="reference external" href="http://scikit-learn.org/stable/">scikit-learn</a> site, to
+dig deeper include:</p>
+<ul class="simple">
+<li><a class="reference external" href="http://scikit-learn.org/stable/modules/tree.html#classification">decision tree classifier example</a> &#8211; a simple decision tree example.</li>
+<li><a class="reference external" href="http://scikit-learn.org/stable/modules/generated/sklearn.tree.DecisionTreeClassifier.html#sklearn.tree.DecisionTreeClassifier">decision tree classifier documentation</a> &#8211; documentation for the class. Be
+sure to check out the many parameters that can be set.</li>
+<li><a class="reference external" href="http://scikit-learn.org/stable/auto_examples/tree/plot_iris.html#example-tree-plot-iris-py">decision tree classifier plot boundaries</a> &#8211; how to plot the decision
+boundaries for the iris data. Unfortunately, they <em>normalize</em> the data before
+training and plotting, resulting in <em>negative lengths</em>, which are very
+difficult to relate back to the original data.</li>
+</ul>
+<p>Importantly, I have not covered how to set parameters and to avoid over
+fitting.  However, that&#8217;s beyond the scope of this post.  The best place to
+start for this is the <strong>cross-validation</strong> tools in scikit-learn. Check out:</p>
+<ul class="simple">
+<li><a class="reference external" href="http://scikit-learn.org/stable/modules/cross_validation.html">scikit-learn cross-validation</a> &#8211; there&#8217;s even an example with the iris
+data to get you started!</li>
+<li><a class="reference external" href="http://scikit-learn.org/stable/modules/grid_search.html#grid-search">scikit-learn grid search</a> &#8211; search through set of parameters to find the
+best setting(s).</li>
+</ul>
+<p>As always, post comments and questions below.  Corrections and typos are also
+welcomed!</p>
+</div>
+</div>
+
+    <div class="postmeta">
+        <div class="author">
+            <span>Posted by Chris Strelioff</span>
+        </div>
+        
+        <div class="tags">
+            <span>
+                Tags:
+                <a href="../../../tags/python.html">python</a>, <a href="../../../tags/pandas.html">pandas</a>, <a href="../../../tags/scikit_learn.html">scikit-learn</a>, <a href="../../../tags/machine_learning.html">machine learning</a>, <a href="../../../tags/decision_trees.html">decision trees</a></span>
+        </div>
+        </div><ul class="related clearfix">
+            <li class="left"></li>
+            <li class="right"><a href="../../05/27/revisiting_the_medical_tests_example_with_python_and_lea.html">Revisiting the medical tests example with Python and Lea</a> &raquo; </li>
+        </ul><div id="disqus_thread"></div><script type="text/javascript">    var disqus_shortname = "chrissandbox";    var disqus_identifier = "2015/06/08/decision_trees_in_python_with_scikit_learn_and_pandas";    disqus_thread();</script><noscript>Please enable JavaScript to view the    <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></article><aside class="sidebar"><section><div class="widget" id="searchbox" role="search">
+    <h1><a href="#searchbox">Search</a></h1>
+    <form action="../../../search.html" method="get">
+        <input type="text" name="q" />
+        <button type="submit"><span class="fa fa-search"></span></button>
+    </form>
+</div></section><section><div class="widget">
+  <h1>Pages</h1>
+  <ul>
+  <li>
+      <a href="../../../index.html">Home</a>
+    </li>
+  </ul>
+</div>
+</section><section><div class="widget">
+    <h1>Recent Posts</h1>
+    <ul><li>
+            <a href="#">Decision trees in python with scikit-learn and pandas</a>
+        </li><li>
+            <a href="../../05/27/revisiting_the_medical_tests_example_with_python_and_lea.html">Revisiting the medical tests example with Python and Lea</a>
+        </li><li>
+            <a href="../../05/04/probabilistic_programming_with_python_and_lea.html">Probabilistic programming with Python and Lea</a>
+        </li><li>
+            <a href="../../04/30/joins_and_some_views_in_mysql.html">JOINs, and some VIEWs, in MySQL</a>
+        </li><li>
+            <a href="../../04/22/employees_database_for_mysql_setup_and_simple_queries.html">Employees database for MySQL, setup and simple queries</a>
+        </li><li>
+            <a href="../../04/21/installing_mysql_on_ubuntu_14_04.html">Installing MySQL on Ubuntu 14.04</a>
+        </li><li>
+            <a href="../../04/03/getting_started_with_responsive_websites_and_javascript.html">Getting started with responsive websites and JavaScript</a>
+        </li><li>
+            <a href="../../03/03/installing_pysoundfile_on_ubuntu_14_04.html">Installing PySoundFile on Ubuntu 14.04</a>
+        </li><li>
+            <a href="../../02/17/install_qgis_on_ubuntu_14_04.html">Install QGIS on Ubuntu 14.04</a>
+        </li><li>
+            <a href="../../02/17/using_python_to_query_data_from_socrata.html">Using Python to query data from Socrata</a>
+        </li></ul>
+</div>
+</section><section><div class="widget">
+    <h1>Tags</h1><a href="../../../tags/api.html">api</a> (1), <a href="../../../tags/audio.html">audio</a> (1), <a href="../../../tags/audio_features.html">audio features</a> (1), <a href="../../../tags/bayesian.html">Bayesian</a> (7), <a href="../../../tags/beta.html">Beta</a> (1), <a href="../../../tags/blog_setup.html">blog setup</a> (1), <a href="../../../tags/bootstrap.html">bootstrap</a> (1), <a href="../../../tags/bottleneck.html">bottleneck</a> (1), <a href="../../../tags/c.html">c++</a> (1), <a href="../../../tags/caret.html">caret</a> (1), <a href="../../../tags/cmpy.html">cmpy</a> (1), <a href="../../../tags/conditional_probability.html">conditional probability</a> (6), <a href="../../../tags/coursera.html">coursera</a> (1), <a href="../../../tags/coursera_intro_to_data_science.html">coursera intro to data science</a> (3), <a href="../../../tags/css.html">css</a> (1), <a href="../../../tags/cython.html">cython</a> (1), <a href="../../../tags/d3.html">d3</a> (1), <a href="../../../tags/decision_trees.html">decision trees</a> (1), <a href="../../../tags/dsp.html">dsp</a> (1), <a href="../../../tags/e1071.html">e1071</a> (1), <a href="../../../tags/essentia.html">essentia</a> (1), <a href="../../../tags/garmin.html">garmin</a> (1), <a href="../../../tags/ggplot2.html">ggplot2</a> (1), <a href="../../../tags/gis.html">gis</a> (1), <a href="../../../tags/git.html">git</a> (1), <a href="../../../tags/gnuplot.html">gnuplot</a> (1), <a href="../../../tags/graphs.html">graphs</a> (1), <a href="../../../tags/html5.html">html5</a> (1), <a href="../../../tags/igraph.html">igraph</a> (1), <a href="../../../tags/ipython.html">ipython</a> (1), <a href="../../../tags/javascript.html">javascript</a> (2), <a href="../../../tags/joint_probability.html">joint probability</a> (6), <a href="../../../tags/json.html">json</a> (1), <a href="../../../tags/latex.html">LaTeX</a> (1), <a href="../../../tags/lda.html">LDA</a> (1), <a href="../../../tags/lea.html">Lea</a> (2), <a href="../../../tags/machine_learning.html">machine learning</a> (2), <a href="../../../tags/marginal_probability.html">marginal probability</a> (6), <a href="../../../tags/matplotlib.html">matplotlib</a> (1), <a href="../../../tags/mir.html">mir</a> (1), <a href="../../../tags/music.html">music</a> (1), <a href="../../../tags/my_python_setup.html">my python setup</a> (5), <a href="../../../tags/my_ubuntu_setup.html">my ubuntu setup</a> (10), <a href="../../../tags/mysql.html">mysql</a> (3), <a href="../../../tags/networks.html">networks</a> (1), <a href="../../../tags/networkx.html">networkx</a> (1), <a href="../../../tags/nodejs.html">nodejs</a> (1), <a href="../../../tags/npm.html">npm</a> (1), <a href="../../../tags/numexpr.html">numexpr</a> (1), <a href="../../../tags/numpy.html">numpy</a> (1), <a href="../../../tags/octave.html">octave</a> (1), <a href="../../../tags/open_oakland.html">Open Oakland</a> (2), <a href="../../../tags/openpyxl.html">openpyxl</a> (1), <a href="../../../tags/pandas.html">pandas</a> (2), <a href="../../../tags/patsy.html">patsy</a> (1), <a href="../../../tags/pip.html">pip</a> (1), <a href="../../../tags/pweave.html">pweave</a> (1), <a href="../../../tags/pygraphviz.html">pygraphviz</a> (1), <a href="../../../tags/pymc.html">pymc</a> (1), <a href="../../../tags/pysoundfile.html">PySoundFile</a> (1), <a href="../../../tags/python.html">python</a> (11), <a href="../../../tags/python.html">Python</a> (1), <a href="../../../tags/python_2_7.html">python 2.7</a> (5), <a href="../../../tags/python_3_4.html">python 3.4</a> (1), <a href="../../../tags/pyyaml.html">pyyaml</a> (1), <a href="../../../tags/qgis.html">qgis</a> (1), <a href="../../../tags/r.html">R</a> (1), <a href="../../../tags/randomforest.html">randomForest</a> (1), <a href="../../../tags/restview.html">restview</a> (1), <a href="../../../tags/resume.html">resume</a> (1), <a href="../../../tags/rpart.html">rpart</a> (1), <a href="../../../tags/running.html">running</a> (1), <a href="../../../tags/scikit_learn.html">scikit-learn</a> (2), <a href="../../../tags/scipy.html">scipy</a> (1), <a href="../../../tags/screen.html">screen</a> (1), <a href="../../../tags/server_setup.html">server setup</a> (1), <a href="../../../tags/social_networks.html">social networks</a> (1), <a href="../../../tags/socrata.html">Socrata</a> (1), <a href="../../../tags/sound.html">sound</a> (1), <a href="../../../tags/sphinx.html">sphinx</a> (1), <a href="../../../tags/sql.html">sql</a> (4), <a href="../../../tags/sqlite3.html">sqlite3</a> (1), <a href="../../../tags/ssh.html">ssh</a> (1), <a href="../../../tags/ssh_keys.html">ssh keys</a> (1), <a href="../../../tags/statsmodels.html">statsmodels</a> (1), <a href="../../../tags/sympy.html">sympy</a> (1), <a href="../../../tags/tableau.html">tableau</a> (1), <a href="../../../tags/tinkerer.html">tinkerer</a> (1), <a href="../../../tags/topic_models.html">topic models</a> (1), <a href="../../../tags/tree.html">tree</a> (1), <a href="../../../tags/ubuntu_14_04.html">ubuntu 14.04</a> (11), <a href="../../../tags/vim.html">vim</a> (1), <a href="../../../tags/virtualbox.html">virtualbox</a> (1), <a href="../../../tags/virtualenv.html">virtualenv</a> (3), <a href="../../../tags/virtualenvwrapper.html">virtualenvwrapper</a> (2), <a href="../../../tags/vps.html">VPS</a> (1), <a href="../../../tags/yaml.html">yaml</a> (1)</div></section></aside></div> <!-- #main --></div> <!-- #main-container -->
+
+        <div class="footer-container" role="contentinfo"><footer class="wrapper">&copy; Copyright 2014-2015 Christopher Strelioff. Powered by <a href="http://www.tinkerer.me/">Tinkerer</a> and <a href="http://sphinx.pocoo.org/">Sphinx</a>.</footer></div> <!-- footer-container -->
+
+      </div> <!--! end of #container --><!--[if lt IE 7 ]>
+          <script src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js"></script>
+          <script>window.attachEvent('onload',function(){CFInstall.check({mode:'overlay'})})</script>
+        <![endif]-->
+    </body>
+</html>
