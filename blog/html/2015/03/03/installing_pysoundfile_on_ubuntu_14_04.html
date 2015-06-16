@@ -60,7 +60,7 @@
             <span>March 03, 2015</span>
         </div>
     <div class="section" id="installing-pysoundfile-on-ubuntu-14-04">
-<h1>Installing PySoundFile on Ubuntu 14.04</h1>
+<span id="installing-pysoundfile"></span><h1>Installing PySoundFile on Ubuntu 14.04</h1>
 <p>In this post I will go over installing PySoundFile using <strong>pip</strong> and
 <strong>virtualenvwrapper</strong>.  PySoundFile is a utility for reading and writing sound
 files of various types, like <strong>wav</strong>, <strong>flac</strong> and <strong>ogg</strong> using the abilities
@@ -68,10 +68,14 @@ of the <a class="reference external" href="http://www.mega-nerd.com/libsndfile/"
 issue&#8211; use a tool like (the wonderful) <a class="reference external" href="http://sox.sourceforge.net/">sox</a> to convert mp3&#8217;s to a supported
 file type. See</p>
 <ul class="simple">
-<li><a class="reference external" href="http://pysoundfile.readthedocs.org/en/0.6.0/">PySoundFile Docs</a></li>
+<li><a class="reference external" href="http://pysoundfile.readthedocs.org/en/">PySoundFile Docs</a></li>
 <li><a class="reference external" href="https://github.com/bastibe/PySoundFile">PySoundFile github</a></li>
 </ul>
 <p>for more details about PySoundFile.</p>
+<p><strong>2015, June 16&#8211;</strong> I have new post on installing PySoundFile for use with
+Python 3.4&#8211; <a class="reference internal" href="../../06/16/pysoundfile_and_python_3_4_on_ubuntu_14_04.html#pysoundfile-python3"><em>PySoundFile and Python 3.4 on Ubuntu 14.04</em></a>, check it out. There are also some
+updates to package, that affect the Python 2.7.6 install done in this post, so
+I&#8217;ll show how to upgrade below, if you need to do that. <strong>&#8211;End edit.</strong></p>
 <div id="more"> </div><p>Using <strong>pip</strong> to install Python packages comes with some difficulties&#8211; we have
 to worry about all the dependencies.  Of course, the benefit is that we can
 install current package versions and software that is not in the Ubuntu
@@ -139,16 +143,33 @@ Location: /home/cstrelioff/virtenvs/sounds/lib/python2.7/site-packages
 Requires: numpy, cffi
 </pre></div>
 </div>
+<p><strong>2016, June 16&#8211;</strong> PySoundFile version 0.7 has changed the import name of the
+package from <span class="code docutils literal"><span class="pre">pysoundfile</span></span> to <span class="code docutils literal"><span class="pre">soundfile</span></span>, so the code as
+originally posted here breaks.  Let&#8217;s upgrade the package to version 0.7 and
+change the code below. To upgrade using pip simply type</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>(sounds)$ pip install --upgrade PySoundFile
+</pre></div>
+</div>
+<p>and check the version:</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>(sounds)$ pip show PySoundFile
+---
+Name: PySoundFile
+Version: 0.7.0
+Location: /home/cstrelioff/virtenvs/sounds/lib/python2.7/site-packages
+Requires: numpy, cffi
+</pre></div>
+</div>
+<p><strong>&#8211;End edit.</strong></p>
 <p>And, to make sure that it loads in Python let&#8217;s import and try out a few
 things.  First, print out the version, this should agree with the information
 from above:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
-<span class="kn">import</span> <span class="nn">pysoundfile</span> <span class="kn">as</span> <span class="nn">sf</span>
+<span class="kn">import</span> <span class="nn">soundfile</span> <span class="kn">as</span> <span class="nn">sf</span>
 
 <span class="k">print</span><span class="p">(</span><span class="s">&quot;PySoundFile version: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sf</span><span class="o">.</span><span class="n">__version__</span><span class="p">))</span>
 </pre></div>
 </div>
-<div class="highlight-python"><div class="highlight"><pre>PySoundFile version: 0.6.0
+<div class="highlight-python"><div class="highlight"><pre>PySoundFile version: 0.7.0
 </pre></div>
 </div>
 <p>Next, let&#8217;s see what file types we can read and write:</p>
@@ -184,9 +205,9 @@ WAVEX -- desc: WAVEX (Microsoft)
 </pre></div>
 </div>
 <p>That&#8217;s pretty good, with all the usual suspects (except for mp3&#8217;s, for reasons
-stated above).  From the <a class="reference external" href="http://pysoundfile.readthedocs.org/en/0.6.0/">PySoundFile Docs</a>, typical read/write goes something
+stated above).  From the <a class="reference external" href="http://pysoundfile.readthedocs.org/en/">PySoundFile Docs</a>, typical read/write goes something
 like this:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="c"># read an existing wav file</span>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="c"># read an existing wav file</span>
 <span class="n">data</span><span class="p">,</span> <span class="n">samplerate</span> <span class="o">=</span> <span class="n">sf</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s">&#39;existing_file.wav&#39;</span><span class="p">)</span>
 
 <span class="c"># write the data to a new ogg file</span>
@@ -229,6 +250,8 @@ as soon as I can.</p>
 </section><section><div class="widget">
     <h1>Recent Posts</h1>
     <ul><li>
+            <a href="../../06/16/pysoundfile_and_python_3_4_on_ubuntu_14_04.html">PySoundFile and Python 3.4 on Ubuntu 14.04</a>
+        </li><li>
             <a href="../../06/08/decision_trees_in_python_with_scikit_learn_and_pandas.html">Decision trees in python with scikit-learn and pandas</a>
         </li><li>
             <a href="../../05/27/revisiting_the_medical_tests_example_with_python_and_lea.html">Revisiting the medical tests example with Python and Lea</a>
@@ -246,12 +269,10 @@ as soon as I can.</p>
             <a href="#">Installing PySoundFile on Ubuntu 14.04</a>
         </li><li>
             <a href="../../02/17/install_qgis_on_ubuntu_14_04.html">Install QGIS on Ubuntu 14.04</a>
-        </li><li>
-            <a href="../../02/17/using_python_to_query_data_from_socrata.html">Using Python to query data from Socrata</a>
         </li></ul>
 </div>
 </section><section><div class="widget">
-    <h1>Tags</h1><a href="../../../tags/api.html">api</a> (1), <a href="../../../tags/audio.html">audio</a> (1), <a href="../../../tags/audio_features.html">audio features</a> (1), <a href="../../../tags/bayesian.html">Bayesian</a> (7), <a href="../../../tags/beta.html">Beta</a> (1), <a href="../../../tags/blog_setup.html">blog setup</a> (1), <a href="../../../tags/bootstrap.html">bootstrap</a> (1), <a href="../../../tags/bottleneck.html">bottleneck</a> (1), <a href="../../../tags/c.html">c++</a> (1), <a href="../../../tags/caret.html">caret</a> (1), <a href="../../../tags/cmpy.html">cmpy</a> (1), <a href="../../../tags/conditional_probability.html">conditional probability</a> (6), <a href="../../../tags/coursera.html">coursera</a> (1), <a href="../../../tags/coursera_intro_to_data_science.html">coursera intro to data science</a> (3), <a href="../../../tags/css.html">css</a> (1), <a href="../../../tags/cython.html">cython</a> (1), <a href="../../../tags/d3.html">d3</a> (1), <a href="../../../tags/decision_trees.html">decision trees</a> (1), <a href="../../../tags/dsp.html">dsp</a> (1), <a href="../../../tags/e1071.html">e1071</a> (1), <a href="../../../tags/essentia.html">essentia</a> (1), <a href="../../../tags/garmin.html">garmin</a> (1), <a href="../../../tags/ggplot2.html">ggplot2</a> (1), <a href="../../../tags/gis.html">gis</a> (1), <a href="../../../tags/git.html">git</a> (1), <a href="../../../tags/gnuplot.html">gnuplot</a> (1), <a href="../../../tags/graphs.html">graphs</a> (1), <a href="../../../tags/html5.html">html5</a> (1), <a href="../../../tags/igraph.html">igraph</a> (1), <a href="../../../tags/ipython.html">ipython</a> (1), <a href="../../../tags/javascript.html">javascript</a> (2), <a href="../../../tags/joint_probability.html">joint probability</a> (6), <a href="../../../tags/json.html">json</a> (1), <a href="../../../tags/latex.html">LaTeX</a> (1), <a href="../../../tags/lda.html">LDA</a> (1), <a href="../../../tags/lea.html">Lea</a> (2), <a href="../../../tags/machine_learning.html">machine learning</a> (2), <a href="../../../tags/marginal_probability.html">marginal probability</a> (6), <a href="../../../tags/matplotlib.html">matplotlib</a> (1), <a href="../../../tags/mir.html">mir</a> (1), <a href="../../../tags/music.html">music</a> (1), <a href="../../../tags/my_python_setup.html">my python setup</a> (5), <a href="../../../tags/my_ubuntu_setup.html">my ubuntu setup</a> (10), <a href="../../../tags/mysql.html">mysql</a> (3), <a href="../../../tags/networks.html">networks</a> (1), <a href="../../../tags/networkx.html">networkx</a> (1), <a href="../../../tags/nodejs.html">nodejs</a> (1), <a href="../../../tags/npm.html">npm</a> (1), <a href="../../../tags/numexpr.html">numexpr</a> (1), <a href="../../../tags/numpy.html">numpy</a> (1), <a href="../../../tags/octave.html">octave</a> (1), <a href="../../../tags/open_oakland.html">Open Oakland</a> (2), <a href="../../../tags/openpyxl.html">openpyxl</a> (1), <a href="../../../tags/pandas.html">pandas</a> (2), <a href="../../../tags/patsy.html">patsy</a> (1), <a href="../../../tags/pip.html">pip</a> (1), <a href="../../../tags/pweave.html">pweave</a> (1), <a href="../../../tags/pygraphviz.html">pygraphviz</a> (1), <a href="../../../tags/pymc.html">pymc</a> (1), <a href="../../../tags/pysoundfile.html">PySoundFile</a> (1), <a href="../../../tags/python.html">python</a> (11), <a href="../../../tags/python.html">Python</a> (1), <a href="../../../tags/python_2_7.html">python 2.7</a> (5), <a href="../../../tags/python_3_4.html">python 3.4</a> (1), <a href="../../../tags/pyyaml.html">pyyaml</a> (1), <a href="../../../tags/qgis.html">qgis</a> (1), <a href="../../../tags/r.html">R</a> (1), <a href="../../../tags/randomforest.html">randomForest</a> (1), <a href="../../../tags/restview.html">restview</a> (1), <a href="../../../tags/resume.html">resume</a> (1), <a href="../../../tags/rpart.html">rpart</a> (1), <a href="../../../tags/running.html">running</a> (1), <a href="../../../tags/scikit_learn.html">scikit-learn</a> (2), <a href="../../../tags/scipy.html">scipy</a> (1), <a href="../../../tags/screen.html">screen</a> (1), <a href="../../../tags/server_setup.html">server setup</a> (1), <a href="../../../tags/social_networks.html">social networks</a> (1), <a href="../../../tags/socrata.html">Socrata</a> (1), <a href="../../../tags/sound.html">sound</a> (1), <a href="../../../tags/sphinx.html">sphinx</a> (1), <a href="../../../tags/sql.html">sql</a> (4), <a href="../../../tags/sqlite3.html">sqlite3</a> (1), <a href="../../../tags/ssh.html">ssh</a> (1), <a href="../../../tags/ssh_keys.html">ssh keys</a> (1), <a href="../../../tags/statsmodels.html">statsmodels</a> (1), <a href="../../../tags/sympy.html">sympy</a> (1), <a href="../../../tags/tableau.html">tableau</a> (1), <a href="../../../tags/tinkerer.html">tinkerer</a> (1), <a href="../../../tags/topic_models.html">topic models</a> (1), <a href="../../../tags/tree.html">tree</a> (1), <a href="../../../tags/ubuntu_14_04.html">ubuntu 14.04</a> (11), <a href="../../../tags/vim.html">vim</a> (1), <a href="../../../tags/virtualbox.html">virtualbox</a> (1), <a href="../../../tags/virtualenv.html">virtualenv</a> (3), <a href="../../../tags/virtualenvwrapper.html">virtualenvwrapper</a> (2), <a href="../../../tags/vps.html">VPS</a> (1), <a href="../../../tags/yaml.html">yaml</a> (1)</div></section></aside></div> <!-- #main --></div> <!-- #main-container -->
+    <h1>Tags</h1><a href="../../../tags/api.html">api</a> (1), <a href="../../../tags/audio.html">audio</a> (2), <a href="../../../tags/audio_features.html">audio features</a> (1), <a href="../../../tags/bayesian.html">Bayesian</a> (7), <a href="../../../tags/beta.html">Beta</a> (1), <a href="../../../tags/blog_setup.html">blog setup</a> (1), <a href="../../../tags/bootstrap.html">bootstrap</a> (1), <a href="../../../tags/bottleneck.html">bottleneck</a> (1), <a href="../../../tags/c.html">c++</a> (1), <a href="../../../tags/caret.html">caret</a> (1), <a href="../../../tags/cmpy.html">cmpy</a> (1), <a href="../../../tags/conditional_probability.html">conditional probability</a> (6), <a href="../../../tags/coursera.html">coursera</a> (1), <a href="../../../tags/coursera_intro_to_data_science.html">coursera intro to data science</a> (3), <a href="../../../tags/css.html">css</a> (1), <a href="../../../tags/cython.html">cython</a> (1), <a href="../../../tags/d3.html">d3</a> (1), <a href="../../../tags/decision_trees.html">decision trees</a> (1), <a href="../../../tags/dsp.html">dsp</a> (1), <a href="../../../tags/e1071.html">e1071</a> (1), <a href="../../../tags/essentia.html">essentia</a> (1), <a href="../../../tags/garmin.html">garmin</a> (1), <a href="../../../tags/ggplot2.html">ggplot2</a> (1), <a href="../../../tags/gis.html">gis</a> (1), <a href="../../../tags/git.html">git</a> (1), <a href="../../../tags/gnuplot.html">gnuplot</a> (1), <a href="../../../tags/graphs.html">graphs</a> (1), <a href="../../../tags/html5.html">html5</a> (1), <a href="../../../tags/igraph.html">igraph</a> (1), <a href="../../../tags/ipython.html">ipython</a> (1), <a href="../../../tags/javascript.html">javascript</a> (2), <a href="../../../tags/joint_probability.html">joint probability</a> (6), <a href="../../../tags/json.html">json</a> (1), <a href="../../../tags/latex.html">LaTeX</a> (1), <a href="../../../tags/lda.html">LDA</a> (1), <a href="../../../tags/lea.html">Lea</a> (2), <a href="../../../tags/machine_learning.html">machine learning</a> (2), <a href="../../../tags/marginal_probability.html">marginal probability</a> (6), <a href="../../../tags/matplotlib.html">matplotlib</a> (1), <a href="../../../tags/mir.html">mir</a> (1), <a href="../../../tags/music.html">music</a> (2), <a href="../../../tags/my_python_setup.html">my python setup</a> (5), <a href="../../../tags/my_ubuntu_setup.html">my ubuntu setup</a> (10), <a href="../../../tags/mysql.html">mysql</a> (3), <a href="../../../tags/networks.html">networks</a> (1), <a href="../../../tags/networkx.html">networkx</a> (1), <a href="../../../tags/nodejs.html">nodejs</a> (1), <a href="../../../tags/npm.html">npm</a> (1), <a href="../../../tags/numexpr.html">numexpr</a> (1), <a href="../../../tags/numpy.html">numpy</a> (1), <a href="../../../tags/octave.html">octave</a> (1), <a href="../../../tags/open_oakland.html">Open Oakland</a> (2), <a href="../../../tags/openpyxl.html">openpyxl</a> (1), <a href="../../../tags/pandas.html">pandas</a> (2), <a href="../../../tags/patsy.html">patsy</a> (1), <a href="../../../tags/pip.html">pip</a> (1), <a href="../../../tags/pweave.html">pweave</a> (1), <a href="../../../tags/pygraphviz.html">pygraphviz</a> (1), <a href="../../../tags/pymc.html">pymc</a> (1), <a href="../../../tags/pysoundfile.html">PySoundFile</a> (2), <a href="../../../tags/python.html">python</a> (12), <a href="../../../tags/python.html">Python</a> (1), <a href="../../../tags/python_2_7.html">python 2.7</a> (5), <a href="../../../tags/python_3_4.html">python 3.4</a> (2), <a href="../../../tags/pyyaml.html">pyyaml</a> (1), <a href="../../../tags/qgis.html">qgis</a> (1), <a href="../../../tags/r.html">R</a> (1), <a href="../../../tags/randomforest.html">randomForest</a> (1), <a href="../../../tags/restview.html">restview</a> (1), <a href="../../../tags/resume.html">resume</a> (1), <a href="../../../tags/rpart.html">rpart</a> (1), <a href="../../../tags/running.html">running</a> (1), <a href="../../../tags/scikit_learn.html">scikit-learn</a> (2), <a href="../../../tags/scipy.html">scipy</a> (1), <a href="../../../tags/screen.html">screen</a> (1), <a href="../../../tags/server_setup.html">server setup</a> (1), <a href="../../../tags/social_networks.html">social networks</a> (1), <a href="../../../tags/socrata.html">Socrata</a> (1), <a href="../../../tags/sound.html">sound</a> (2), <a href="../../../tags/sphinx.html">sphinx</a> (1), <a href="../../../tags/sql.html">sql</a> (4), <a href="../../../tags/sqlite3.html">sqlite3</a> (1), <a href="../../../tags/ssh.html">ssh</a> (1), <a href="../../../tags/ssh_keys.html">ssh keys</a> (1), <a href="../../../tags/statsmodels.html">statsmodels</a> (1), <a href="../../../tags/sympy.html">sympy</a> (1), <a href="../../../tags/tableau.html">tableau</a> (1), <a href="../../../tags/tinkerer.html">tinkerer</a> (1), <a href="../../../tags/topic_models.html">topic models</a> (1), <a href="../../../tags/tree.html">tree</a> (1), <a href="../../../tags/ubuntu_14_04.html">ubuntu 14.04</a> (11), <a href="../../../tags/vim.html">vim</a> (1), <a href="../../../tags/virtualbox.html">virtualbox</a> (1), <a href="../../../tags/virtualenv.html">virtualenv</a> (3), <a href="../../../tags/virtualenvwrapper.html">virtualenvwrapper</a> (2), <a href="../../../tags/vps.html">VPS</a> (1), <a href="../../../tags/yaml.html">yaml</a> (1)</div></section></aside></div> <!-- #main --></div> <!-- #main-container -->
 
         <div class="footer-container" role="contentinfo"><footer class="wrapper">&copy; Copyright 2014-2015 Christopher Strelioff. Powered by <a href="http://www.tinkerer.me/">Tinkerer</a> and <a href="http://sphinx.pocoo.org/">Sphinx</a>.</footer></div> <!-- footer-container -->
 

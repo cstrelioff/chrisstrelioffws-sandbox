@@ -4,6 +4,7 @@ Sitemap
 .. toctree::
    :maxdepth: 1
 
+   2015/06/16/pysoundfile_and_python_3_4_on_ubuntu_14_04
    2015/06/08/decision_trees_in_python_with_scikit_learn_and_pandas
    2015/05/27/revisiting_the_medical_tests_example_with_python_and_lea
    2015/05/04/probabilistic_programming_with_python_and_lea

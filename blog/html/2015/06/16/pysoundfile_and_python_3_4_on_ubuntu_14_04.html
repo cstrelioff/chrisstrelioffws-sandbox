@@ -1,0 +1,231 @@
+<!DOCTYPE html><!--[if lt IE 7]>      <html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:og="http://ogp.me/ns#"
+    xmlns:fb="https://www.facebook.com/2008/fbml" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:og="http://ogp.me/ns#"
+    xmlns:fb="https://www.facebook.com/2008/fbml" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:og="http://ogp.me/ns#"
+    xmlns:fb="https://www.facebook.com/2008/fbml" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:og="http://ogp.me/ns#"
+    xmlns:fb="https://www.facebook.com/2008/fbml" class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" content="Christopher Strelioff's blog">
+        <meta name="viewport" content="width=device-width">
+        <title>PySoundFile and Python 3.4 on Ubuntu 14.04 &mdash; chris&#39; sandbox</title>
+            <link rel="stylesheet" href="../../../_static/normalize.css" type="text/css">
+            <link rel="stylesheet" href="../../../_static/sphinx.css" type="text/css">
+            <link rel="stylesheet" href="../../../_static/main.css" type="text/css">
+            <link rel="stylesheet" href="../../../_static/flat.css" type="text/css">
+            <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+            <link rel="stylesheet" href="../../../_static/font-awesome.min.css" type="text/css">
+        <link rel="stylesheet" href="../../../_static/jsdemo.css" type="text/css" /><link rel="stylesheet" href="../../../_static/style.css" type="text/css" /><link rel="shortcut icon" href="../../../_static/tinkerer.ico" /><!-- Load modernizr and JQuery -->
+        <script src="../../../_static/vendor/modernizr-2.6.2.min.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="../../../_static/vendor/jquery-1.8.2.min.js"><\/script>')</script>
+        <script src="../../../_static/plugins.js"></script>
+        <script src="../../../_static/main.js"></script>
+        <link rel="next" title="Decision trees in python with scikit-learn and pandas" href="../08/decision_trees_in_python_with_scikit_learn_and_pandas.html" /><link rel="alternate" type="application/rss+xml" title="RSS" href="../../../rss.html" /><script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '1.5',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script><script type="text/javascript" src="../../../_static/underscore.js"></script><script type="text/javascript" src="../../../_static/doctools.js"></script><script type="text/javascript" src="../../../_static/jsdemo.js"></script><script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script type="text/javascript" src="../../../_static/disqus.js"></script><script type="text/javascript" src="../../../_static/google_analytics.js"></script><script type="text/javascript" src="../../../_static/d3.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            // Scroll to content if on small screen
+            if (screen.width < 480)
+            {
+                $(document).scrollTop(document.getElementsByTagName("article")[0].offsetTop - 44);
+            }
+        });
+    </script></head>
+    <body role="document">
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+
+      <div id="container"><header role="banner">
+    <hgroup>
+      <h1><a href="../../../index.html">chris&#39; sandbox</a></h1><h2>python, R, ubuntu, bayesian methods, machine learning and more...</h2></hgroup>
+  </header>
+<div class="main-container" role="main"><div class="main wrapper body clearfix"><article><div class="timestamp postmeta">
+            <span>June 16, 2015</span>
+        </div>
+    <div class="section" id="pysoundfile-and-python-3-4-on-ubuntu-14-04">
+<span id="pysoundfile-python3"></span><h1>PySoundFile and Python 3.4 on Ubuntu 14.04</h1>
+<p>In a previous post, <a class="reference internal" href="../../03/03/installing_pysoundfile_on_ubuntu_14_04.html#installing-pysoundfile"><em>Installing PySoundFile on Ubuntu 14.04</em></a>, I went over installing
+PySoundFile on Ubuntu 14.04 using the default version of Python&#8211; that&#8217;s
+version 2.7.6.  In this post I&#8217;ll cover the use of Python 3.4 in a virtual
+environment&#8211; the goal here, at least in the long run, is to write audio
+processing (dsp) code in Python that is version 2- and 3-compatible.</p>
+<div id="more"> </div><div class="section" id="dependencies">
+<h2>Dependencies</h2>
+<p>To start, the <a class="reference internal" href="../../03/03/installing_pysoundfile_on_ubuntu_14_04.html#installing-pysoundfile"><em>previous post</em></a> should be consulted
+to make sure that the Ubuntu-specific requirements are fulfilled.  If you&#8217;ve
+already setup PySoundFile for Python 2.7.6 as described in that post you are
+off to a good start, if not read through all of the <span class="code docutils literal"><span class="pre">sudo</span> <span class="pre">apt-get</span> <span class="pre">install</span></span>
+commands to see if you need to install any libraries, compilers or other
+packages. Also, make sure that you have <span class="code docutils literal"><span class="pre">python3-dev</span></span> installed using</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>$ sudo apt-get install python3-dev
+</pre></div>
+</div>
+</div>
+<div class="section" id="virtualenv">
+<h2>virtualenv</h2>
+<p>When setting up PySoundFile for Python 2.7.6, we called the virtual environment
+<strong>sounds</strong>, so let&#8217;s call this environment <strong>sounds3</strong>.  To setup the
+environment use:</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>$ mkvirtualenv sounds3 -p /usr/bin/python3
+</pre></div>
+</div>
+<p>This should create the environment, reflected by a change in prompt to
+something similar to <span class="code docutils literal"><span class="pre">(sounds3)$</span></span>. Try the following to make sure that
+the basics are setup:</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>(sounds3)$ python --version
+Python 3.4.0
+(sounds3)$ pip list
+pip (1.5.6)
+setuptools (3.6)
+</pre></div>
+</div>
+</div>
+<div class="section" id="pysoundfile">
+<h2>PySoundFile</h2>
+<p>Next, we install PySoundFile using pip (this will download a fair number of
+packages and do lots of compiling&#8211;mainly numpy&#8211; so, be patient):</p>
+<div class="code highlight-python"><div class="highlight"><pre>(sounds3)$ pip install PySoundFile
+</pre></div>
+</div>
+<p>Now, if we list the packages in our virtual environment we get:</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>(sounds3)$ pip list
+cffi (1.1.2)
+numpy (1.9.2)
+pip (1.5.6)
+pycparser (2.14)
+PySoundFile (0.7.0)
+setuptools (3.6)
+</pre></div>
+</div>
+<p>Finally, let&#8217;s do the same test we did for the Python 2.7.6 install. First,
+test the import and version</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
+<span class="kn">import</span> <span class="nn">soundfile</span> <span class="kn">as</span> <span class="nn">sf</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s">&quot;PySoundFile version: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sf</span><span class="o">.</span><span class="n">__version__</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre>PySoundFile version: 0.7.0
+</pre></div>
+</div>
+<p>then, print out the supported audio formats:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">sf</span><span class="o">.</span><span class="n">available_formats</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&quot;{:5s} -- desc: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre>IRCAM -- desc: SF (Berkeley/IRCAM/CARL)
+WAV   -- desc: WAV (Microsoft)
+AU    -- desc: AU (Sun/NeXT)
+W64   -- desc: W64 (SoundFoundry WAVE 64)
+CAF   -- desc: CAF (Apple Core Audio File)
+SD2   -- desc: SD2 (Sound Designer II)
+WVE   -- desc: WVE (Psion Series 3)
+AVR   -- desc: AVR (Audio Visual Research)
+SDS   -- desc: SDS (Midi Sample Dump Standard)
+RAW   -- desc: RAW (header-less)
+WAVEX -- desc: WAVEX (Microsoft)
+HTK   -- desc: HTK (HMM Tool Kit)
+RF64  -- desc: RF64 (RIFF 64)
+SVX   -- desc: IFF (Amiga IFF/SVX8/SV16)
+MPC2K -- desc: MPC (Akai MPC 2k)
+MAT5  -- desc: MAT5 (GNU Octave 2.1 / Matlab 5.0)
+FLAC  -- desc: FLAC (FLAC Lossless Audio Codec)
+NIST  -- desc: WAV (NIST Sphere)
+OGG   -- desc: OGG (OGG Container format)
+MAT4  -- desc: MAT4 (GNU Octave 2.0 / Matlab 4.2)
+VOC   -- desc: VOC (Creative Labs)
+PAF   -- desc: PAF (Ensoniq PARIS)
+PVF   -- desc: PVF (Portable Voice Format)
+AIFF  -- desc: AIFF (Apple/SGI)
+XI    -- desc: XI (FastTracker 2)
+</pre></div>
+</div>
+<p>Okay, that&#8217;s it.  For more information checkout:</p>
+<ul class="simple">
+<li><a class="reference external" href="http://pysoundfile.readthedocs.org/en/">PySoundFile Docs</a></li>
+<li><a class="reference external" href="https://github.com/bastibe/PySoundFile">PySoundFile github</a></li>
+<li><a class="reference external" href="http://sox.sourceforge.net/">sox</a> &#8211; for converting your mp3s to supported audio formats.</li>
+</ul>
+<p>As always questions, comments, and corrections are welcome.</p>
+</div>
+</div>
+
+    <div class="postmeta">
+        <div class="author">
+            <span>Posted by Chris Strelioff</span>
+        </div>
+        
+        <div class="tags">
+            <span>
+                Tags:
+                <a href="../../../tags/python.html">python</a>, <a href="../../../tags/python_3_4.html">python 3.4</a>, <a href="../../../tags/audio.html">audio</a>, <a href="../../../tags/music.html">music</a>, <a href="../../../tags/sound.html">sound</a>, <a href="../../../tags/pysoundfile.html">PySoundFile</a></span>
+        </div>
+        </div><ul class="related clearfix">
+            <li class="left"></li>
+            <li class="right"><a href="../08/decision_trees_in_python_with_scikit_learn_and_pandas.html">Decision trees in python with scikit-learn and pandas</a> &raquo; </li>
+        </ul><div id="disqus_thread"></div><script type="text/javascript">    var disqus_shortname = "chrissandbox";    var disqus_identifier = "2015/06/16/pysoundfile_and_python_3_4_on_ubuntu_14_04";    disqus_thread();</script><noscript>Please enable JavaScript to view the    <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></article><aside class="sidebar"><section><div class="widget" id="searchbox" role="search">
+    <h1><a href="#searchbox">Search</a></h1>
+    <form action="../../../search.html" method="get">
+        <input type="text" name="q" />
+        <button type="submit"><span class="fa fa-search"></span></button>
+    </form>
+</div></section><section><div class="widget">
+  <h1>Pages</h1>
+  <ul>
+  <li>
+      <a href="../../../index.html">Home</a>
+    </li>
+  </ul>
+</div>
+</section><section><div class="widget">
+    <h1>Recent Posts</h1>
+    <ul><li>
+            <a href="#">PySoundFile and Python 3.4 on Ubuntu 14.04</a>
+        </li><li>
+            <a href="../08/decision_trees_in_python_with_scikit_learn_and_pandas.html">Decision trees in python with scikit-learn and pandas</a>
+        </li><li>
+            <a href="../../05/27/revisiting_the_medical_tests_example_with_python_and_lea.html">Revisiting the medical tests example with Python and Lea</a>
+        </li><li>
+            <a href="../../05/04/probabilistic_programming_with_python_and_lea.html">Probabilistic programming with Python and Lea</a>
+        </li><li>
+            <a href="../../04/30/joins_and_some_views_in_mysql.html">JOINs, and some VIEWs, in MySQL</a>
+        </li><li>
+            <a href="../../04/22/employees_database_for_mysql_setup_and_simple_queries.html">Employees database for MySQL, setup and simple queries</a>
+        </li><li>
+            <a href="../../04/21/installing_mysql_on_ubuntu_14_04.html">Installing MySQL on Ubuntu 14.04</a>
+        </li><li>
+            <a href="../../04/03/getting_started_with_responsive_websites_and_javascript.html">Getting started with responsive websites and JavaScript</a>
+        </li><li>
+            <a href="../../03/03/installing_pysoundfile_on_ubuntu_14_04.html">Installing PySoundFile on Ubuntu 14.04</a>
+        </li><li>
+            <a href="../../02/17/install_qgis_on_ubuntu_14_04.html">Install QGIS on Ubuntu 14.04</a>
+        </li></ul>
+</div>
+</section><section><div class="widget">
+    <h1>Tags</h1><a href="../../../tags/api.html">api</a> (1), <a href="../../../tags/audio.html">audio</a> (2), <a href="../../../tags/audio_features.html">audio features</a> (1), <a href="../../../tags/bayesian.html">Bayesian</a> (7), <a href="../../../tags/beta.html">Beta</a> (1), <a href="../../../tags/blog_setup.html">blog setup</a> (1), <a href="../../../tags/bootstrap.html">bootstrap</a> (1), <a href="../../../tags/bottleneck.html">bottleneck</a> (1), <a href="../../../tags/c.html">c++</a> (1), <a href="../../../tags/caret.html">caret</a> (1), <a href="../../../tags/cmpy.html">cmpy</a> (1), <a href="../../../tags/conditional_probability.html">conditional probability</a> (6), <a href="../../../tags/coursera.html">coursera</a> (1), <a href="../../../tags/coursera_intro_to_data_science.html">coursera intro to data science</a> (3), <a href="../../../tags/css.html">css</a> (1), <a href="../../../tags/cython.html">cython</a> (1), <a href="../../../tags/d3.html">d3</a> (1), <a href="../../../tags/decision_trees.html">decision trees</a> (1), <a href="../../../tags/dsp.html">dsp</a> (1), <a href="../../../tags/e1071.html">e1071</a> (1), <a href="../../../tags/essentia.html">essentia</a> (1), <a href="../../../tags/garmin.html">garmin</a> (1), <a href="../../../tags/ggplot2.html">ggplot2</a> (1), <a href="../../../tags/gis.html">gis</a> (1), <a href="../../../tags/git.html">git</a> (1), <a href="../../../tags/gnuplot.html">gnuplot</a> (1), <a href="../../../tags/graphs.html">graphs</a> (1), <a href="../../../tags/html5.html">html5</a> (1), <a href="../../../tags/igraph.html">igraph</a> (1), <a href="../../../tags/ipython.html">ipython</a> (1), <a href="../../../tags/javascript.html">javascript</a> (2), <a href="../../../tags/joint_probability.html">joint probability</a> (6), <a href="../../../tags/json.html">json</a> (1), <a href="../../../tags/latex.html">LaTeX</a> (1), <a href="../../../tags/lda.html">LDA</a> (1), <a href="../../../tags/lea.html">Lea</a> (2), <a href="../../../tags/machine_learning.html">machine learning</a> (2), <a href="../../../tags/marginal_probability.html">marginal probability</a> (6), <a href="../../../tags/matplotlib.html">matplotlib</a> (1), <a href="../../../tags/mir.html">mir</a> (1), <a href="../../../tags/music.html">music</a> (2), <a href="../../../tags/my_python_setup.html">my python setup</a> (5), <a href="../../../tags/my_ubuntu_setup.html">my ubuntu setup</a> (10), <a href="../../../tags/mysql.html">mysql</a> (3), <a href="../../../tags/networks.html">networks</a> (1), <a href="../../../tags/networkx.html">networkx</a> (1), <a href="../../../tags/nodejs.html">nodejs</a> (1), <a href="../../../tags/npm.html">npm</a> (1), <a href="../../../tags/numexpr.html">numexpr</a> (1), <a href="../../../tags/numpy.html">numpy</a> (1), <a href="../../../tags/octave.html">octave</a> (1), <a href="../../../tags/open_oakland.html">Open Oakland</a> (2), <a href="../../../tags/openpyxl.html">openpyxl</a> (1), <a href="../../../tags/pandas.html">pandas</a> (2), <a href="../../../tags/patsy.html">patsy</a> (1), <a href="../../../tags/pip.html">pip</a> (1), <a href="../../../tags/pweave.html">pweave</a> (1), <a href="../../../tags/pygraphviz.html">pygraphviz</a> (1), <a href="../../../tags/pymc.html">pymc</a> (1), <a href="../../../tags/pysoundfile.html">PySoundFile</a> (2), <a href="../../../tags/python.html">python</a> (12), <a href="../../../tags/python.html">Python</a> (1), <a href="../../../tags/python_2_7.html">python 2.7</a> (5), <a href="../../../tags/python_3_4.html">python 3.4</a> (2), <a href="../../../tags/pyyaml.html">pyyaml</a> (1), <a href="../../../tags/qgis.html">qgis</a> (1), <a href="../../../tags/r.html">R</a> (1), <a href="../../../tags/randomforest.html">randomForest</a> (1), <a href="../../../tags/restview.html">restview</a> (1), <a href="../../../tags/resume.html">resume</a> (1), <a href="../../../tags/rpart.html">rpart</a> (1), <a href="../../../tags/running.html">running</a> (1), <a href="../../../tags/scikit_learn.html">scikit-learn</a> (2), <a href="../../../tags/scipy.html">scipy</a> (1), <a href="../../../tags/screen.html">screen</a> (1), <a href="../../../tags/server_setup.html">server setup</a> (1), <a href="../../../tags/social_networks.html">social networks</a> (1), <a href="../../../tags/socrata.html">Socrata</a> (1), <a href="../../../tags/sound.html">sound</a> (2), <a href="../../../tags/sphinx.html">sphinx</a> (1), <a href="../../../tags/sql.html">sql</a> (4), <a href="../../../tags/sqlite3.html">sqlite3</a> (1), <a href="../../../tags/ssh.html">ssh</a> (1), <a href="../../../tags/ssh_keys.html">ssh keys</a> (1), <a href="../../../tags/statsmodels.html">statsmodels</a> (1), <a href="../../../tags/sympy.html">sympy</a> (1), <a href="../../../tags/tableau.html">tableau</a> (1), <a href="../../../tags/tinkerer.html">tinkerer</a> (1), <a href="../../../tags/topic_models.html">topic models</a> (1), <a href="../../../tags/tree.html">tree</a> (1), <a href="../../../tags/ubuntu_14_04.html">ubuntu 14.04</a> (11), <a href="../../../tags/vim.html">vim</a> (1), <a href="../../../tags/virtualbox.html">virtualbox</a> (1), <a href="../../../tags/virtualenv.html">virtualenv</a> (3), <a href="../../../tags/virtualenvwrapper.html">virtualenvwrapper</a> (2), <a href="../../../tags/vps.html">VPS</a> (1), <a href="../../../tags/yaml.html">yaml</a> (1)</div></section></aside></div> <!-- #main --></div> <!-- #main-container -->
+
+        <div class="footer-container" role="contentinfo"><footer class="wrapper">&copy; Copyright 2014-2015 Christopher Strelioff. Powered by <a href="http://www.tinkerer.me/">Tinkerer</a> and <a href="http://sphinx.pocoo.org/">Sphinx</a>.</footer></div> <!-- footer-container -->
+
+      </div> <!--! end of #container --><!--[if lt IE 7 ]>
+          <script src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js"></script>
+          <script>window.attachEvent('onload',function(){CFInstall.check({mode:'overlay'})})</script>
+        <![endif]-->
+    </body>
+</html>
