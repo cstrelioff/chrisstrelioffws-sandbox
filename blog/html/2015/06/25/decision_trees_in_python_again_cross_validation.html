@@ -1,0 +1,730 @@
+<!DOCTYPE html><!--[if lt IE 7]>      <html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:og="http://ogp.me/ns#"
+    xmlns:fb="https://www.facebook.com/2008/fbml" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:og="http://ogp.me/ns#"
+    xmlns:fb="https://www.facebook.com/2008/fbml" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:og="http://ogp.me/ns#"
+    xmlns:fb="https://www.facebook.com/2008/fbml" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:og="http://ogp.me/ns#"
+    xmlns:fb="https://www.facebook.com/2008/fbml" class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" content="Christopher Strelioff's blog">
+        <meta name="viewport" content="width=device-width">
+        <title>Decision trees in python again, cross-validation &mdash; chris&#39; sandbox</title>
+            <link rel="stylesheet" href="../../../_static/normalize.css" type="text/css">
+            <link rel="stylesheet" href="../../../_static/sphinx.css" type="text/css">
+            <link rel="stylesheet" href="../../../_static/main.css" type="text/css">
+            <link rel="stylesheet" href="../../../_static/flat.css" type="text/css">
+            <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+            <link rel="stylesheet" href="../../../_static/font-awesome.min.css" type="text/css">
+        <link rel="stylesheet" href="../../../_static/jsdemo.css" type="text/css" /><link rel="stylesheet" href="../../../_static/style.css" type="text/css" /><link rel="shortcut icon" href="../../../_static/tinkerer.ico" /><!-- Load modernizr and JQuery -->
+        <script src="../../../_static/vendor/modernizr-2.6.2.min.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="../../../_static/vendor/jquery-1.8.2.min.js"><\/script>')</script>
+        <script src="../../../_static/plugins.js"></script>
+        <script src="../../../_static/main.js"></script>
+        <link rel="next" title="PySoundFile and Python 3.4 on Ubuntu 14.04" href="../16/pysoundfile_and_python_3_4_on_ubuntu_14_04.html" /><link rel="alternate" type="application/rss+xml" title="RSS" href="../../../rss.html" /><script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '1.5',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script><script type="text/javascript" src="../../../_static/underscore.js"></script><script type="text/javascript" src="../../../_static/doctools.js"></script><script type="text/javascript" src="../../../_static/jsdemo.js"></script><script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script type="text/javascript" src="../../../_static/disqus.js"></script><script type="text/javascript" src="../../../_static/google_analytics.js"></script><script type="text/javascript" src="../../../_static/d3.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            // Scroll to content if on small screen
+            if (screen.width < 480)
+            {
+                $(document).scrollTop(document.getElementsByTagName("article")[0].offsetTop - 44);
+            }
+        });
+    </script></head>
+    <body role="document">
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+
+      <div id="container"><header role="banner">
+    <hgroup>
+      <h1><a href="../../../index.html">chris&#39; sandbox</a></h1><h2>python, R, ubuntu, bayesian methods, machine learning and more...</h2></hgroup>
+  </header>
+<div class="main-container" role="main"><div class="main wrapper body clearfix"><article><div class="timestamp postmeta">
+            <span>June 25, 2015</span>
+        </div>
+    <div class="section" id="decision-trees-in-python-again-cross-validation">
+<span id="decision-trees-2"></span><h1>Decision trees in python again, cross-validation</h1>
+<p>This is my second post on decision trees using <a class="reference external" href="http://scikit-learn.org/stable/">scikit-learn</a> and Python. The
+first, <a class="reference internal" href="../08/decision_trees_in_python_with_scikit_learn_and_pandas.html#decision-trees-1"><em>Decision trees in python with scikit-learn and pandas</em></a>, focused on visualizing the resulting tree.
+This post will concentrate on using cross-validation methods to choose the
+parameters used to train the tree.  In particular, I&#8217;ll focus on <em>grid</em> and
+<em>random</em> search for decision tree parameter settings.  If this sounds
+interesting to you, following along. As always, comments, questions and
+corrections are welcome below.</p>
+<div id="more"> </div><div class="section" id="gist">
+<h2>gist</h2>
+<p>Okay, let&#8217;s get started by linking to the gist containing all of the needed
+code&#8211;
+<a class="reference external" href="https://gist.github.com/cstrelioff/4cfd65d224c89604dc2b">linked here</a>. So,
+you don&#8217;t have to copy and paste (unless you want
+to). The following code is adapted from this <a class="reference external" href="http://scikit-learn.org/stable/auto_examples/model_selection/randomized_search.html#example-model-selection-randomized-search-py">scikit-learn example</a> (<em>be
+careful&#8211;</em> although the example looks like it uses the <em>iris</em> data it really
+loads the <em>digits</em> data). Also, that example uses a <em>random forest</em>&#8211; an
+<em>ensemble of decision trees</em>&#8211; so the parameters that can be searched are
+slightly different.</p>
+</div>
+<div class="section" id="imports">
+<h2>imports</h2>
+<p>First we import all of the code we&#8217;ll need for the post&#8211; this expands on the
+methods needed in the last post:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
+<span class="kn">from</span> <span class="nn">operator</span> <span class="kn">import</span> <span class="n">itemgetter</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">randint</span>
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">sklearn.tree</span> <span class="kn">import</span> <span class="n">DecisionTreeClassifier</span>
+<span class="kn">from</span> <span class="nn">sklearn.tree</span> <span class="kn">import</span> <span class="n">export_graphviz</span>
+<span class="kn">from</span> <span class="nn">sklearn.grid_search</span> <span class="kn">import</span> <span class="n">GridSearchCV</span>
+<span class="kn">from</span> <span class="nn">sklearn.grid_search</span> <span class="kn">import</span> <span class="n">RandomizedSearchCV</span>
+<span class="kn">from</span> <span class="nn">sklearn.cross_validation</span> <span class="kn">import</span>  <span class="n">cross_val_score</span>
+</pre></div>
+</div>
+<p>The main additions are methods from <span class="code docutils literal"><span class="pre">sklearn.grid_search</span></span> as well as some
+tools to:</p>
+<ul class="simple">
+<li>time the searches, using <span class="code docutils literal"><span class="pre">time</span></span>,</li>
+<li>sort the results, using <span class="code docutils literal"><span class="pre">itemgetter</span></span>, and</li>
+<li>generate random integers, using <span class="code docutils literal"><span class="pre">scipy.stats.randint</span></span>.</li>
+</ul>
+<p>Now we can start writing our functions&#8211; some new, some old.</p>
+</div>
+<div class="section" id="previous-functions">
+<h2>previous functions</h2>
+<p>I will also declare functions used in the previous post so that I can use them
+here.  The include:</p>
+<ul class="simple">
+<li><span class="code docutils literal"><span class="pre">get_code</span></span> &#8211; writes pseudo-code for a decision tree,</li>
+<li><span class="code docutils literal"><span class="pre">visualize_tree</span></span> &#8211; to generate a graphic of a decision tree. The
+ability to name output files has been added here.</li>
+<li><span class="code docutils literal"><span class="pre">encode_target</span></span> &#8211; process raw data for use with scikit-learn.</li>
+<li><span class="code docutils literal"><span class="pre">get_iris_data</span></span> &#8211; grabs <strong>iris.csv</strong> from the web, if needed, and
+writes a copy to the local directory. This is mainly to replicate real-world
+usage of pandas and scikit-learn.</li>
+</ul>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">get_code</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="n">feature_names</span><span class="p">,</span> <span class="n">target_names</span><span class="p">,</span>
+             <span class="n">spacer_base</span><span class="o">=</span><span class="s">&quot;    &quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Produce pseudo-code for decision tree.</span>
+
+<span class="sd">    Args</span>
+<span class="sd">    ----</span>
+<span class="sd">    tree -- scikit-leant Decision Tree.</span>
+<span class="sd">    feature_names -- list of feature names.</span>
+<span class="sd">    target_names -- list of target (class) names.</span>
+<span class="sd">    spacer_base -- used for spacing code (default: &quot;    &quot;).</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    based on http://stackoverflow.com/a/30104792.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">left</span>      <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">tree_</span><span class="o">.</span><span class="n">children_left</span>
+    <span class="n">right</span>     <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">tree_</span><span class="o">.</span><span class="n">children_right</span>
+    <span class="n">threshold</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">tree_</span><span class="o">.</span><span class="n">threshold</span>
+    <span class="n">features</span>  <span class="o">=</span> <span class="p">[</span><span class="n">feature_names</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">tree</span><span class="o">.</span><span class="n">tree_</span><span class="o">.</span><span class="n">feature</span><span class="p">]</span>
+    <span class="n">value</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">tree_</span><span class="o">.</span><span class="n">value</span>
+
+    <span class="k">def</span> <span class="nf">recurse</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">threshold</span><span class="p">,</span> <span class="n">features</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">depth</span><span class="p">):</span>
+        <span class="n">spacer</span> <span class="o">=</span> <span class="n">spacer_base</span> <span class="o">*</span> <span class="n">depth</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">threshold</span><span class="p">[</span><span class="n">node</span><span class="p">]</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">2</span><span class="p">):</span>
+            <span class="k">print</span><span class="p">(</span><span class="n">spacer</span> <span class="o">+</span> <span class="s">&quot;if ( &quot;</span> <span class="o">+</span> <span class="n">features</span><span class="p">[</span><span class="n">node</span><span class="p">]</span> <span class="o">+</span> <span class="s">&quot; &lt;= &quot;</span> <span class="o">+</span> \
+                  <span class="nb">str</span><span class="p">(</span><span class="n">threshold</span><span class="p">[</span><span class="n">node</span><span class="p">])</span> <span class="o">+</span> <span class="s">&quot; ) {&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">left</span><span class="p">[</span><span class="n">node</span><span class="p">]</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                    <span class="n">recurse</span> <span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">threshold</span><span class="p">,</span> <span class="n">features</span><span class="p">,</span>
+                             <span class="n">left</span><span class="p">[</span><span class="n">node</span><span class="p">],</span> <span class="n">depth</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+            <span class="k">print</span><span class="p">(</span><span class="n">spacer</span> <span class="o">+</span> <span class="s">&quot;}</span><span class="se">\n</span><span class="s">&quot;</span> <span class="o">+</span> <span class="n">spacer</span> <span class="o">+</span><span class="s">&quot;else {&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">right</span><span class="p">[</span><span class="n">node</span><span class="p">]</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                    <span class="n">recurse</span> <span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">threshold</span><span class="p">,</span> <span class="n">features</span><span class="p">,</span>
+                             <span class="n">right</span><span class="p">[</span><span class="n">node</span><span class="p">],</span> <span class="n">depth</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+            <span class="k">print</span><span class="p">(</span><span class="n">spacer</span> <span class="o">+</span> <span class="s">&quot;}&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">target</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="n">node</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">target</span><span class="p">)[</span><span class="mi">1</span><span class="p">],</span>
+                            <span class="n">target</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">target</span><span class="p">)]):</span>
+                <span class="n">target_name</span> <span class="o">=</span> <span class="n">target_names</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="n">target_count</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+                <span class="k">print</span><span class="p">(</span><span class="n">spacer</span> <span class="o">+</span> <span class="s">&quot;return &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">target_name</span><span class="p">)</span> <span class="o">+</span> \
+                      <span class="s">&quot; ( &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">target_count</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot; examples )&quot;</span><span class="p">)</span>
+
+    <span class="n">recurse</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">threshold</span><span class="p">,</span> <span class="n">features</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">visualize_tree</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="n">feature_names</span><span class="p">,</span> <span class="n">fn</span><span class="o">=</span><span class="s">&quot;dt&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Create tree png using graphviz.</span>
+
+<span class="sd">    Args</span>
+<span class="sd">    ----</span>
+<span class="sd">    tree -- scikit-learn Decision Tree.</span>
+<span class="sd">    feature_names -- list of feature names.</span>
+<span class="sd">    fn -- [string], root of filename, default `dt`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">dotfile</span> <span class="o">=</span> <span class="n">fn</span> <span class="o">+</span> <span class="s">&quot;.dot&quot;</span>
+    <span class="n">pngfile</span> <span class="o">=</span> <span class="n">fn</span> <span class="o">+</span> <span class="s">&quot;.png&quot;</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">dotfile</span><span class="p">,</span> <span class="s">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">export_graphviz</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="n">out_file</span><span class="o">=</span><span class="n">f</span><span class="p">,</span>
+                        <span class="n">feature_names</span><span class="o">=</span><span class="n">feature_names</span><span class="p">)</span>
+
+    <span class="n">command</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;dot&quot;</span><span class="p">,</span> <span class="s">&quot;-Tpng&quot;</span><span class="p">,</span> <span class="n">dotfile</span><span class="p">,</span> <span class="s">&quot;-o&quot;</span><span class="p">,</span> <span class="n">pngfile</span><span class="p">]</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">subprocess</span><span class="o">.</span><span class="n">check_call</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="nb">exit</span><span class="p">(</span><span class="s">&quot;Could not run dot, ie graphviz, &quot;</span>
+             <span class="s">&quot;to produce visualization&quot;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">encode_target</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">target_column</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Add column to df with integers for the target.</span>
+
+<span class="sd">    Args</span>
+<span class="sd">    ----</span>
+<span class="sd">    df -- pandas Data Frame.</span>
+<span class="sd">    target_column -- column to map to int, producing new</span>
+<span class="sd">                     Target column.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    df -- modified Data Frame.</span>
+<span class="sd">    targets -- list of target names.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">df_mod</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">targets</span> <span class="o">=</span> <span class="n">df_mod</span><span class="p">[</span><span class="n">target_column</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+    <span class="n">map_to_int</span> <span class="o">=</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="n">n</span> <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">targets</span><span class="p">)}</span>
+    <span class="n">df_mod</span><span class="p">[</span><span class="s">&quot;Target&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_mod</span><span class="p">[</span><span class="n">target_column</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">map_to_int</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">(</span><span class="n">df_mod</span><span class="p">,</span> <span class="n">targets</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">get_iris_data</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Get the iris data, from local csv or pandas repo.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s">&quot;iris.csv&quot;</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&quot;-- iris.csv found locally&quot;</span><span class="p">)</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s">&quot;iris.csv&quot;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&quot;-- trying to download from github&quot;</span><span class="p">)</span>
+        <span class="n">fn</span> <span class="o">=</span> <span class="p">(</span><span class="s">&quot;https://raw.githubusercontent.com/pydata/&quot;</span>
+              <span class="s">&quot;pandas/master/pandas/tests/data/iris.csv&quot;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="nb">exit</span><span class="p">(</span><span class="s">&quot;-- Unable to download iris.csv&quot;</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">&quot;iris.csv&quot;</span><span class="p">,</span> <span class="s">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">&quot;-- writing to local iris.csv file&quot;</span><span class="p">)</span>
+            <span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">df</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="new-functions">
+<h2>new functions</h2>
+<p>Next we add some new function to do the grid and random searches as well as
+report on the top parameters found.  First up is <span class="code docutils literal"><span class="pre">report</span></span>. This function
+takes the output from the grid or random search, prints a report of the top
+models and returns the best parameter setting.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">report</span><span class="p">(</span><span class="n">grid_scores</span><span class="p">,</span> <span class="n">n_top</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Report top n_top parameters settings, default n_top=3.</span>
+
+<span class="sd">    Args</span>
+<span class="sd">    ----</span>
+<span class="sd">    grid_scores -- output from grid or random search</span>
+<span class="sd">    n_top -- how many to report, of top models</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    top_params -- [dict] top parameter settings found in</span>
+<span class="sd">                  search</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">top_scores</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">grid_scores</span><span class="p">,</span>
+                        <span class="n">key</span><span class="o">=</span><span class="n">itemgetter</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span>
+                        <span class="n">reverse</span><span class="o">=</span><span class="bp">True</span><span class="p">)[:</span><span class="n">n_top</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">score</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">top_scores</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&quot;Model with rank: {0}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="k">print</span><span class="p">((</span><span class="s">&quot;Mean validation score: &quot;</span>
+               <span class="s">&quot;{0:.3f} (std: {1:.3f})&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+               <span class="n">score</span><span class="o">.</span><span class="n">mean_validation_score</span><span class="p">,</span>
+               <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">score</span><span class="o">.</span><span class="n">cv_validation_scores</span><span class="p">)))</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&quot;Parameters: {0}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">score</span><span class="o">.</span><span class="n">parameters</span><span class="p">))</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">top_scores</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">parameters</span>
+</pre></div>
+</div>
+<p><strong>grid search</strong></p>
+<p>Next up is <span class="code docutils literal"><span class="pre">run_gridsearch</span></span>.  This function takes</p>
+<ul class="simple">
+<li>the features <span class="code docutils literal"><span class="pre">X</span></span>,</li>
+<li>the targets <span class="code docutils literal"><span class="pre">y</span></span>,</li>
+<li>a (Decision Tree) classifier <span class="code docutils literal"><span class="pre">clf</span></span>,</li>
+<li>a dictionary of parameters to try <span class="code docutils literal"><span class="pre">param_grid</span></span></li>
+<li>the fold of the cross-validation <span class="code docutils literal"><span class="pre">cv</span></span>, defaulted
+to 5&#8211; this is discussed more below.</li>
+</ul>
+<p>The <span class="code docutils literal"><span class="pre">param_grid</span></span> is the set of parameters that will be tested&#8211; be
+careful not to list too many options, because all combinations will be tested!</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">run_gridsearch</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">clf</span><span class="p">,</span> <span class="n">param_grid</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Run a grid search for best Decision Tree parameters.</span>
+
+<span class="sd">    Args</span>
+<span class="sd">    ----</span>
+<span class="sd">    X -- features</span>
+<span class="sd">    y -- targets (classes)</span>
+<span class="sd">    cf -- scikit-learn Decision Tree</span>
+<span class="sd">    param_grid -- [dict] parameter settings to test</span>
+<span class="sd">    cv -- fold of cross-validation, default 5</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    top_params -- [dict] from report()</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">grid_search</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">clf</span><span class="p">,</span>
+                               <span class="n">param_grid</span><span class="o">=</span><span class="n">param_grid</span><span class="p">,</span>
+                               <span class="n">cv</span><span class="o">=</span><span class="n">cv</span><span class="p">)</span>
+    <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+    <span class="n">grid_search</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+    <span class="k">print</span><span class="p">((</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">GridSearchCV took {:.2f} &quot;</span>
+           <span class="s">&quot;seconds for {:d} candidate &quot;</span>
+           <span class="s">&quot;parameter settings.&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span><span class="p">,</span>
+                <span class="nb">len</span><span class="p">(</span><span class="n">grid_search</span><span class="o">.</span><span class="n">grid_scores_</span><span class="p">)))</span>
+
+    <span class="n">top_params</span> <span class="o">=</span> <span class="n">report</span><span class="p">(</span><span class="n">grid_search</span><span class="o">.</span><span class="n">grid_scores_</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="k">return</span>  <span class="n">top_params</span>
+</pre></div>
+</div>
+<p><strong>random search</strong></p>
+<p>Next up is the function <span class="code docutils literal"><span class="pre">run_randomsearch</span></span>, which samples parameters from
+specified lists or distributions. Similar to the grid search, the arguments
+are:</p>
+<ul class="simple">
+<li>the features <span class="code docutils literal"><span class="pre">X</span></span></li>
+<li>the targets <span class="code docutils literal"><span class="pre">y</span></span></li>
+<li>a (Decision Tree) classifier <span class="code docutils literal"><span class="pre">clf</span></span></li>
+<li>the fold of the cross-validation <span class="code docutils literal"><span class="pre">cv</span></span>, defaulted
+to 5&#8211; this is discussed more below</li>
+<li>the number of random parameter setting to consider
+<span class="code docutils literal"><span class="pre">n_iter_search</span></span>, defaulted to 20.</li>
+</ul>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">run_randomsearch</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">clf</span><span class="p">,</span> <span class="n">para_dist</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+                     <span class="n">n_iter_search</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Run a random search for best Decision Tree parameters.</span>
+
+<span class="sd">    Args</span>
+<span class="sd">    ----</span>
+<span class="sd">    X -- features</span>
+<span class="sd">    y -- targets (classes)</span>
+<span class="sd">    cf -- scikit-learn Decision Tree</span>
+<span class="sd">    param_dist -- [dict] list, distributions of parameters</span>
+<span class="sd">                  to sample</span>
+<span class="sd">    cv -- fold of cross-validation, default 5</span>
+<span class="sd">    n_iter_search -- number of random parameter sets to try,</span>
+<span class="sd">                     default 20.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    top_params -- [dict] from report()</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">random_search</span> <span class="o">=</span> <span class="n">RandomizedSearchCV</span><span class="p">(</span><span class="n">clf</span><span class="p">,</span>
+                        <span class="n">param_distributions</span><span class="o">=</span><span class="n">param_dist</span><span class="p">,</span>
+                        <span class="n">n_iter</span><span class="o">=</span><span class="n">n_iter_search</span><span class="p">)</span>
+
+    <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+    <span class="n">random_search</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">((</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">RandomizedSearchCV took {:.2f} seconds &quot;</span>
+           <span class="s">&quot;for {:d} candidates parameter &quot;</span>
+           <span class="s">&quot;settings.&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">((</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span><span class="p">),</span>
+                               <span class="n">n_iter_search</span><span class="p">))</span>
+
+    <span class="n">top_params</span> <span class="o">=</span> <span class="n">report</span><span class="p">(</span><span class="n">random_search</span><span class="o">.</span><span class="n">grid_scores_</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="k">return</span>  <span class="n">top_params</span>
+</pre></div>
+</div>
+<p>Okay, we&#8217;ve defined all our functions&#8211; let&#8217;s use them!</p>
+</div>
+<div class="section" id="cross-validation">
+<h2>cross-validation</h2>
+<p><strong>getting the data</strong></p>
+<p>Next, let&#8217;s run through finding good parameter settings, using the search
+methods that we&#8217;ve setup above. First some preliminaries&#8211; get the data and
+construct the feature and target data:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">-- get data:&quot;</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">get_iris_data</span><span class="p">()</span>
+<span class="k">print</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">)</span>
+
+<span class="n">features</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;SepalLength&quot;</span><span class="p">,</span> <span class="s">&quot;SepalWidth&quot;</span><span class="p">,</span>
+            <span class="s">&quot;PetalLength&quot;</span><span class="p">,</span> <span class="s">&quot;PetalWidth&quot;</span><span class="p">]</span>
+<span class="n">df</span><span class="p">,</span> <span class="n">targets</span> <span class="o">=</span> <span class="n">encode_target</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s">&quot;Name&quot;</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s">&quot;Target&quot;</span><span class="p">]</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">features</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre>-- get data:
+-- iris.csv found locally
+</pre></div>
+</div>
+<p><strong>a first cross-validation</strong></p>
+<p>Next, let&#8217;s do cross-validation using the parameters from the previous post&#8211;
+<a class="reference internal" href="../08/decision_trees_in_python_with_scikit_learn_and_pandas.html#decision-trees-1"><em>Decision trees in python with scikit-learn and pandas</em></a>. I&#8217;ll use 10-fold cross-validation in all of the
+examples to follow. This choice means:</p>
+<ul class="simple">
+<li>split the data into 10 parts</li>
+<li>fit on 9-parts</li>
+<li>test accuracy on the remaining part</li>
+</ul>
+<p>This is repeated <em>on all combinations</em> to produce ten estimates of the accuracy
+of the model using the current parameter setting. Typically the mean and
+standard deviation of the ten scores is reported. So, if we use the setting
+from the previous post, we get:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">print</span><span class="p">(</span><span class="s">&quot;-- 10-fold cross-validation &quot;</span>
+      <span class="s">&quot;[using setup from previous post]&quot;</span><span class="p">)</span>
+<span class="n">dt_old</span> <span class="o">=</span> <span class="n">DecisionTreeClassifier</span><span class="p">(</span><span class="n">min_samples_split</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+                                <span class="n">random_state</span><span class="o">=</span><span class="mi">99</span><span class="p">)</span>
+<span class="n">dt_old</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="n">scores</span> <span class="o">=</span> <span class="n">cross_val_score</span><span class="p">(</span><span class="n">dt_old</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s">&quot;mean: {:.3f} (std: {:.3f})&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">scores</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span>
+                                          <span class="n">scores</span><span class="o">.</span><span class="n">std</span><span class="p">()),</span>
+                                          <span class="n">end</span><span class="o">=</span><span class="s">&quot;</span><span class="se">\n\n</span><span class="s">&quot;</span> <span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre>-- 10-fold cross-validation [using setup from previous post]
+mean: 0.960 (std: 0.033)
+</pre></div>
+</div>
+<p>Okay, 0.960 is not bad.  That means that the average accuracy (percentage of
+correct classifications using the trained model) is 96%.  That accuracy is
+pretty high, but let&#8217;s if see if better parameters can be found.</p>
+<p><strong>application of grid search</strong></p>
+<p>First, I&#8217;ll try a grid search.  The dictionary <span class="code docutils literal"><span class="pre">para_grid</span></span> provides the
+different parameter settings to test.  The <em>keys</em> are the parameter name and the
+<em>values</em> are a list of settings to try.  Make sure to check the documentation
+for Decision Trees (or other method you are testing) to get correct parameter
+names and valid values to be tested.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">print</span><span class="p">(</span><span class="s">&quot;-- Grid Parameter Search via 10-fold CV&quot;</span><span class="p">)</span>
+
+<span class="c"># set of parameters to test</span>
+<span class="n">param_grid</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;criterion&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s">&quot;gini&quot;</span><span class="p">,</span> <span class="s">&quot;entropy&quot;</span><span class="p">],</span>
+              <span class="s">&quot;min_samples_split&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">],</span>
+              <span class="s">&quot;max_depth&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">None</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span>
+              <span class="s">&quot;min_samples_leaf&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span>
+              <span class="s">&quot;max_leaf_nodes&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">None</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">],</span>
+              <span class="p">}</span>
+
+<span class="n">dt</span> <span class="o">=</span> <span class="n">DecisionTreeClassifier</span><span class="p">()</span>
+<span class="n">ts_gs</span> <span class="o">=</span> <span class="n">run_gridsearch</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">param_grid</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre>-- Grid Parameter Search via 10-fold CV
+
+GridSearchCV took 5.02 seconds for 288 candidate parameter settings.
+Model with rank: 1
+Mean validation score: 0.967 (std: 0.033)
+Parameters: {&#39;min_samples_split&#39;: 10, &#39;max_leaf_nodes&#39;: 5,
+&#39;criterion&#39;: &#39;gini&#39;, &#39;max_depth&#39;: None, &#39;min_samples_leaf&#39;: 1}
+
+Model with rank: 2
+Mean validation score: 0.967 (std: 0.033)
+Parameters: {&#39;min_samples_split&#39;: 20, &#39;max_leaf_nodes&#39;: 5,
+&#39;criterion&#39;: &#39;gini&#39;, &#39;max_depth&#39;: None, &#39;min_samples_leaf&#39;: 1}
+
+Model with rank: 3
+Mean validation score: 0.967 (std: 0.033)
+Parameters: {&#39;min_samples_split&#39;: 10, &#39;max_leaf_nodes&#39;: 5,
+&#39;criterion&#39;: &#39;gini&#39;, &#39;max_depth&#39;: 5, &#39;min_samples_leaf&#39;: 1}
+</pre></div>
+</div>
+<p>In most runs I get a mean of 0.967 for a variety of parameter settings. This
+means there is an improvement from 96% to 96.7%&#8211; I guess every bit helps!  We
+can see the best parameter setting <span class="code docutils literal"><span class="pre">ts_gs</span></span> as shown below:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">-- Best Parameters:&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">ts_gs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&quot;parameter: {:&lt;20s} setting: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre>-- Best Parameters:
+parameter: min_samples_split    setting: 10
+parameter: max_leaf_nodes       setting: 5
+parameter: criterion            setting: gini
+parameter: max_depth            setting: None
+parameter: min_samples_leaf     setting: 1
+</pre></div>
+</div>
+<p>and, replicate the cross-validation results:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># test the retuned best parameters</span>
+<span class="k">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n\n</span><span class="s">-- Testing best parameters [Grid]...&quot;</span><span class="p">)</span>
+<span class="n">dt_ts_gs</span> <span class="o">=</span> <span class="n">DecisionTreeClassifier</span><span class="p">(</span><span class="o">**</span><span class="n">ts_gs</span><span class="p">)</span>
+<span class="n">scores</span> <span class="o">=</span> <span class="n">cross_val_score</span><span class="p">(</span><span class="n">dt_ts_gs</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s">&quot;mean: {:.3f} (std: {:.3f})&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">scores</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span>
+                                          <span class="n">scores</span><span class="o">.</span><span class="n">std</span><span class="p">()),</span>
+                                          <span class="n">end</span><span class="o">=</span><span class="s">&quot;</span><span class="se">\n\n</span><span class="s">&quot;</span> <span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre>-- Testing best parameters [Grid]...
+mean: 0.967 (std: 0.033)
+</pre></div>
+</div>
+<p>Next, let&#8217;s use the code from the previous post (also provided above) to get
+psuedo-code for best tree:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">-- get_code for best parameters [Grid]:&quot;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s">&quot;</span><span class="se">\n\n</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="n">dt_ts_gs</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
+<span class="n">get_code</span><span class="p">(</span><span class="n">dt_ts_gs</span><span class="p">,</span> <span class="n">features</span><span class="p">,</span> <span class="n">targets</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre>-- get_code for best parameters [Grid]:
+
+if ( PetalWidth &lt;= 0.800000011921 ) {
+    return Iris-setosa ( 50 examples )
+}
+else {
+    if ( PetalWidth &lt;= 1.75 ) {
+        if ( PetalLength &lt;= 4.94999980927 ) {
+            if ( PetalWidth &lt;= 1.65000009537 ) {
+                return Iris-versicolor ( 47 examples )
+            }
+            else {
+                return Iris-virginica ( 1 examples )
+            }
+        }
+        else {
+            return Iris-versicolor ( 2 examples )
+            return Iris-virginica ( 4 examples )
+        }
+    }
+    else {
+        return Iris-versicolor ( 1 examples )
+        return Iris-virginica ( 45 examples )
+    }
+}
+</pre></div>
+</div>
+<p>We can also make a graphic of the Decision Tree:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">visualize_tree</span><span class="p">(</span><span class="n">dt_ts_gs</span><span class="p">,</span> <span class="n">features</span><span class="p">,</span> <span class="n">fn</span><span class="o">=</span><span class="s">&quot;grid_best&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>resulting in</p>
+<div class="figure">
+<a class="reference internal image-reference" href="../../../_images/grid_best.png"><img alt="../../../_images/grid_best.png" src="../../../_images/grid_best.png" style="width: 15cm;" /></a>
+</div>
+<p><strong>application of random search</strong></p>
+<p>Next, we try the random search method for finding parameters.  In this case the
+dictionary <span class="code docutils literal"><span class="pre">param_dist</span></span> has <em>keys</em> that are the parameter names (as
+before) and <em>values</em> that are (i) a list to be sampled from, or (ii) a
+distribution to be sampled from&#8211; again, make sure the parameter names are
+valid and the distributions produce values that are sensible for the method
+being tested. In this example I use 288 samples so that the number of parameter
+settings tested is the same as the grid search above:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">print</span><span class="p">(</span><span class="s">&quot;-- Random Parameter Search via 10-fold CV&quot;</span><span class="p">)</span>
+
+<span class="c"># dict of parameter list/distributions to sample</span>
+<span class="n">param_dist</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;criterion&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s">&quot;gini&quot;</span><span class="p">,</span> <span class="s">&quot;entropy&quot;</span><span class="p">],</span>
+              <span class="s">&quot;min_samples_split&quot;</span><span class="p">:</span> <span class="n">randint</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span>
+              <span class="s">&quot;max_depth&quot;</span><span class="p">:</span> <span class="n">randint</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span>
+              <span class="s">&quot;min_samples_leaf&quot;</span><span class="p">:</span> <span class="n">randint</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span>
+              <span class="s">&quot;max_leaf_nodes&quot;</span><span class="p">:</span> <span class="n">randint</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">20</span><span class="p">)}</span>
+
+<span class="n">dt</span> <span class="o">=</span> <span class="n">DecisionTreeClassifier</span><span class="p">()</span>
+<span class="n">ts_rs</span> <span class="o">=</span> <span class="n">run_randomsearch</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">param_dist</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+                         <span class="n">n_iter_search</span><span class="o">=</span><span class="mi">288</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre>-- Random Parameter Search via 10-fold CV
+
+RandomizedSearchCV took 1.52 seconds for 288 candidates parameter
+settings.
+Model with rank: 1
+Mean validation score: 0.967 (std: 0.033)
+Parameters: {&#39;min_samples_split&#39;: 12, &#39;max_leaf_nodes&#39;: 5,
+&#39;criterion&#39;: &#39;gini&#39;, &#39;max_depth&#39;: 19, &#39;min_samples_leaf&#39;: 1}
+
+Model with rank: 2
+Mean validation score: 0.967 (std: 0.033)
+Parameters: {&#39;min_samples_split&#39;: 1, &#39;max_leaf_nodes&#39;: 6, &#39;criterion&#39;:
+&#39;gini&#39;, &#39;max_depth&#39;: 11, &#39;min_samples_leaf&#39;: 1}
+
+Model with rank: 3
+Mean validation score: 0.967 (std: 0.033)
+Parameters: {&#39;min_samples_split&#39;: 4, &#39;max_leaf_nodes&#39;: 5, &#39;criterion&#39;:
+&#39;gini&#39;, &#39;max_depth&#39;: 15, &#39;min_samples_leaf&#39;: 1}
+</pre></div>
+</div>
+<p>As with the grid search, this typically finds multiple parameter settings with
+a mean accuracy 0.967, or 96.7%. As we did above, the parameters for the best
+cross-validation are:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">-- Best Parameters:&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">ts_rs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&quot;parameters: {:&lt;20s} setting: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre>-- Best Parameters:
+parameters: min_samples_split    setting: 12
+parameters: max_leaf_nodes       setting: 5
+parameters: criterion            setting: gini
+parameters: max_depth            setting: 19
+parameters: min_samples_leaf     setting: 1
+</pre></div>
+</div>
+<p>And, we can test the best parameters again:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># test the retuned best parameters</span>
+<span class="k">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n\n</span><span class="s">-- Testing best parameters [Random]...&quot;</span><span class="p">)</span>
+<span class="n">dt_ts_rs</span> <span class="o">=</span> <span class="n">DecisionTreeClassifier</span><span class="p">(</span><span class="o">**</span><span class="n">ts_rs</span><span class="p">)</span>
+<span class="n">scores</span> <span class="o">=</span> <span class="n">cross_val_score</span><span class="p">(</span><span class="n">dt_ts_rs</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s">&quot;mean: {:.3f} (std: {:.3f})&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">scores</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span>
+                                          <span class="n">scores</span><span class="o">.</span><span class="n">std</span><span class="p">()),</span>
+                                          <span class="n">end</span><span class="o">=</span><span class="s">&quot;</span><span class="se">\n\n</span><span class="s">&quot;</span> <span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre>-- Testing best parameters [Random]...
+mean: 0.967 (std: 0.033)
+</pre></div>
+</div>
+<p>To see what the Decision Tree is like, we can generate the pseudo-code for best
+random search result</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">-- get_code for best parameters [Random]:&quot;</span><span class="p">)</span>
+<span class="n">dt_ts_rs</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
+<span class="n">get_code</span><span class="p">(</span><span class="n">dt_ts_rs</span><span class="p">,</span> <span class="n">features</span><span class="p">,</span> <span class="n">targets</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre>-- get_code for best parameters [Random]:
+if ( PetalLength &lt;= 2.45000004768 ) {
+    return Iris-setosa ( 50 examples )
+}
+else {
+    if ( PetalWidth &lt;= 1.75 ) {
+        if ( PetalLength &lt;= 4.94999980927 ) {
+            if ( PetalWidth &lt;= 1.65000009537 ) {
+                return Iris-versicolor ( 47 examples )
+            }
+            else {
+                return Iris-virginica ( 1 examples )
+            }
+        }
+        else {
+            return Iris-versicolor ( 2 examples )
+            return Iris-virginica ( 4 examples )
+        }
+    }
+    else {
+        return Iris-versicolor ( 1 examples )
+        return Iris-virginica ( 45 examples )
+    }
+}
+</pre></div>
+</div>
+<p>and visualize the tree</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">visualize_tree</span><span class="p">(</span><span class="n">dt_ts_rs</span><span class="p">,</span> <span class="n">features</span><span class="p">,</span> <span class="n">fn</span><span class="o">=</span><span class="s">&quot;rand_best&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>producing:</p>
+<div class="figure">
+<a class="reference internal image-reference" href="../../../_images/rand_best.png"><img alt="../../../_images/rand_best.png" src="../../../_images/rand_best.png" style="width: 15cm;" /></a>
+</div>
+</div>
+<div class="section" id="wrapping-up">
+<h2>Wrapping Up</h2>
+<p>So, we&#8217;ve used grid and random search with cross-validation to tune the
+parameters for our Decision Tree.  In both cases there were marginal
+improvements, from 96% to 96.7%.  Of course, this effect can be much larger
+in more complicated problems.  A few final notes:</p>
+<ul class="simple">
+<li>After finding the best parameter settings through cross-validation search it
+is typical to train the model with <strong>all of the data</strong>, using the best
+parameters found.</li>
+<li>The conventional wisdom is that random search is more efficient than grid
+search for practical application.  This certainly makes sense in cases where
+there are many parameters and features to test and grid search is really
+(computationally) difficult&#8211; takes too long.</li>
+<li>The basic cross-validation ideas developed here can be applied to many other
+scikit-learn models&#8211; Random Forests, logistic regression, SVM, etc. To do
+this you simply need to spend some time learning about the model parameters,
+as well as the range of sensible values, to setup your own grid/random
+search&#8211; I&#8217;d love to see it if you do this!</li>
+</ul>
+<p>So, that&#8217;s it. If you have comments or questions please leave them below&#8211;
+links to code, web pages, etc are also very much appreciated by me and other
+readers. As always, reports of corrections/typos are also welcome.  Enjoy!</p>
+</div>
+</div>
+
+    <div class="postmeta">
+        <div class="author">
+            <span>Posted by Chris Strelioff</span>
+        </div>
+        
+        <div class="tags">
+            <span>
+                Tags:
+                <a href="../../../tags/python.html">python</a>, <a href="../../../tags/pandas.html">pandas</a>, <a href="../../../tags/scikit_learn.html">scikit-learn</a>, <a href="../../../tags/machine_learning.html">machine learning</a>, <a href="../../../tags/supervised_learning.html">supervised learning</a>, <a href="../../../tags/decision_trees.html">decision trees</a></span>
+        </div>
+        </div><ul class="related clearfix">
+            <li class="left"></li>
+            <li class="right"><a href="../16/pysoundfile_and_python_3_4_on_ubuntu_14_04.html">PySoundFile and Python 3.4 on Ubuntu 14.04</a> &raquo; </li>
+        </ul><div id="disqus_thread"></div><script type="text/javascript">    var disqus_shortname = "chrissandbox";    var disqus_identifier = "2015/06/25/decision_trees_in_python_again_cross_validation";    disqus_thread();</script><noscript>Please enable JavaScript to view the    <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></article><aside class="sidebar"><section><div class="widget" id="searchbox" role="search">
+    <h1><a href="#searchbox">Search</a></h1>
+    <form action="../../../search.html" method="get">
+        <input type="text" name="q" />
+        <button type="submit"><span class="fa fa-search"></span></button>
+    </form>
+</div></section><section><div class="widget">
+  <h1>Pages</h1>
+  <ul>
+  <li>
+      <a href="../../../index.html">Home</a>
+    </li>
+  </ul>
+</div>
+</section><section><div class="widget">
+    <h1>Recent Posts</h1>
+    <ul><li>
+            <a href="#">Decision trees in python again, cross-validation</a>
+        </li><li>
+            <a href="../16/pysoundfile_and_python_3_4_on_ubuntu_14_04.html">PySoundFile and Python 3.4 on Ubuntu 14.04</a>
+        </li><li>
+            <a href="../08/decision_trees_in_python_with_scikit_learn_and_pandas.html">Decision trees in python with scikit-learn and pandas</a>
+        </li><li>
+            <a href="../../05/27/revisiting_the_medical_tests_example_with_python_and_lea.html">Revisiting the medical tests example with Python and Lea</a>
+        </li><li>
+            <a href="../../05/04/probabilistic_programming_with_python_and_lea.html">Probabilistic programming with Python and Lea</a>
+        </li><li>
+            <a href="../../04/30/joins_and_some_views_in_mysql.html">JOINs, and some VIEWs, in MySQL</a>
+        </li><li>
+            <a href="../../04/22/employees_database_for_mysql_setup_and_simple_queries.html">Employees database for MySQL, setup and simple queries</a>
+        </li><li>
+            <a href="../../04/21/installing_mysql_on_ubuntu_14_04.html">Installing MySQL on Ubuntu 14.04</a>
+        </li><li>
+            <a href="../../04/03/getting_started_with_responsive_websites_and_javascript.html">Getting started with responsive websites and JavaScript</a>
+        </li><li>
+            <a href="../../03/03/installing_pysoundfile_on_ubuntu_14_04.html">Installing PySoundFile on Ubuntu 14.04</a>
+        </li></ul>
+</div>
+</section><section><div class="widget">
+    <h1>Tags</h1><a href="../../../tags/api.html">api</a> (1), <a href="../../../tags/audio.html">audio</a> (2), <a href="../../../tags/audio_features.html">audio features</a> (1), <a href="../../../tags/bayesian.html">Bayesian</a> (7), <a href="../../../tags/beta.html">Beta</a> (1), <a href="../../../tags/blog_setup.html">blog setup</a> (1), <a href="../../../tags/bootstrap.html">bootstrap</a> (1), <a href="../../../tags/bottleneck.html">bottleneck</a> (1), <a href="../../../tags/c.html">c++</a> (1), <a href="../../../tags/caret.html">caret</a> (1), <a href="../../../tags/cmpy.html">cmpy</a> (1), <a href="../../../tags/conditional_probability.html">conditional probability</a> (6), <a href="../../../tags/coursera.html">coursera</a> (1), <a href="../../../tags/coursera_intro_to_data_science.html">coursera intro to data science</a> (3), <a href="../../../tags/css.html">css</a> (1), <a href="../../../tags/cython.html">cython</a> (1), <a href="../../../tags/d3.html">d3</a> (1), <a href="../../../tags/decision_trees.html">decision trees</a> (2), <a href="../../../tags/dsp.html">dsp</a> (1), <a href="../../../tags/e1071.html">e1071</a> (1), <a href="../../../tags/essentia.html">essentia</a> (1), <a href="../../../tags/garmin.html">garmin</a> (1), <a href="../../../tags/ggplot2.html">ggplot2</a> (1), <a href="../../../tags/gis.html">gis</a> (1), <a href="../../../tags/git.html">git</a> (1), <a href="../../../tags/gnuplot.html">gnuplot</a> (1), <a href="../../../tags/graphs.html">graphs</a> (1), <a href="../../../tags/html5.html">html5</a> (1), <a href="../../../tags/igraph.html">igraph</a> (1), <a href="../../../tags/ipython.html">ipython</a> (1), <a href="../../../tags/javascript.html">javascript</a> (2), <a href="../../../tags/joint_probability.html">joint probability</a> (6), <a href="../../../tags/json.html">json</a> (1), <a href="../../../tags/latex.html">LaTeX</a> (1), <a href="../../../tags/lda.html">LDA</a> (1), <a href="../../../tags/lea.html">Lea</a> (2), <a href="../../../tags/machine_learning.html">machine learning</a> (3), <a href="../../../tags/marginal_probability.html">marginal probability</a> (6), <a href="../../../tags/matplotlib.html">matplotlib</a> (1), <a href="../../../tags/mir.html">mir</a> (1), <a href="../../../tags/music.html">music</a> (2), <a href="../../../tags/my_python_setup.html">my python setup</a> (5), <a href="../../../tags/my_ubuntu_setup.html">my ubuntu setup</a> (10), <a href="../../../tags/mysql.html">mysql</a> (3), <a href="../../../tags/networks.html">networks</a> (1), <a href="../../../tags/networkx.html">networkx</a> (1), <a href="../../../tags/nodejs.html">nodejs</a> (1), <a href="../../../tags/npm.html">npm</a> (1), <a href="../../../tags/numexpr.html">numexpr</a> (1), <a href="../../../tags/numpy.html">numpy</a> (1), <a href="../../../tags/octave.html">octave</a> (1), <a href="../../../tags/open_oakland.html">Open Oakland</a> (2), <a href="../../../tags/openpyxl.html">openpyxl</a> (1), <a href="../../../tags/pandas.html">pandas</a> (3), <a href="../../../tags/patsy.html">patsy</a> (1), <a href="../../../tags/pip.html">pip</a> (1), <a href="../../../tags/pweave.html">pweave</a> (1), <a href="../../../tags/pygraphviz.html">pygraphviz</a> (1), <a href="../../../tags/pymc.html">pymc</a> (1), <a href="../../../tags/pysoundfile.html">PySoundFile</a> (2), <a href="../../../tags/python.html">python</a> (13), <a href="../../../tags/python.html">Python</a> (1), <a href="../../../tags/python_2_7.html">python 2.7</a> (5), <a href="../../../tags/python_3_4.html">python 3.4</a> (2), <a href="../../../tags/pyyaml.html">pyyaml</a> (1), <a href="../../../tags/qgis.html">qgis</a> (1), <a href="../../../tags/r.html">R</a> (1), <a href="../../../tags/randomforest.html">randomForest</a> (1), <a href="../../../tags/restview.html">restview</a> (1), <a href="../../../tags/resume.html">resume</a> (1), <a href="../../../tags/rpart.html">rpart</a> (1), <a href="../../../tags/running.html">running</a> (1), <a href="../../../tags/scikit_learn.html">scikit-learn</a> (3), <a href="../../../tags/scipy.html">scipy</a> (1), <a href="../../../tags/screen.html">screen</a> (1), <a href="../../../tags/server_setup.html">server setup</a> (1), <a href="../../../tags/social_networks.html">social networks</a> (1), <a href="../../../tags/socrata.html">Socrata</a> (1), <a href="../../../tags/sound.html">sound</a> (2), <a href="../../../tags/sphinx.html">sphinx</a> (1), <a href="../../../tags/sql.html">sql</a> (4), <a href="../../../tags/sqlite3.html">sqlite3</a> (1), <a href="../../../tags/ssh.html">ssh</a> (1), <a href="../../../tags/ssh_keys.html">ssh keys</a> (1), <a href="../../../tags/statsmodels.html">statsmodels</a> (1), <a href="../../../tags/supervised_learning.html">supervised learning</a> (2), <a href="../../../tags/sympy.html">sympy</a> (1), <a href="../../../tags/tableau.html">tableau</a> (1), <a href="../../../tags/tinkerer.html">tinkerer</a> (1), <a href="../../../tags/topic_models.html">topic models</a> (1), <a href="../../../tags/tree.html">tree</a> (1), <a href="../../../tags/ubuntu_14_04.html">ubuntu 14.04</a> (11), <a href="../../../tags/vim.html">vim</a> (1), <a href="../../../tags/virtualbox.html">virtualbox</a> (1), <a href="../../../tags/virtualenv.html">virtualenv</a> (3), <a href="../../../tags/virtualenvwrapper.html">virtualenvwrapper</a> (2), <a href="../../../tags/vps.html">VPS</a> (1), <a href="../../../tags/yaml.html">yaml</a> (1)</div></section></aside></div> <!-- #main --></div> <!-- #main-container -->
+
+        <div class="footer-container" role="contentinfo"><footer class="wrapper">&copy; Copyright 2014-2015 Christopher Strelioff. Powered by <a href="http://www.tinkerer.me/">Tinkerer</a> and <a href="http://sphinx.pocoo.org/">Sphinx</a>.</footer></div> <!-- footer-container -->
+
+      </div> <!--! end of #container --><!--[if lt IE 7 ]>
+          <script src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js"></script>
+          <script>window.attachEvent('onload',function(){CFInstall.check({mode:'overlay'})})</script>
+        <![endif]-->
+    </body>
+</html>

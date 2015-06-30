@@ -1,3 +1,5 @@
+.. _decision-trees-1:
+
 Decision trees in python with scikit-learn and pandas
 =====================================================
 
@@ -526,5 +528,5 @@ welcomed!
 
 .. author:: default
 .. categories:: none
-.. tags:: python, pandas, scikit-learn, machine learning, decision trees
+.. tags:: python, pandas, scikit-learn, machine learning, supervised learning, decision trees
 .. comments::
