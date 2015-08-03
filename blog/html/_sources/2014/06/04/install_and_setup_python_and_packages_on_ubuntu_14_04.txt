@@ -32,13 +32,13 @@ In the past I have installed Python packages:
 
 .. code-block:: bash
 
-    $ sudo apt-get packagename
+    $ sudo apt-get install packagename
 
 2. Or, from a git/svn repository:
 
 .. code-block:: bash
 
-    $ sudo python setup.py
+    $ sudo python setup.py install
 
 Approach 1 *has many advantages for Python users that don't need to have the
 latest versions of every package*. In particular, all of the package
@@ -152,10 +152,19 @@ To test it out, see if you get something like the following:
 Now that virtualenv_ is installed, there will be two paths forward for the
 rest of the Python installs:
 
-1. Keep installing as a user -- **I'll use this approach**
-2. Create a virtual environment and install everything there to have a
-   completely isolated Python environment -- **I'll write a post about
-   this later**
+1. Keep installing as a user -- **I'll use this approach** for the reasons
+   discussed above.
+2. If you have admin permissions you can install all packages globally using
+   a command like:
+
+.. code-block:: bash
+
+   $ sudo pip install packagename
+
+3. Create a virtual environment and install everything there to have a
+   completely isolated Python environment -- see
+   :ref:`virtualenvs on ubuntu 14.04` for an example of how to take this
+   approach.
 
 .. _Ubuntu 14.04 Python dependencies:
 
