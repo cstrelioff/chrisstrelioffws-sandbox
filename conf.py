@@ -33,10 +33,10 @@ website = 'http://chrisstrelioff.ws/sandbox/'
 disqus_shortname = 'chrissandbox'
 
 # Change your favicon (new favicon goes in _static directory)
-html_favicon = 'tinkerer.ico'
+html_favicon = '_static/tinkerer.ico'
 
 # Pick another Tinkerer theme or use your own
-html_theme = "ccsflat"
+html_theme = "ccsflat2"
 
 # Theme-specific options, see docs
 html_theme_options = {}
