@@ -11,7 +11,7 @@ import tinkerer.paths
 project = 'chris\' sandbox'
 
 # Change this to the tagline of your blog
-tagline = 'python, R, ubuntu, bayesian methods, machine learning and more...'
+tagline = 'python, R, Ubuntu, Bayesian methods, machine learning and more...'
 
 # Change this to the description of your blog
 description = 'Christopher Strelioff\'s blog'

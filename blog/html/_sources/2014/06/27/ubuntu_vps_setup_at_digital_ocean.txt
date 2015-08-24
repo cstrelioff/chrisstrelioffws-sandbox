@@ -1,3 +1,5 @@
+.. _VPS setup at digitalocean:
+
 Ubuntu VPS setup at digital ocean
 =================================
 
