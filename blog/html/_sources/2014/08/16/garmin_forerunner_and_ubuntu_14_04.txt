@@ -24,6 +24,26 @@ if you are interested.
     $ cd ~/gitlocal/
     $ git clone git@github.com:cstrelioff/garmin-dev.git
 
+**Edit: 2015, Aug 27**
+
+The above :code:`git clone` command uses ssh and will only work if you have a
+github account setup and have an ssh key on file.  If you don't and would 
+rather not bother setting that up you can
+
+1. Dowload a zip of the repository from the
+   `github page <https://github.com/cstrelioff/garmin-dev>`_ and unzip
+   on your local computer-- look for the **Download ZIP** button on the right
+   side of the page.
+
+2. Use git with https instead of ssh.  This changes the git clone command
+   to
+
+.. code-block:: bash
+
+    $ git clone https://github.com/cstrelioff/garmin-dev.git
+
+**End edit**
+
 * Finally we are ready to get data.  I will give one approach -- start by
   making a directory where the data will be saved. For example,
 

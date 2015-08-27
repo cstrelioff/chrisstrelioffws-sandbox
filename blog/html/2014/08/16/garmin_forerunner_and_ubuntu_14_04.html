@@ -81,6 +81,22 @@ want the code to reside&#8211; I&#8217;ll do this in <span class="docutils liter
 <span class="nv">$ </span>git clone git@github.com:cstrelioff/garmin-dev.git
 </pre></div>
 </div>
+<p><strong>Edit: 2015, Aug 27</strong></p>
+<p>The above <span class="code docutils literal"><span class="pre">git</span> <span class="pre">clone</span></span> command uses ssh and will only work if you have a
+github account setup and have an ssh key on file.  If you don&#8217;t and would
+rather not bother setting that up you can</p>
+<ol class="arabic simple">
+<li>Dowload a zip of the repository from the
+<a class="reference external" href="https://github.com/cstrelioff/garmin-dev">github page</a> and unzip
+on your local computer&#8211; look for the <strong>Download ZIP</strong> button on the right
+side of the page.</li>
+<li>Use git with https instead of ssh.  This changes the git clone command
+to</li>
+</ol>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>git clone https://github.com/cstrelioff/garmin-dev.git
+</pre></div>
+</div>
+<p><strong>End edit</strong></p>
 <ul class="simple">
 <li>Finally we are ready to get data.  I will give one approach &#8211; start by
 making a directory where the data will be saved. For example,</li>
