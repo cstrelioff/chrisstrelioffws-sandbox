@@ -29,6 +29,16 @@ apt using:
 If you have problems with these commands consult the `installation instructions
 at cran`_ for alternatives to the above.
 
+**>>Note [2015, Dec]**
+
+If you installed R using this method before Oct 18th 2015, the key added above
+expired and you are probably getting errors about an *Expired Key* when updates
+are done on your machine-- **see the end of the post for a fix to this issue.**
+If you're installing for the first time, the instructions above will install
+the current (not-expired) key. So, ignore this note.
+
+**<<end Note**
+
 Now that we have the repository setup and the key added we do typical Ubuntu
 install commands to install R:
 
@@ -160,6 +170,43 @@ code and data -- be patient):
 
 That's it, we are ready to go!
 
+2015, Dec 1 -- fixing the expired key
+-------------------------------------
+
+So, you're updating away and you get (something like) the following error:
+
+.. code-block:: bash
+
+    W: GPG error: http://cran.stat.ucla.edu trusty/ Release: The following signatures were invalid: KEYEXPIRED 1445181253 KEYEXPIRED 1445181253 KEYEXPIRED 1445181253
+
+This means you probably followed the R install instructions before 2015-10-18
+and the key used to authenticate the updates has expired.  To verify this, you
+should get similar results:
+
+.. code-block:: bash
+
+    $ apt-key list | grep expired
+    pub   2048R/E084DAB9 2010-10-19 [expired: 2015-10-18]
+
+If we check-- see `Michael Rutter's key`_ -- we see that the key has been
+updated. So, following this `info on updating keys`_ we can fix our issue
+using (be sure to use the key E084DAB9, as shown below, to fix our problem
+with R updates):
+
+.. code-block:: bash
+
+    $ sudo apt-key adv --recv-keys --keyserver keys.gnupg.net E084DAB9
+
+Finally, to do the R updates (as well as others that might be queued)
+immediately we can do:
+
+.. code-block:: bash
+
+    $ sudo apt-get update
+    $ sudo apt-get upgrade
+
+and (hopefully) we should be up-to-date and error-free!
+
 .. _installation instructions at cran: http://cran.r-project.org/bin/linux/ubuntu/README.html
 .. _Coursera's Introduction to Data Science: https://www.coursera.org/course/datasci
 .. _install R on Ubuntu 12.04: http://livesoncoffee.wordpress.com/2012/12/09/installing-r-on-ubuntu-12-04/
@@ -169,6 +216,8 @@ That's it, we are ready to go!
 .. _randomForest: http://cran.r-project.org/web/packages/randomForest/index.html
 .. _e1071: http://cran.r-project.org/web/packages/e1071/index.html 
 .. _ggplot2: http://cran.r-project.org/web/packages/ggplot2/index.html 
+.. _Michael Rutter's key: http://keyserver.ubuntu.com:11371/pks/lookup?op=vindex&fingerprint=on&search=0x51716619E084DAB9
+.. _info on updating keys: http://serverfault.com/a/615362
 
 .. author:: default
 .. categories:: none

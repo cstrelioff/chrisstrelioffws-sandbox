@@ -81,6 +81,13 @@ apt using:</p>
 </div>
 <p>If you have problems with these commands consult the <a class="reference external" href="http://cran.r-project.org/bin/linux/ubuntu/README.html">installation instructions
 at cran</a> for alternatives to the above.</p>
+<p><strong>&gt;&gt;Note [2015, Dec]</strong></p>
+<p>If you installed R using this method before Oct 18th 2015, the key added above
+expired and you are probably getting errors about an <em>Expired Key</em> when updates
+are done on your machine&#8211; <strong>see the end of the post for a fix to this issue.</strong>
+If you&#8217;re installing for the first time, the instructions above will install
+the current (not-expired) key. So, ignore this note.</p>
+<p><strong>&lt;&lt;end Note</strong></p>
 <p>Now that we have the repository setup and the key added we do typical Ubuntu
 install commands to install R:</p>
 <div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>sudo apt-get update
@@ -190,6 +197,34 @@ code and data &#8211; be patient):</p>
 </pre></div>
 </div>
 <p>That&#8217;s it, we are ready to go!</p>
+</div>
+<div class="section" id="dec-1-fixing-the-expired-key">
+<h2>2015, Dec 1 &#8211; fixing the expired key</h2>
+<p>So, you&#8217;re updating away and you get (something like) the following error:</p>
+<div class="highlight-bash"><div class="highlight"><pre>W: GPG error: http://cran.stat.ucla.edu trusty/ Release: The following signatures were invalid: KEYEXPIRED <span class="m">1445181253</span> KEYEXPIRED <span class="m">1445181253</span> KEYEXPIRED 1445181253
+</pre></div>
+</div>
+<p>This means you probably followed the R install instructions before 2015-10-18
+and the key used to authenticate the updates has expired.  To verify this, you
+should get similar results:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>apt-key list <span class="p">|</span> grep expired
+pub   2048R/E084DAB9 2010-10-19 <span class="o">[</span>expired: 2015-10-18<span class="o">]</span>
+</pre></div>
+</div>
+<p>If we check&#8211; see <a class="reference external" href="http://keyserver.ubuntu.com:11371/pks/lookup?op=vindex&amp;fingerprint=on&amp;search=0x51716619E084DAB9">Michael Rutter&#8217;s key</a> &#8211; we see that the key has been
+updated. So, following this <a class="reference external" href="http://serverfault.com/a/615362">info on updating keys</a> we can fix our issue
+using (be sure to use the key E084DAB9, as shown below, to fix our problem
+with R updates):</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>sudo apt-key adv --recv-keys --keyserver keys.gnupg.net E084DAB9
+</pre></div>
+</div>
+<p>Finally, to do the R updates (as well as others that might be queued)
+immediately we can do:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>sudo apt-get update
+<span class="nv">$ </span>sudo apt-get upgrade
+</pre></div>
+</div>
+<p>and (hopefully) we should be up-to-date and error-free!</p>
 </div>
 </div>
 
