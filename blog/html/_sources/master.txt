@@ -4,6 +4,7 @@ Sitemap
 .. toctree::
    :maxdepth: 1
 
+   2015/12/08/arduino_on_ubuntu_14_04_without_the_arduino_ide
    2015/08/20/installing_fiona_on_ubuntu_14_04
    2015/06/25/decision_trees_in_python_again_cross_validation
    2015/06/16/pysoundfile_and_python_3_4_on_ubuntu_14_04
