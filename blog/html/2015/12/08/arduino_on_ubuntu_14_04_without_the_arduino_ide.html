@@ -67,12 +67,32 @@ unfamiliar with the microcontroller.  However, <strong>be warned</strong>, I am 
 use the official Arudino IDE, if you&#8217;d like the official setup checkout the
 <a class="reference external" href="http://playground.arduino.cc/Linux/Ubuntu">official Arduino installation instructions</a>. Instead I&#8217;m going to setup the
 basic requirements for writing and pushing code, including libraries and make
-files, and use Vim as my editor. So, if you&#8217;re interested in this approach,
+files, and use <em>vim</em> as my editor. So, if you&#8217;re interested in this approach,
 follow along.</p>
-<div id="more"> </div><p>I&#8217;ll be using this nice (but outdated) post on jayway&#8211;
+<div id="more"> </div><p>First, I&#8217;ll make a few comments on why I want to use this setup instead of the
+standard Arduino IDE (if these don&#8217;t make sense to you, you should probably not
+use this guide:)</p>
+<ul class="simple">
+<li>This setup will use standard c++ coding instead of the Arduino *.ino
+variant used with Arduino IDE.
+As a result, code will have to be slightly modified from examples you&#8217;ll find
+at the Arduino website or elsewhere on the web. Header files will have to be
+included, loops made explicit, etc. Also, instead of clicking buttons
+on the Arduino IDE to compile code and push to the Arduino you&#8217;ll have to use
+<strong>make</strong> files, as in <span class="code docutils literal"><span class="pre">$</span> <span class="pre">make</span></span> and <span class="code docutils literal"><span class="pre">$</span> <span class="pre">make</span> <span class="pre">upload</span></span>. So, this
+becomes standard c++ coding with an upload step&#8211; this can be good, or bad,
+depending on your experience.</li>
+<li>The Arduino IDE requires Java 6, an old version of Java, be installed for
+use&#8211; I really don&#8217;t want to deal with this requirement and I&#8217;m very happy
+coding with <em>vim</em> and using <em>make</em> at the terminal.</li>
+</ul>
+<div class="section" id="credits">
+<h2>Credits</h2>
+<p>I&#8217;ll be using this nice (but old&#8211;2011!) post on jayway&#8211;
 <a class="reference external" href="http://www.jayway.com/2011/10/08/arduino-on-ubuntu-without-ide/">jaway post on Ubuntu and Arduino</a>&#8211; as my starting point.  Additional
 comments by <em>Havard</em>, at the end of the post, provide some nice updates,
 thanks!</p>
+</div>
 <div class="section" id="install">
 <h2>Install</h2>
 <p>So, let&#8217;s get started with the repository installs that provide libraries and
@@ -81,15 +101,17 @@ make files for Ubuntu (14.04):</p>
 </pre></div>
 </div>
 <p>This will install <em>arduino-mk</em> and <em>arduino-core</em> along with a bunch of
-needed libraries. All of Arduino-specific libraries and documentation is
-located in the following set of directories:</p>
+needed libraries&#8211; say <strong>Y</strong> to all the dependencies. All of Arduino-specific
+libraries and documentation is located in the following set of directories
+once the install is complete:</p>
 <div class="highlight-python"><div class="highlight"><pre>/usr/share/arduino
 /usr/share/doc/arduino-core
 /usr/share/doc/arduino-mk
 </pre></div>
 </div>
 <p>Check these directories out to see what&#8217;s included and be sure to try out the
-examples:</p>
+examples (however, as noted above, we&#8217;ll have to modify the code a bit to work
+with our setup&#8211; I&#8217;ll do an example later):</p>
 <div class="code bash highlight-python"><div class="highlight"><pre>$ ls -l /usr/share/doc/arduino-core/examples/
 total 44
 drwxr-xr-x  8 root root 4096 Dec  8 12:21 01.Basics
@@ -110,16 +132,52 @@ directory of examples that can help getting started.</p>
 </div>
 <div class="section" id="usb-access">
 <h2>USB access</h2>
-<p>One of the issues many users seem to have using Arduino with Ubuntu is getting
+<p><strong>Finding your port&#8211;</strong>
+you&#8217;ve connected the Arduino to your computer via usb and can see
+that the board is recognized using <span class="code docutils literal"><span class="pre">lsusb</span></span>&#8211; an example looks like:</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>$ lsusb
+Bus 001 Device 002: ID 8087:8000 Intel Corp.
+Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+Bus 003 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub
+Bus 002 Device 003: ID 174f:14a1 Syntek
+Bus 002 Device 002: ID 8087:07dc Intel Corp.
+Bus 002 Device 004: ID 2341:0043 Arduino SA Uno R3 (CDC ACM)
+Bus 002 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+</pre></div>
+</div>
+<p>Notice the Arduino Uno on the second-to-last line.  Okay, what port is it on?
+We need to know the port for uploading code to the Arduino. Often the port is
+<span class="code docutils literal"><span class="pre">/dev/ttyACM0</span></span> or something similar&#8211; how do we find this?  The best
+method I&#8217;ve found is using a combination of <span class="code docutils literal"><span class="pre">dmesg</span></span> and <span class="code docutils literal"><span class="pre">grep</span></span>&#8211;
+when the Arduino is connected, try:</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>$ dmesg | grep Arduino -C 3
+[ 6433.058276] usb 2-2: new full-speed USB device number 4 using xhci_hcd
+[ 6433.077095] usb 2-2: New USB device found, idVendor=2341, idProduct=0043
+[ 6433.077104] usb 2-2: New USB device strings: Mfr=1, Product=2, SerialNumber=220
+[ 6433.077110] usb 2-2: Manufacturer: Arduino (www.arduino.cc)
+[ 6433.077114] usb 2-2: SerialNumber: 75439333335351105031
+[ 6433.077340] usb 2-2: ep 0x82 - rounding interval to 1024 microframes, ep desc says 2040 microframes
+[ 6433.106521] cdc_acm 2-2:1.0: ttyACM0: USB ACM device
+</pre></div>
+</div>
+<p>Notice the last line in the output, giving <span class="code docutils literal"><span class="pre">ttyACM0</span></span> as the port in my
+case&#8211; yours might be different. If you just run <span class="code docutils literal"><span class="pre">dmesg</span></span> there is a ton
+of output. This is why I pipe it to <span class="code docutils literal"><span class="pre">grep</span></span>, searching for <em>Arduino</em>. The
+argument <span class="code docutils literal"><span class="pre">-C</span> <span class="pre">3</span></span> provides <em>three lines of context</em>&#8211; you can increase, or
+decrease this number to get more/less info if the port is not immediately
+obvious. Okay, that&#8217;s my approach &#8211; <strong>do you know a better way to do this?</strong>&#8211;
+please leave a comment below!</p>
+<p><strong>dialout group and permissions&#8211;</strong>
+One of the issues many users seem to have using Arduino with Ubuntu is getting
 the usb permissions to work. When the Arduino <strong>is connected</strong>, we can inspect
-the properties of the usb port:</p>
-<div class="code bash highlight-python"><div class="highlight"><pre>$ ls -lah /dev/ttyACM0
-crw-rw---- 1 root dialout 166, 0 Dec  8 13:24 /dev/ttyACM0
+the properties of the usb port (hopefully found above):</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>$ ls -l /dev/ttyACM0
+crw-rw---- 1 root dialout 166, 0 Dec  9 11:39 /dev/ttyACM0
 </pre></div>
 </div>
 <p>Notice that the <em>group</em> is dialout&#8211; we will use that in a second.  However,
 when the Arduino <strong>is not connected</strong>, the same command will give an error:</p>
-<div class="code bash highlight-python"><div class="highlight"><pre>$ ls -lah /dev/ttyACM0
+<div class="code bash highlight-python"><div class="highlight"><pre>$ ls -l /dev/ttyACM0
 ls: cannot access /dev/ttyACM0: No such file or directory
 </pre></div>
 </div>
@@ -128,14 +186,161 @@ group&#8211; be sure to <strong>change username</strong> below:</p>
 <div class="code bash highlight-python"><div class="highlight"><pre>$ sudo adduser username dialout
 </pre></div>
 </div>
-<p><em>Note:</em> this accomplishes the
-same thing as adding the username to the file <cite>/etc/group</cite>, as discussed by
-Havard in his/her comments&#8211; also, you&#8217;ll have to <strong>log off and logon</strong> for the
-group changes to be updated.</p>
+<p>The above command accomplishes the same thing as adding the username to the
+file <span class="code docutils literal"><span class="pre">/etc/group</span></span>, as discussed by Havard in his/her comments.  Also,
+you&#8217;ll have to <strong>logoff and logon</strong> for the group changes to take effect.</p>
+<p>Okay, take a deep breath, everything is setup&#8211; let&#8217;s try implementing the
+blinking light example, as detailed in my motivational post.</p>
 </div>
 <div class="section" id="an-example-blinking-light">
 <h2>An example &#8211; blinking light</h2>
-<p>Document example...</p>
+<p>As an example, let&#8217;s do the standard blinking led example. We can use pin 13 to
+blink an led on the board, so no circuit to build.  In this way we can focus
+on the difference between the Arduino *.ino files and the *.cc files we&#8217;ll be
+using.  The examples directory, mentioned above, has this example in
+<span class="code docutils literal"><span class="pre">/usr/share/arduino/examples/01.Basics/Blink/Blink.ino</span></span> &#8211; replicated
+here (with minor formatting):</p>
+<div class="code cpp highlight-python"><div class="highlight"><pre>//  Blink.ino
+//
+//  Turns on an LED on for one second,
+//  then off for one second, repeatedly.
+//
+//  This example code is in the public domain.
+
+// Pin 13 has an LED connected on most
+// Arduino boards.
+int led = 13;
+
+// the setup routine runs once when you press reset
+void setup() {
+  // initialize the digital pin as an output.
+  pinMode(led, OUTPUT);
+}
+
+// the loop routine runs over and over
+void loop() {
+  // turn the LED on (HIGH is the voltage level)
+  digitalWrite(led, HIGH);
+
+  // wait for a second
+  delay(1000);
+
+  // turn the LED off by making the voltage LOW
+  digitalWrite(led, LOW);
+
+  // wait for a second
+  delay(1000);
+}
+</pre></div>
+</div>
+<p>The above code can be compiled and uploaded to the Arduino as-is <em>if you are
+using the Arduino IDE</em>.  However, we are not. So, we modify the above to make
+it standard c++ and call the file <span class="code docutils literal"><span class="pre">main.cc</span></span>:</p>
+<div class="code cpp highlight-python"><div class="highlight"><pre>//  main.cc -- from Blink.ino
+//
+//  Turns on an LED on for one second,
+//  then off for one second, repeatedly.
+//
+//  This example code is in the public domain.
+
+// include Arduino.h header file
+#include &lt;Arduino.h&gt;
+
+// Pin 13 has an LED connected on most
+// Arduino boards.
+int led = 13;
+
+// the setup routine runs once when you press reset
+void setup() {
+  // initialize the digital pin as an output.
+  pinMode(led, OUTPUT);
+}
+
+// the loop routine runs over and over
+void loop() {
+  // turn the LED on (HIGH is the voltage level)
+  digitalWrite(led, HIGH);
+
+  // wait for a second
+  delay(1000);
+
+  // turn the LED off by making the voltage LOW
+  digitalWrite(led, LOW);
+
+  // wait for a second
+  delay(1000);
+}
+
+// main function
+int main(void) {
+  // call init()
+  init();
+
+  // make explicit call to setup()
+  setup();
+
+  // use a for-loop -- to make loop
+  for (;;) {
+    loop();
+  }
+}
+</pre></div>
+</div>
+<p>If we compare the two versions there are only a few differences:</p>
+<ul class="simple">
+<li><span class="code docutils literal"><span class="pre">main.cc</span></span> adds the <span class="code docutils literal"><span class="pre">#include</span> <span class="pre">&lt;Arduino.h&gt;</span></span> statement</li>
+<li><span class="code docutils literal"><span class="pre">main.cc</span></span> adds a <span class="code docutils literal"><span class="pre">main()</span></span> function that initializes with a
+call to <span class="code docutils literal"><span class="pre">init()</span></span>, explicitly calls the <span class="code docutils literal"><span class="pre">setup()</span></span> function and
+then uses a never-ending <span class="code docutils literal"><span class="pre">for</span></span> loop to repeatedly call the
+<span class="code docutils literal"><span class="pre">loop()</span></span> function.</li>
+</ul>
+<p>All of these changes make a lot of sense to c++ coder. Finaly, a fairly
+minimal <span class="code docutils literal"><span class="pre">makefile</span></span> (literally name the file <span class="code docutils literal"><span class="pre">makefile</span></span>) looks like
+this:</p>
+<div class="highlight-python"><div class="highlight"><pre>ARDMK_DIR = /usr/share/arduino
+ARDUINO_PORT = /dev/ttyACM0
+BOARD_TAG = uno
+include $(ARDMK_DIR)/Arduino.mk
+</pre></div>
+</div>
+<p>Most of the heavy-lifting is done by <span class="code docutils literal"><span class="pre">Arduino.mk</span></span>, as seen by the
+inclusion of this file.  The <span class="code docutils literal"><span class="pre">BOARD_TAG</span> <span class="pre">=</span> <span class="pre">uno</span></span> is not required because
+the default is <span class="code docutils literal"><span class="pre">uno</span></span>&#8211; if you&#8217;re using another board you&#8217;ll have to
+change this.  The <span class="code docutils literal"><span class="pre">ARDUINO_PORT</span></span> <strong>is important</strong>&#8211; this must be correct
+and permissions need to be assigned (as discussed above) for the upload to work.
+So, getting ready to compile and upload, we put these two files in a directory,
+say:</p>
+<div class="highlight-python"><div class="highlight"><pre>blink_pin13/
+├── main.cc
+└── makefile
+</pre></div>
+</div>
+<p>To compile open the terminal and navigate to the directory and use make:</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>$ make
+</pre></div>
+</div>
+<p>Assuming that everything went well the code can be uploaded to the Arduino
+using:</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>$ make upload
+</pre></div>
+</div>
+<p>That&#8217;s it we&#8217;re Arduino-ing!  Try changing the amount of time that the led is
+off/on followed by:</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>$ make clean
+$ make
+$ make upload
+</pre></div>
+</div>
+<p>to see the changes.</p>
+<p>Finally, all of the code for this example is available at my github account&#8212;
+see <a class="reference external" href="https://github.com/cstrelioff/arduino-sketches/tree/master/blink_pin13">blinking lights at github</a>.</p>
+</div>
+<div class="section" id="wrapping-up">
+<h2>Wrapping Up</h2>
+<p>As always&#8211; if you find typos, mistakes, or have suggestions or questions
+please leave a comment below. I&#8217;d also be interested to find out about
+different approaches to setup&#8211; if you have one, leave a comment and/or
+link to your ideas.</p>
 </div>
 </div>
 
