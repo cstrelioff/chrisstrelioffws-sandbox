@@ -10,14 +10,14 @@ interesting, follow along.
 
 To do this, I will use the instructions provided at the MongoDB site:
 `Install MongoDB Community Edition`_ -- **you should check to see if there are
-more recent, or diffent, instuctions** before you proceed! At the time I
+more recent, or different, instructions** before you proceed! At the time I
 installed, the process was to first get the MongoDB public GPG key:
 
 .. code:: bash
 
     $ sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv EA312927
 
-Next, we create a list file that tell Ubuntu where the repositories are located--
+Next, we create a list file that tells Ubuntu where the repositories are located--
 this location depends on the version of Ubuntu being used. For **Ubuntu 14.04**,
 the file is created using:
 
@@ -38,7 +38,7 @@ you should see :code:`mongodb-org-3.2.list`. Finally, the install commands are:
     $ sudo apt-get update
     $ sudo apt-get install -y mongodb-org
 
-The Mongo server can be started, stooped, etc using the typical commands for
+The Mongo server can be started, stopped, etc using the typical commands for
 this type of service.  To start, use (notice the service is called
 :code:`mongod`):
 

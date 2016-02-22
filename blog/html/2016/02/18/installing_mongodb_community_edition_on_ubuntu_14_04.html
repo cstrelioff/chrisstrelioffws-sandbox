@@ -67,12 +67,12 @@ available using the standard <span class="code docutils literal"><span class="pr
 interesting, follow along.</p>
 <div id="more"> </div><p>To do this, I will use the instructions provided at the MongoDB site:
 <a class="reference external" href="https://docs.mongodb.org/manual/tutorial/install-mongodb-on-ubuntu/#install-mongodb-community-edition">Install MongoDB Community Edition</a> &#8211; <strong>you should check to see if there are
-more recent, or diffent, instuctions</strong> before you proceed! At the time I
+more recent, or different, instructions</strong> before you proceed! At the time I
 installed, the process was to first get the MongoDB public GPG key:</p>
 <div class="code bash highlight-python"><div class="highlight"><pre>$ sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv EA312927
 </pre></div>
 </div>
-<p>Next, we create a list file that tell Ubuntu where the repositories are located&#8211;
+<p>Next, we create a list file that tells Ubuntu where the repositories are located&#8211;
 this location depends on the version of Ubuntu being used. For <strong>Ubuntu 14.04</strong>,
 the file is created using:</p>
 <div class="code bash highlight-python"><div class="highlight"><pre>$ echo &quot;deb http://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/3.2 multiverse&quot; | sudo tee /etc/apt/sources.list.d/mongodb-org-3.2.list
@@ -87,7 +87,7 @@ the file is created using:</p>
 $ sudo apt-get install -y mongodb-org
 </pre></div>
 </div>
-<p>The Mongo server can be started, stooped, etc using the typical commands for
+<p>The Mongo server can be started, stopped, etc using the typical commands for
 this type of service.  To start, use (notice the service is called
 <span class="code docutils literal"><span class="pre">mongod</span></span>):</p>
 <div class="code bash highlight-python"><div class="highlight"><pre>$ sudo service mongod start
