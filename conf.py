@@ -36,7 +36,7 @@ disqus_shortname = 'chrissandbox'
 html_favicon = '_static/tinkerer.ico'
 
 # Pick another Tinkerer theme or use your own
-html_theme = "ccsflat2"
+html_theme = "ccs_bs3"
 
 # Theme-specific options, see docs
 html_theme_options = {}
@@ -76,7 +76,7 @@ exclude_patterns = ["drafts/*", "_templates/*", "pweave/*"]
 
 # Add templates to be rendered in sidebar here
 html_sidebars = {
-    "**": ["searchbox.html", "pages.html", "recent.html", "tags.html"]
+    "**": ["recent.html", "tags.html"]
 }
 
 # **************************************************************

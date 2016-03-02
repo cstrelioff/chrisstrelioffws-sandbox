@@ -1,0 +1,18 @@
+{#-
+    testing/tags.html
+    ~~~~~~~~~~~~~~~~~~~~~
+
+    Sidebar list of all tags.
+
+-#}
+
+<div class="widget">
+    <h1>{{ text_tags }}</h1>
+
+    {%- for tag, count in tags|dictsort -%}
+    <a href="{{ pathto('tags/' + taglinks[tag]) }}">
+      {{tag}} [{{count}}]
+    </a>
+    {%- if not loop.last -%}&nbsp;{% endif -%}
+    {%- endfor -%}
+</div>

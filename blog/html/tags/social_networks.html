@@ -18,14 +18,14 @@
         <title>Posts tagged with social networks &mdash; chris&#39; sandbox</title>
             <link rel="stylesheet" href="../_static/normalize.css" type="text/css">
             <link rel="stylesheet" href="../_static/sphinx.css" type="text/css">
+            <link rel="stylesheet" href="../_static/bootstrap.min.css" type="text/css">
             <link rel="stylesheet" href="../_static/main.css" type="text/css">
-            <link rel="stylesheet" href="../_static/flat.css" type="text/css">
             <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
             <link rel="stylesheet" href="../_static/font-awesome.min.css" type="text/css">
-        <link rel="stylesheet" href="../_static/jsdemo.css" type="text/css" /><link rel="stylesheet" href="../_static/style.css" type="text/css" /><link rel="shortcut icon" href="../_static/tinkerer.ico" /><!-- Load modernizr and JQuery -->
-        <script src="../_static/vendor/modernizr-2.6.2.min.js"></script>
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-        <script>window.jQuery || document.write('<script src="../_static/vendor/jquery-1.8.2.min.js"><\/script>')</script>
+            <link rel="stylesheet" href="../_static/custom.css" type="text/css">
+        <link rel="stylesheet" href="../_static/jsdemo.css" type="text/css" /><link rel="shortcut icon" href="../_static/tinkerer.ico" /><script src="../_static/vendor/modernizr-2.6.2.min.js"></script>
+        <script src="../_static/jquery-1.12.0.min.js"></script>
+        <script src="../_static/bootstrap-3.3.6.min.js"></script>
         <script src="../_static/plugins.js"></script>
         <script src="../_static/main.js"></script>
         <link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.html" /><script type="text/javascript">
@@ -36,32 +36,38 @@
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
       };
-    </script><script type="text/javascript" src="../_static/underscore.js"></script><script type="text/javascript" src="../_static/doctools.js"></script><script type="text/javascript" src="../_static/jsdemo.js"></script><script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script type="text/javascript" src="../_static/disqus.js"></script><script type="text/javascript" src="../_static/google_analytics.js"></script><script type="text/javascript" src="../_static/d3.min.js"></script>
-
-    <script type="text/javascript">
-        $(document).ready(function () {
-            // Scroll to content if on small screen
-            if (screen.width < 480)
-            {
-                $(document).scrollTop(document.getElementsByTagName("article")[0].offsetTop - 44);
-            }
-        });
-    </script></head>
+    </script><script type="text/javascript" src="../_static/underscore.js"></script><script type="text/javascript" src="../_static/doctools.js"></script><script type="text/javascript" src="../_static/jsdemo.js"></script><script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script type="text/javascript" src="../_static/disqus.js"></script></head>
     <body role="document">
-        <!--[if lt IE 7]>
-            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
-        <![endif]-->
 
-      <div id="container"><header role="banner">
-    <hgroup>
-      <h1><a href="../index.html">chris&#39; sandbox</a></h1><h2>python, R, Ubuntu, Bayesian methods, machine learning and more...</h2></hgroup>
-  </header>
-<div class="main-container" role="main"><div class="main wrapper body clearfix"><article><div class="archive">
+      <div class="container" id="container"><nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed"
+                    data-toggle="collapse" data-target="#navbar"
+                    aria-expanded="false" aria-controls="navbar">
+              <span class="sr-only">Toggle Navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="../index.html" id="navbar-title">
+              chris&#39; sandbox
+            </a>
+          </div>
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="../search.html">search</a><li>
+              <li><a href="../archive.html">archive</a><li><li><a href="../rss.html" title="Subscribe via RSS">
+            rss &nbsp;<span class="fa fa-lg fa-rss"></span></a></li></ul>
+          </div><!--/.nav-collapse -->
+        </div><!--/.container-fluid -->
+      </nav><!-- no header --><div class="main-container" role="main"><div class="row"><div class="col-sm-8">
+              <div class="archive">
         <h1>Posts tagged with <span class="title_tag">social networks</span></h1><div class="year">
             <h1>2014</h1>
-            <ul><li>
+            <ul class="list-unstyled"><li>
                     <div class="timestamp postmeta">
-            <span>Jul 29</span>
+            <strong>Jul 29</strong>
         </div>
                     <h2><a href="../2014/07/29/install_igraph_for_python_on_ubuntu_14_04.html">Install igraph for Python on Ubuntu 14.04</a></h2>
                     <div class="postmeta">
@@ -78,52 +84,244 @@
             <a href="http://chrisstrelioff.ws/sandbox/2014/07/29/install_igraph_for_python_on_ubuntu_14_04.html#disqus_thread" data-disqus-identifier="2014/07/29/install_igraph_for_python_on_ubuntu_14_04">Leave a comment</a>
         </div></div>
                 </li></ul>
-        </div></div></article><aside class="sidebar"><section><div class="widget" id="searchbox" role="search">
-    <h1><a href="#searchbox">Search</a></h1>
-    <form action="../search.html" method="get">
-        <input type="text" name="q" />
-        <button type="submit"><span class="fa fa-search"></span></button>
-    </form>
-</div></section><section><div class="widget">
-  <h1>Pages</h1>
-  <ul>
-  <li>
-      <a href="../index.html">Home</a>
-    </li>
-  </ul>
-</div>
-</section><section><div class="widget">
+        </div></div></div> <!-- document div --><div class="col-sm-3 col-sm-offset-1 blog-sidebar"><section><div class="widget">
     <h1>Recent Posts</h1>
-    <ul><li>
+    <ul class="list-unstyled"><li class="recent-post">
             <a href="../2016/02/18/installing_mongodb_community_edition_on_ubuntu_14_04.html">Installing MongoDB Community Edition on Ubuntu 14.04</a>
-        </li><li>
+        </li><li class="recent-post">
             <a href="../2015/12/08/arduino_on_ubuntu_14_04_without_the_arduino_ide.html">Arduino on Ubuntu 14.04 without the Arduino IDE</a>
-        </li><li>
+        </li><li class="recent-post">
             <a href="../2015/08/20/installing_fiona_on_ubuntu_14_04.html">Installing Fiona on Ubuntu 14.04</a>
-        </li><li>
+        </li><li class="recent-post">
             <a href="../2015/06/25/decision_trees_in_python_again_cross_validation.html">Decision trees in python again, cross-validation</a>
-        </li><li>
+        </li><li class="recent-post">
             <a href="../2015/06/16/pysoundfile_and_python_3_4_on_ubuntu_14_04.html">PySoundFile and Python 3.4 on Ubuntu 14.04</a>
-        </li><li>
+        </li><li class="recent-post">
             <a href="../2015/06/08/decision_trees_in_python_with_scikit_learn_and_pandas.html">Decision trees in python with scikit-learn and pandas</a>
-        </li><li>
+        </li><li class="recent-post">
             <a href="../2015/05/27/revisiting_the_medical_tests_example_with_python_and_lea.html">Revisiting the medical tests example with Python and Lea</a>
-        </li><li>
+        </li><li class="recent-post">
             <a href="../2015/05/04/probabilistic_programming_with_python_and_lea.html">Probabilistic programming with Python and Lea</a>
-        </li><li>
+        </li><li class="recent-post">
             <a href="../2015/04/30/joins_and_some_views_in_mysql.html">JOINs, and some VIEWs, in MySQL</a>
-        </li><li>
+        </li><li class="recent-post">
             <a href="../2015/04/22/employees_database_for_mysql_setup_and_simple_queries.html">Employees database for MySQL, setup and simple queries</a>
         </li></ul>
 </div>
 </section><section><div class="widget">
-    <h1>Tags</h1><a href="api.html">api</a> (1), <a href="arduino.html">arduino</a> (1), <a href="audio.html">audio</a> (2), <a href="audio_features.html">audio features</a> (1), <a href="bayesian.html">Bayesian</a> (7), <a href="beta.html">Beta</a> (1), <a href="blog_setup.html">blog setup</a> (1), <a href="bootstrap.html">bootstrap</a> (1), <a href="bottleneck.html">bottleneck</a> (1), <a href="c.html">c++</a> (1), <a href="caret.html">caret</a> (1), <a href="cmpy.html">cmpy</a> (1), <a href="conditional_probability.html">conditional probability</a> (6), <a href="coursera.html">coursera</a> (1), <a href="coursera_intro_to_data_science.html">coursera intro to data science</a> (3), <a href="css.html">css</a> (1), <a href="cython.html">cython</a> (1), <a href="d3.html">d3</a> (1), <a href="decision_trees.html">decision trees</a> (2), <a href="diy.html">diy</a> (1), <a href="dsp.html">dsp</a> (1), <a href="e1071.html">e1071</a> (1), <a href="essentia.html">essentia</a> (1), <a href="garmin.html">garmin</a> (1), <a href="geojson.html">geojson</a> (1), <a href="ggplot2.html">ggplot2</a> (1), <a href="gis.html">gis</a> (2), <a href="git.html">git</a> (1), <a href="gnuplot.html">gnuplot</a> (1), <a href="graphs.html">graphs</a> (1), <a href="html5.html">html5</a> (1), <a href="igraph.html">igraph</a> (1), <a href="ipython.html">ipython</a> (1), <a href="javascript.html">javascript</a> (2), <a href="joint_probability.html">joint probability</a> (6), <a href="json.html">json</a> (1), <a href="latex.html">LaTeX</a> (1), <a href="lda.html">LDA</a> (1), <a href="lea.html">Lea</a> (2), <a href="machine_learning.html">machine learning</a> (3), <a href="marginal_probability.html">marginal probability</a> (6), <a href="matplotlib.html">matplotlib</a> (1), <a href="mir.html">mir</a> (1), <a href="mongodb.html">MongoDB</a> (1), <a href="music.html">music</a> (2), <a href="my_python_setup.html">my python setup</a> (5), <a href="my_ubuntu_setup.html">my ubuntu setup</a> (10), <a href="mysql.html">mysql</a> (3), <a href="networks.html">networks</a> (1), <a href="networkx.html">networkx</a> (1), <a href="nodejs.html">nodejs</a> (1), <a href="npm.html">npm</a> (1), <a href="numexpr.html">numexpr</a> (1), <a href="numpy.html">numpy</a> (1), <a href="octave.html">octave</a> (1), <a href="open_oakland.html">Open Oakland</a> (2), <a href="openpyxl.html">openpyxl</a> (1), <a href="pandas.html">pandas</a> (3), <a href="patsy.html">patsy</a> (1), <a href="pip.html">pip</a> (1), <a href="pweave.html">pweave</a> (1), <a href="pygraphviz.html">pygraphviz</a> (1), <a href="pymc.html">pymc</a> (1), <a href="pysoundfile.html">PySoundFile</a> (2), <a href="python.html">python</a> (14), <a href="python.html">Python</a> (1), <a href="python_2_7.html">python 2.7</a> (5), <a href="python_3_4.html">python 3.4</a> (2), <a href="pyyaml.html">pyyaml</a> (1), <a href="qgis.html">qgis</a> (1), <a href="r.html">R</a> (1), <a href="randomforest.html">randomForest</a> (1), <a href="restview.html">restview</a> (1), <a href="resume.html">resume</a> (1), <a href="rpart.html">rpart</a> (1), <a href="running.html">running</a> (1), <a href="scikit_learn.html">scikit-learn</a> (3), <a href="scipy.html">scipy</a> (1), <a href="screen.html">screen</a> (1), <a href="server_setup.html">server setup</a> (1), <a href="shapefile.html">shapefile</a> (1), <a href="#">social networks</a> (1), <a href="socrata.html">Socrata</a> (1), <a href="sound.html">sound</a> (2), <a href="sphinx.html">sphinx</a> (1), <a href="sql.html">sql</a> (4), <a href="sqlite3.html">sqlite3</a> (1), <a href="ssh.html">ssh</a> (1), <a href="ssh_keys.html">ssh keys</a> (1), <a href="statsmodels.html">statsmodels</a> (1), <a href="supervised_learning.html">supervised learning</a> (2), <a href="sympy.html">sympy</a> (1), <a href="tableau.html">tableau</a> (1), <a href="tinkerer.html">tinkerer</a> (1), <a href="topic_models.html">topic models</a> (1), <a href="tree.html">tree</a> (1), <a href="ubuntu_14_04.html">ubuntu 14.04</a> (13), <a href="ubuntu_14_04.html">Ubuntu 14.04</a> (1), <a href="vim.html">vim</a> (1), <a href="virtualbox.html">virtualbox</a> (1), <a href="virtualenv.html">virtualenv</a> (3), <a href="virtualenvwrapper.html">virtualenvwrapper</a> (2), <a href="vps.html">VPS</a> (1), <a href="yaml.html">yaml</a> (1)</div></section></aside></div> <!-- #main --></div> <!-- #main-container -->
+    <h1>Tags</h1><a href="api.html">
+      api [1]
+    </a>&nbsp;<a href="arduino.html">
+      arduino [1]
+    </a>&nbsp;<a href="audio.html">
+      audio [2]
+    </a>&nbsp;<a href="audio_features.html">
+      audio features [1]
+    </a>&nbsp;<a href="bayesian.html">
+      Bayesian [7]
+    </a>&nbsp;<a href="beta.html">
+      Beta [1]
+    </a>&nbsp;<a href="blog_setup.html">
+      blog setup [1]
+    </a>&nbsp;<a href="bootstrap.html">
+      bootstrap [1]
+    </a>&nbsp;<a href="bottleneck.html">
+      bottleneck [1]
+    </a>&nbsp;<a href="c.html">
+      c++ [1]
+    </a>&nbsp;<a href="caret.html">
+      caret [1]
+    </a>&nbsp;<a href="cmpy.html">
+      cmpy [1]
+    </a>&nbsp;<a href="conditional_probability.html">
+      conditional probability [6]
+    </a>&nbsp;<a href="coursera.html">
+      coursera [1]
+    </a>&nbsp;<a href="coursera_intro_to_data_science.html">
+      coursera intro to data science [3]
+    </a>&nbsp;<a href="css.html">
+      css [1]
+    </a>&nbsp;<a href="cython.html">
+      cython [1]
+    </a>&nbsp;<a href="d3.html">
+      d3 [1]
+    </a>&nbsp;<a href="decision_trees.html">
+      decision trees [2]
+    </a>&nbsp;<a href="diy.html">
+      diy [1]
+    </a>&nbsp;<a href="dsp.html">
+      dsp [1]
+    </a>&nbsp;<a href="e1071.html">
+      e1071 [1]
+    </a>&nbsp;<a href="essentia.html">
+      essentia [1]
+    </a>&nbsp;<a href="garmin.html">
+      garmin [1]
+    </a>&nbsp;<a href="geojson.html">
+      geojson [1]
+    </a>&nbsp;<a href="ggplot2.html">
+      ggplot2 [1]
+    </a>&nbsp;<a href="gis.html">
+      gis [2]
+    </a>&nbsp;<a href="git.html">
+      git [1]
+    </a>&nbsp;<a href="gnuplot.html">
+      gnuplot [1]
+    </a>&nbsp;<a href="graphs.html">
+      graphs [1]
+    </a>&nbsp;<a href="html5.html">
+      html5 [1]
+    </a>&nbsp;<a href="igraph.html">
+      igraph [1]
+    </a>&nbsp;<a href="ipython.html">
+      ipython [1]
+    </a>&nbsp;<a href="javascript.html">
+      javascript [2]
+    </a>&nbsp;<a href="joint_probability.html">
+      joint probability [6]
+    </a>&nbsp;<a href="json.html">
+      json [1]
+    </a>&nbsp;<a href="latex.html">
+      LaTeX [1]
+    </a>&nbsp;<a href="lda.html">
+      LDA [1]
+    </a>&nbsp;<a href="lea.html">
+      Lea [2]
+    </a>&nbsp;<a href="machine_learning.html">
+      machine learning [3]
+    </a>&nbsp;<a href="marginal_probability.html">
+      marginal probability [6]
+    </a>&nbsp;<a href="matplotlib.html">
+      matplotlib [1]
+    </a>&nbsp;<a href="mir.html">
+      mir [1]
+    </a>&nbsp;<a href="mongodb.html">
+      MongoDB [1]
+    </a>&nbsp;<a href="music.html">
+      music [2]
+    </a>&nbsp;<a href="my_python_setup.html">
+      my python setup [5]
+    </a>&nbsp;<a href="my_ubuntu_setup.html">
+      my ubuntu setup [10]
+    </a>&nbsp;<a href="mysql.html">
+      mysql [3]
+    </a>&nbsp;<a href="networks.html">
+      networks [1]
+    </a>&nbsp;<a href="networkx.html">
+      networkx [1]
+    </a>&nbsp;<a href="nodejs.html">
+      nodejs [1]
+    </a>&nbsp;<a href="npm.html">
+      npm [1]
+    </a>&nbsp;<a href="numexpr.html">
+      numexpr [1]
+    </a>&nbsp;<a href="numpy.html">
+      numpy [1]
+    </a>&nbsp;<a href="octave.html">
+      octave [1]
+    </a>&nbsp;<a href="open_oakland.html">
+      Open Oakland [2]
+    </a>&nbsp;<a href="openpyxl.html">
+      openpyxl [1]
+    </a>&nbsp;<a href="pandas.html">
+      pandas [3]
+    </a>&nbsp;<a href="patsy.html">
+      patsy [1]
+    </a>&nbsp;<a href="pip.html">
+      pip [1]
+    </a>&nbsp;<a href="pweave.html">
+      pweave [1]
+    </a>&nbsp;<a href="pygraphviz.html">
+      pygraphviz [1]
+    </a>&nbsp;<a href="pymc.html">
+      pymc [1]
+    </a>&nbsp;<a href="pysoundfile.html">
+      PySoundFile [2]
+    </a>&nbsp;<a href="python.html">
+      python [14]
+    </a>&nbsp;<a href="python.html">
+      Python [1]
+    </a>&nbsp;<a href="python_2_7.html">
+      python 2.7 [5]
+    </a>&nbsp;<a href="python_3_4.html">
+      python 3.4 [2]
+    </a>&nbsp;<a href="pyyaml.html">
+      pyyaml [1]
+    </a>&nbsp;<a href="qgis.html">
+      qgis [1]
+    </a>&nbsp;<a href="r.html">
+      R [1]
+    </a>&nbsp;<a href="randomforest.html">
+      randomForest [1]
+    </a>&nbsp;<a href="restview.html">
+      restview [1]
+    </a>&nbsp;<a href="resume.html">
+      resume [1]
+    </a>&nbsp;<a href="rpart.html">
+      rpart [1]
+    </a>&nbsp;<a href="running.html">
+      running [1]
+    </a>&nbsp;<a href="scikit_learn.html">
+      scikit-learn [3]
+    </a>&nbsp;<a href="scipy.html">
+      scipy [1]
+    </a>&nbsp;<a href="screen.html">
+      screen [1]
+    </a>&nbsp;<a href="server_setup.html">
+      server setup [1]
+    </a>&nbsp;<a href="shapefile.html">
+      shapefile [1]
+    </a>&nbsp;<a href="#">
+      social networks [1]
+    </a>&nbsp;<a href="socrata.html">
+      Socrata [1]
+    </a>&nbsp;<a href="sound.html">
+      sound [2]
+    </a>&nbsp;<a href="sphinx.html">
+      sphinx [1]
+    </a>&nbsp;<a href="sql.html">
+      sql [4]
+    </a>&nbsp;<a href="sqlite3.html">
+      sqlite3 [1]
+    </a>&nbsp;<a href="ssh.html">
+      ssh [1]
+    </a>&nbsp;<a href="ssh_keys.html">
+      ssh keys [1]
+    </a>&nbsp;<a href="statsmodels.html">
+      statsmodels [1]
+    </a>&nbsp;<a href="supervised_learning.html">
+      supervised learning [2]
+    </a>&nbsp;<a href="sympy.html">
+      sympy [1]
+    </a>&nbsp;<a href="tableau.html">
+      tableau [1]
+    </a>&nbsp;<a href="tinkerer.html">
+      tinkerer [1]
+    </a>&nbsp;<a href="topic_models.html">
+      topic models [1]
+    </a>&nbsp;<a href="tree.html">
+      tree [1]
+    </a>&nbsp;<a href="ubuntu_14_04.html">
+      ubuntu 14.04 [13]
+    </a>&nbsp;<a href="ubuntu_14_04.html">
+      Ubuntu 14.04 [1]
+    </a>&nbsp;<a href="vim.html">
+      vim [1]
+    </a>&nbsp;<a href="virtualbox.html">
+      virtualbox [1]
+    </a>&nbsp;<a href="virtualenv.html">
+      virtualenv [3]
+    </a>&nbsp;<a href="virtualenvwrapper.html">
+      virtualenvwrapper [2]
+    </a>&nbsp;<a href="vps.html">
+      VPS [1]
+    </a>&nbsp;<a href="yaml.html">
+      yaml [1]
+    </a></div></section></div> <!-- sidebar div --></div> <!-- row --></div> <!-- #main-container -->
 
-        <div class="footer-container" role="contentinfo"><footer class="wrapper">&copy; Copyright 2014-2015 Christopher Strelioff. Powered by <a href="http://www.tinkerer.me/">Tinkerer</a> and <a href="http://sphinx.pocoo.org/">Sphinx</a>.</footer></div> <!-- footer-container -->
+      </div> <!--! end of #container -->
 
-      </div> <!--! end of #container --><script type="text/javascript">    var disqus_shortname = "chrissandbox";    disqus_count();</script><!--[if lt IE 7 ]>
-          <script src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js"></script>
-          <script>window.attachEvent('onload',function(){CFInstall.check({mode:'overlay'})})</script>
-        <![endif]-->
-    </body>
+        <footer class="container-fluid text-center">&copy; Copyright 2014-2015 Christopher Strelioff. <br />
+            Powered by <a href="http://www.tinkerer.me/">Tinkerer</a> and 
+            <a href="http://sphinx.pocoo.org/">Sphinx</a>.</footer><script type="text/javascript">    var disqus_shortname = "chrissandbox";    disqus_count();</script></body>
 </html>
