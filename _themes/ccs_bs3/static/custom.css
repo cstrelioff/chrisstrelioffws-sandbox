@@ -29,8 +29,7 @@ img {
 }
 
 pre {
-  /* pygments -- background color */
-  background-color: #202020;
+  color: #3e3f3a;
 }
 
 pre .nn {
