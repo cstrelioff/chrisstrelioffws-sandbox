@@ -11,6 +11,8 @@
 
 {%- extends "layout.html" -%}
 
+{% set script_files = script_files + ["_static/google_analytics.js"] %}
+
 {%- block body -%}
     {{ timestamp(metadata.formatted_date) }}
     {{ body }}
