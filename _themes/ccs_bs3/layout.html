@@ -81,14 +81,20 @@
     {%- if prev or next -%}
         <nav>
         <ul class="pager">
-            <li>
+            <li class="previous">
             {%- if prev -%}
-                {{ prevchar }}<a href="{{ prev.link|e }}">{{ prev.title }}</a>
+              <a href="{{ prev.link|e }}">
+                <span aria-hidden="true">&larr;</span>
+                {{ prev.title }}
+              </a>
             {%- endif -%}
             </li>
-            <li>
+            <li class="next">
             {%- if next -%}
-                <a href="{{ next.link|e }}">{{ next.title }}</a>{{ nextchar }}
+                <a href="{{ next.link|e }}">
+                  {{ next.title }}
+                  <span aria-hidden="true">&rarr;</span>
+                </a>
             {%- endif -%}
             </li>
         </ul>
@@ -290,7 +296,9 @@
               {% else %}
               <div class="col-sm-offset-1 col-sm-10">
               {%- endif -%}
+
                 {% block body -%} {% endblock -%}
+
               </div> <!-- document div -->
             {%- endblock -%}
             {%- if render_sidebar -%}
