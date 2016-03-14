@@ -1,5 +1,13 @@
+.. _install-node-ver1:
+
 Installing Node.js and npm on Ubuntu 14.04
 ==========================================
+
+**edit: 2016, Mar 14th**
+
+I've written a short and updated installation guide for node in a new post. You
+should consult :ref:`install-node-LTS` if you are looking to do a new install
+of node on Ubuntu 14.04. This post will remain available for reference.
 
 **edit: 2016, Jan 26**
 
@@ -157,3 +165,4 @@ If you know of good (online) learning resources for *javascript*, *node* and/or
 .. categories:: none
 .. tags:: javascript, nodejs, npm, d3
 .. comments::
+
