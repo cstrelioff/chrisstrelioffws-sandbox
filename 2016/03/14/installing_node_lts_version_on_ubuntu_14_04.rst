@@ -1,7 +1,7 @@
 .. _install-node-lts:
 
-Installing nodejs LTS version on Ubuntu 14.04
-=============================================
+Installing node LTS version on Ubuntu 14.04
+===========================================
 
 In a previous post, :ref:`install-node-ver1`, I installed nodejs on Ubuntu 14.04
 using what were current instructions at the time. Those notes are outdated at

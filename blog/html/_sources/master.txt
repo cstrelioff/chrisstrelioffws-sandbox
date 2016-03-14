@@ -4,7 +4,7 @@ Sitemap
 .. toctree::
    :maxdepth: 1
 
-   2016/03/14/installing_nodejs_lts_version_on_ubuntu_14_04
+   2016/03/14/installing_node_lts_version_on_ubuntu_14_04
    2016/02/18/installing_mongodb_community_edition_on_ubuntu_14_04
    2015/12/08/arduino_on_ubuntu_14_04_without_the_arduino_ide
    2015/08/20/installing_fiona_on_ubuntu_14_04
