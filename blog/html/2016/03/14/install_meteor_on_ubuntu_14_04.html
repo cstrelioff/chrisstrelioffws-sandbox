@@ -15,7 +15,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
         <meta name="description" content="Christopher Strelioff's blog">
         <meta name="viewport" content="width=device-width">
-        <title>Python 3.4 on Ubuntu 14.04 using virtual environments &mdash; chris&#39; sandbox</title>
+        <title>Install Meteor on Ubuntu 14.04 &mdash; chris&#39; sandbox</title>
             <link rel="stylesheet" href="../../../_static/normalize.css" type="text/css">
             <link rel="stylesheet" href="../../../_static/sphinx.css" type="text/css">
             <link rel="stylesheet" href="../../../_static/bootstrap.min.css" type="text/css">
@@ -28,7 +28,7 @@
         <script src="../../../_static/bootstrap-3.3.6.min.js"></script>
         <script src="../../../_static/plugins.js"></script>
         <script src="../../../_static/main.js"></script>
-        <link rel="next" title="Medical tests, a first example of Bayesian calculations" href="../11/medical_tests_a_first_example_of_bayesian_calculations.html" /><link rel="prev" title="Inferring probabilities, a second example of Bayesian calculations" href="../../10/24/inferring_probabilities_a_second_example_of_bayesian_calculations.html" /><link rel="alternate" type="application/rss+xml" title="RSS" href="../../../rss.html" /><script type="text/javascript">
+        <link rel="next" title="Installing node LTS version on Ubuntu 14.04" href="installing_node_lts_version_on_ubuntu_14_04.html" /><link rel="alternate" type="application/rss+xml" title="RSS" href="../../../rss.html" /><script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
         VERSION:     '1.5',
@@ -63,100 +63,82 @@
         </div><!--/.container-fluid -->
       </nav><!-- no header --><div class="main-container" role="main"><div class="row"><div class="col-sm-8">
               <div class="timestamp postmeta">
-            <strong>September 16, 2014</strong>
+            <strong>March 14, 2016</strong>
         </div>
-    <div class="section" id="python-3-4-on-ubuntu-14-04-using-virtual-environments">
-<h1>Python 3.4 on Ubuntu 14.04 using virtual environments</h1>
-<p>In a previous post discussing <a class="reference internal" href="../04/virtualenv_and_virtualenvwrapper_on_ubuntu_14_04.html#virtualenvs-on-ubuntu-14-04"><em>virtualenv and virtualenvwrapper on Ubuntu 14.04</em></a> I talked about
-using virtual environments with the default Python version&#8211; this is Python
-2.7.6 for Ubuntu 14.04.  However, both Python 2.7 and 3.4 are available on
-Ubuntu 14.04.  In this post I&#8217;ll go over setting up a virtual environment for
-working with Python 3 code.</p>
-<div id="more"> </div><p>To see that both versions of Python are available without additional
-installations try out the following at the terminal:</p>
-<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>python --version
-Python 2.7.6
-<span class="nv">$ </span>python3 --version
-Python 3.4.0
+    <div class="section" id="install-meteor-on-ubuntu-14-04">
+<h1>Install Meteor on Ubuntu 14.04</h1>
+<p>I&#8217;ve been spending a lot of time working with Meteor recently.  This framework
+uses javascript and MongoDB to create a full stack solution that is pretty
+easy to use. The installation is simple and painless on Ubuntu 14.04, but I&#8217;ll
+document my process here for reference and provide some links for learning more
+about Meteor.</p>
+<div id="more"> </div><p>I will be following the official <a class="reference external" href="https://www.meteor.com/install">Meteor install instructions</a>. It is worth
+noting that Meteor installs its own versions of node and MongoDB &#8211; these will
+not clash with node and MongoDB if you have already them installed. This also
+means that you <em>do not need</em> to install node and MongoDB before Meteor.</p>
+<p>The install procedure is a simple:</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>$ sudo curl https://install.meteor.com/ | sh
 </pre></div>
 </div>
-<p>For installing Python 3 packages, I&#8217;m going to install the <span class="docutils literal"><span class="pre">python3-dev</span></span>
-Ubuntu package using apt-get:</p>
-<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>sudo apt-get update
-<span class="nv">$ </span>sudo apt-get install python3-dev
+<p>Once installed, you can check the version:</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>$ meteor --version
+Meteor 1.2.1
 </pre></div>
 </div>
-<p>This will require that you have sudo privileges, but the 4 packages that are
-installed will be needed to install Python 3 packages using pip.</p>
-<p>Next, I create a virtual environment for Python3 using <a class="reference external" href="https://bitbucket.org/dhellmann/virtualenvwrapper">virtualenvwrapper</a>,
-instead of <a class="reference external" href="https://virtualenv.pypa.io/en/latest/virtualenv.html">virtualenv</a>, because the environment will be put in a standard
-place that I have already setup and specified&#8211; see my post on
-<a class="reference internal" href="../04/virtualenv_and_virtualenvwrapper_on_ubuntu_14_04.html#virtualenvs-on-ubuntu-14-04"><em>virtualenv and virtualenvwrapper on Ubuntu 14.04</em></a> for more information on this aspect. I will
-call the environment <strong>py3</strong> and specify that I want Python 3:</p>
-<div class="highlight-bash"><div class="highlight"><pre>$ mkvirtualenv py3 -p /usr/bin/python3
-Running virtualenv with interpreter /usr/bin/python3
-Using base prefix &#39;/usr&#39;
-New python executable in py3/bin/python3
-Also creating executable in py3/bin/python
-Installing setuptools, pip...done.
-(py3)$
-</pre></div>
-</div>
-<p>First, notice that the prompt now indicates the name of the created virtual
-environment.  Also notice that <span class="docutils literal"><span class="pre">setuptools</span></span> and <span class="docutils literal"><span class="pre">pip</span></span> are automatically
-added. Next let&#8217;s check the python version and use <span class="docutils literal"><span class="pre">pip</span></span> to see what&#8217;s
-installed:</p>
-<div class="highlight-bash"><div class="highlight"><pre>(py3)$ python --version
-Python 3.4.0
-(py3)$
-(py3)$ pip list
-pip (1.5.6)
-setuptools (3.6)
-(py3)$
-</pre></div>
-</div>
-<p>That all looks good.  The Python version is 3.4 and only <span class="docutils literal"><span class="pre">pip</span></span> and
-<span class="docutils literal"><span class="pre">setuptools</span></span> are installed.</p>
-<p>Next, let&#8217;s install some packages in <strong>py3</strong>.  I&#8217;m working on a project that
-uses both <span class="docutils literal"><span class="pre">jinja2</span></span> and <span class="docutils literal"><span class="pre">pyyaml</span></span> and I&#8217;d like to make sure that the package
-works for both Python 2.7 and 3.4. <strong>Note:</strong> if you have not installed the
-<strong>python3-dev</strong> Ubuntu package, as described above, the following will
-<em>not work</em>.  Instead you&#8217;ll get compilation errors. The reason for this is that
-the code downloaded by <span class="docutils literal"><span class="pre">pip</span></span> needs to compile against files provided in
-<strong>python3-dev</strong>.  Assuming, you&#8217;re ready to go, the install is easy:</p>
-<div class="highlight-bash"><div class="highlight"><pre>(py3)$ pip install jinja2
+<p>Wow, it&#8217;s that simple!</p>
+<div class="section" id="getting-started">
+<h2>Getting started</h2>
+<p>The <a class="reference external" href="https://www.meteor.com/tutorials/blaze/creating-an-app">Meteor tutorial</a> available at meteor.com is really quite good.  So, this
+is a nice place to start. To give you a flavor, open the terminal and cd to
+a good location, then create a project:</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>$ meteor create simple-todos
+Created a new Meteor app in &#39;simple-todos&#39;.
 
---- edited out compiling ---
+To run your new app:
+  cd simple-todos
+  meteor
 
-(py3)$ pip install pyyaml
-
---- edited out compiling ---
-
-(py3)$
-(py3)$ pip list
-Jinja2 (2.7.3)
-MarkupSafe (0.23)
-pip (1.5.6)
-PyYAML (3.11)
-setuptools (3.6)
+If you are new to Meteor, try some of the learning resources here:
+  https://www.meteor.com/learn
 </pre></div>
 </div>
-<p>The final <span class="docutils literal"><span class="pre">pip</span> <span class="pre">list</span></span> shows that the desired Python packages, in addition to
-<span class="docutils literal"><span class="pre">MarkupSafe</span></span> that is required by <span class="docutils literal"><span class="pre">jinja2</span></span>, are installed.</p>
-<p>Finally, you can deactivate the environment using:</p>
-<div class="highlight-bash"><div class="highlight"><pre>(py3)$ deactivate
-$
+<p>This create the project, <em>simple-todos</em>, and tells you what to do next:</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>$ cd simple-todos/
+$ meteor
+[[[[[ ~/Sandbox/meteor-play/simple-todos ]]]]]
+
+=&gt; Started proxy.
+=&gt; Started MongoDB.
+=&gt; Started your app.
+
+=&gt; App running at: http://localhost:3000/
 </pre></div>
 </div>
-<p>and you&#8217;re back to the normal environment and using Python 2.7.6.  The next
-time the <strong>py3</strong> environment is needed starting it up is as simple as:</p>
-<div class="highlight-bash"><div class="highlight"><pre>$ workon py3
-(py3)$
-</pre></div>
+<p>If you open your browser at localhost, port 3000, the default meteor
+application will be running and you should be able to click a button to
+increment a counter &#8211; you stop the server by doing a <strong>control-c</strong> back at
+the terminal.</p>
+<p>To learn more, continue on with the <a class="reference external" href="https://www.meteor.com/tutorials/blaze/creating-an-app">Meteor tutorial</a>, it really is quite good
+and covers all, or most of, the basics.  Other resources that I have been using
+and found to be useful are (not free, but not too $$) &#8211;</p>
+<ul class="simple">
+<li><a class="reference external" href="https://book.discovermeteor.com/">Discover Meteor book</a> &#8211; covers similar material to the tutorial, but in
+much more depth. The first few chapter are free but the complete book is
+about (USD) $30 at this time.</li>
+<li><a class="reference external" href="https://www.coursera.org/specializations/website-development">Coursera Meteor specialization</a> &#8211; a series of six courses, from html/css/js
+basics through full Meteor apps. These courses are not free, but Coursera does
+offer financial aid if you need it.  The first courses are basic&#8211; but they
+also might go too fast if you are really an html/css/js beginner. The later
+courses cover lots of material and provide focus if you&#8217;d like more than
+books or blog posts. Strangely, the instructors don&#8217;t monitor the forums and
+there were no teaching-assistants so the students are on their own to figure
+things out &#8211; I wasn&#8217;t too impressed by this aspect of the non-free courses!</li>
+</ul>
+<p>So, that&#8217;s the install and some place to learn more.  If you have other
+resources to share, please leave a note &#8211; I&#8217;d love to check it out.  I also
+plan on writing more about Meteor in the coming weeks and months. So, check
+back!</p>
 </div>
-<p>and you&#8217;re all set.</p>
-<p>As always please leave comments, suggestions and questions...anything that will
-be helpful to me or other readers.</p>
 </div>
 
     <div class="postmeta">
@@ -167,17 +149,17 @@ be helpful to me or other readers.</p>
         <div class="tags">
             <span>
                 Tags:
-                <a href="../../../tags/python.html">python</a>, <a href="../../../tags/python_3_4.html">python 3.4</a>, <a href="../../../tags/virtualenv.html">virtualenv</a>, <a href="../../../tags/virtualenvwrapper.html">virtualenvwrapper</a>, <a href="../../../tags/my_python_setup.html">my python setup</a></span>
+                <a href="../../../tags/javascript.html">javascript</a>, <a href="../../../tags/meteor.html">meteor</a>, <a href="../../../tags/nodejs.html">nodejs</a>, <a href="../../../tags/mongodb.html">MongoDB</a>, <a href="../../../tags/ubuntu_14_04.html">Ubuntu 14.04</a></span>
         </div>
         </div>
-    <div id="disqus_thread"></div><script type="text/javascript">    var disqus_shortname = "chrissandbox";    var disqus_identifier = "2014/09/16/python_3_4_on_ubuntu_14_04_using_virtual_environments";    disqus_thread();</script><noscript>Please enable JavaScript to view the    <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></div> <!-- document div --><div class="col-sm-3 col-sm-offset-1 blog-sidebar"><section><div class="widget">
+    <div id="disqus_thread"></div><script type="text/javascript">    var disqus_shortname = "chrissandbox";    var disqus_identifier = "2016/03/14/install_meteor_on_ubuntu_14_04";    disqus_thread();</script><noscript>Please enable JavaScript to view the    <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></div> <!-- document div --><div class="col-sm-3 col-sm-offset-1 blog-sidebar"><section><div class="widget">
     <h1>Recent Posts</h1>
     <ul class="list-unstyled"><li class="recent-post">
-            <a href="../../../2016/03/14/install_meteor_on_ubuntu_14_04.html">Install Meteor on Ubuntu 14.04</a>
+            <a href="#">Install Meteor on Ubuntu 14.04</a>
         </li><li class="recent-post">
-            <a href="../../../2016/03/14/installing_node_lts_version_on_ubuntu_14_04.html">Installing node LTS version on Ubuntu 14.04</a>
+            <a href="installing_node_lts_version_on_ubuntu_14_04.html">Installing node LTS version on Ubuntu 14.04</a>
         </li><li class="recent-post">
-            <a href="../../../2016/02/18/installing_mongodb_community_edition_on_ubuntu_14_04.html">Installing MongoDB Community Edition on Ubuntu 14.04</a>
+            <a href="../../02/18/installing_mongodb_community_edition_on_ubuntu_14_04.html">Installing MongoDB Community Edition on Ubuntu 14.04</a>
         </li><li class="recent-post">
             <a href="../../../2015/12/08/arduino_on_ubuntu_14_04_without_the_arduino_ide.html">Arduino on Ubuntu 14.04 without the Arduino IDE</a>
         </li><li class="recent-post">

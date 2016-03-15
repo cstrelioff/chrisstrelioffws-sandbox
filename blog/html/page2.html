@@ -63,6 +63,47 @@
         </div><!--/.container-fluid -->
       </nav><!-- no header --><div class="main-container" role="main"><div class="row"><div class="col-sm-8">
               <div class="timestamp postmeta">
+            <strong>April 30, 2015</strong>
+        </div>
+        <div class="section">
+            <h1><a href="2015/04/30/joins_and_some_views_in_mysql.html">JOINs, and some VIEWs, in MySQL</a></h1>
+<p>This is the third in a series of posts on MySQL, starting with
+<a class="reference internal" href="2015/04/21/installing_mysql_on_ubuntu_14_04.html#mysql-setup-on-ubuntu-14-04"><em>Installing MySQL on Ubuntu 14.04</em></a> and <a class="reference internal" href="2015/04/22/employees_database_for_mysql_setup_and_simple_queries.html#mysql-employees-database-setup"><em>Employees database for MySQL, setup and simple queries</em></a>.
+The second post also covered simple queries using SELECT, LIMIT, ORDER BY, etc.
+If you are starting out, you should start with these posts.  In this post I will
+go over multi-table queries, using JOINs (with some help from VIEWs).  As you
+might expect, I’ll use the <a class="reference external" href="http://dev.mysql.com/doc/employee/en/index.html">employees sample database</a>, setup in the previous
+post. If that sounds like fun, or at least useful, follow along.</p>
+<p class="readmorewrapper"><a class="readmore" href="2015/04/30/joins_and_some_views_in_mysql.html#more">Read more...</a></p> 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        </div>
+        <div class="postmeta">
+        <div class="author">
+            <span>Posted by Chris Strelioff</span>
+        </div>
+        
+        <div class="tags">
+            <span>
+                Tags:
+                <a href="tags/mysql.html">mysql</a>, <a href="tags/sql.html">sql</a>, <a href="tags/ubuntu_14_04.html">ubuntu 14.04</a></span>
+        </div>
+        <div class="comments">
+            <a href="http://chrisstrelioff.ws/sandbox/2015/04/30/joins_and_some_views_in_mysql.html#disqus_thread" data-disqus-identifier="2015/04/30/joins_and_some_views_in_mysql">Leave a comment</a>
+        </div></div><div class="separator post_separator"></div><div class="timestamp postmeta">
             <strong>April 22, 2015</strong>
         </div>
         <div class="section">
@@ -484,39 +525,6 @@ installation guide</a>.</p>
         </div>
         <div class="comments">
             <a href="http://chrisstrelioff.ws/sandbox/2014/12/10/installing_essentia_for_audio_feature_extraction.html#disqus_thread" data-disqus-identifier="2014/12/10/installing_essentia_for_audio_feature_extraction">Leave a comment</a>
-        </div></div><div class="separator post_separator"></div><div class="timestamp postmeta">
-            <strong>November 13, 2014</strong>
-        </div>
-        <div class="section">
-            <h1><a href="2014/11/13/getting_started_with_latent_dirichlet_allocation_in_python.html">Getting started with Latent Dirichlet Allocation in Python</a></h1>
-<p>In this post I will go over installation and basic usage of the <a class="reference external" href="https://github.com/ariddell/lda">lda</a> Python
-package for Latent Dirichlet Allocation (LDA).  I <em>will not</em> go through the
-theoretical foundations of the method in this post. However, the main reference
-for this model, <a class="reference external" href="http://jmlr.org/papers/v3/blei03a.html">Blei etal 2003</a> is freely available online and I think
-the main idea of assigning documents in a corpus (set of documents) to latent
-(hidden) topics based on a vector of words is fairly simple to understand and
-the example (from <a class="reference external" href="https://github.com/ariddell/lda">lda</a>) will help to solidify our understanding of the LDA
-model. So, let’s get started...</p>
-<p class="readmorewrapper"><a class="readmore" href="2014/11/13/getting_started_with_latent_dirichlet_allocation_in_python.html#more">Read more...</a></p> 
- 
- 
- 
- 
- 
-
-        </div>
-        <div class="postmeta">
-        <div class="author">
-            <span>Posted by Chris Strelioff</span>
-        </div>
-        
-        <div class="tags">
-            <span>
-                Tags:
-                <a href="tags/lda.html">LDA</a>, <a href="tags/bayesian.html">Bayesian</a>, <a href="tags/topic_models.html">topic models</a>, <a href="tags/python.html">Python</a></span>
-        </div>
-        <div class="comments">
-            <a href="http://chrisstrelioff.ws/sandbox/2014/11/13/getting_started_with_latent_dirichlet_allocation_in_python.html#disqus_thread" data-disqus-identifier="2014/11/13/getting_started_with_latent_dirichlet_allocation_in_python">Leave a comment</a>
         </div></div><div class="archive_link">
       <h2 class="centered">
         <a href="archive.html"> &mdash; Blog Archive &mdash; </a>
@@ -524,6 +532,8 @@ model. So, let’s get started...</p>
     </div></div> <!-- document div --><div class="col-sm-3 col-sm-offset-1 blog-sidebar"><section><div class="widget">
     <h1>Recent Posts</h1>
     <ul class="list-unstyled"><li class="recent-post">
+            <a href="2016/03/14/install_meteor_on_ubuntu_14_04.html">Install Meteor on Ubuntu 14.04</a>
+        </li><li class="recent-post">
             <a href="2016/03/14/installing_node_lts_version_on_ubuntu_14_04.html">Installing node LTS version on Ubuntu 14.04</a>
         </li><li class="recent-post">
             <a href="2016/02/18/installing_mongodb_community_edition_on_ubuntu_14_04.html">Installing MongoDB Community Edition on Ubuntu 14.04</a>
@@ -541,8 +551,6 @@ model. So, let’s get started...</p>
             <a href="2015/05/27/revisiting_the_medical_tests_example_with_python_and_lea.html">Revisiting the medical tests example with Python and Lea</a>
         </li><li class="recent-post">
             <a href="2015/05/04/probabilistic_programming_with_python_and_lea.html">Probabilistic programming with Python and Lea</a>
-        </li><li class="recent-post">
-            <a href="2015/04/30/joins_and_some_views_in_mysql.html">JOINs, and some VIEWs, in MySQL</a>
         </li></ul>
 </div>
 </section><section><div class="widget">
@@ -613,7 +621,7 @@ model. So, let’s get started...</p>
     </a>&nbsp;<a href="tags/ipython.html">
       ipython [1]
     </a>&nbsp;<a href="tags/javascript.html">
-      javascript [3]
+      javascript [4]
     </a>&nbsp;<a href="tags/joint_probability.html">
       joint probability [6]
     </a>&nbsp;<a href="tags/json.html">
@@ -630,10 +638,12 @@ model. So, let’s get started...</p>
       marginal probability [6]
     </a>&nbsp;<a href="tags/matplotlib.html">
       matplotlib [1]
+    </a>&nbsp;<a href="tags/meteor.html">
+      meteor [1]
     </a>&nbsp;<a href="tags/mir.html">
       mir [1]
     </a>&nbsp;<a href="tags/mongodb.html">
-      MongoDB [1]
+      MongoDB [2]
     </a>&nbsp;<a href="tags/music.html">
       music [2]
     </a>&nbsp;<a href="tags/my_python_setup.html">
@@ -647,7 +657,7 @@ model. So, let’s get started...</p>
     </a>&nbsp;<a href="tags/networkx.html">
       networkx [1]
     </a>&nbsp;<a href="tags/nodejs.html">
-      nodejs [2]
+      nodejs [3]
     </a>&nbsp;<a href="tags/npm.html">
       npm [2]
     </a>&nbsp;<a href="tags/numexpr.html">
@@ -741,7 +751,7 @@ model. So, let’s get started...</p>
     </a>&nbsp;<a href="tags/ubuntu_14_04.html">
       ubuntu 14.04 [13]
     </a>&nbsp;<a href="tags/ubuntu_14_04.html">
-      Ubuntu 14.04 [1]
+      Ubuntu 14.04 [2]
     </a>&nbsp;<a href="tags/vim.html">
       vim [1]
     </a>&nbsp;<a href="tags/virtualbox.html">
