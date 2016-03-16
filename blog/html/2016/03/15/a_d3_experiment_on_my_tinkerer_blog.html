@@ -78,42 +78,81 @@ how to do some <a class="reference external" href="https://d3js.org/">d3</a>.</p
 <div id="more"> </div><div class="section" id="raw-javascript">
 <h2>Raw javascript</h2>
 <p>First, let&#8217;s consider a simple javascript example without using <a class="reference external" href="https://d3js.org/">d3</a>. I will
-create a html-div and use javascript to insert some text.  In the rst markup
-the div is created using</p>
+create a html-div as well as two buttons that use javascript to insert some
+text.  In the rst markup the div and buttons are created using</p>
 <div class="highlight-rst"><div class="highlight"><pre><span class="p">..</span> <span class="ow">raw</span><span class="p">::</span> html
 
-    &lt;div id=&quot;js_example&quot;&gt;&lt;/div&gt;
+    &lt;div id=&quot;js_ex&quot;
+         style=&quot;padding: 20px 0px;&quot;&gt;
+
+      &lt;p id=&quot;js_ex_text&quot;
+         style=&quot;padding: 10px; background: #111; color: #eee;&quot;&gt;
+         -- click write and clear ---
+      &lt;/p&gt;
+
+      &lt;button id=&quot;js_ex_write&quot;&gt;
+       write
+      &lt;/button&gt;
+      &lt;button id=&quot;js_ex_clear&quot;&gt;
+       clear
+      &lt;/button&gt;
+    &lt;/div&gt;
 </pre></div>
 </div>
-<p>This does not appear on the html page that is created by <a class="reference external" href="http://tinkerer.me/">Tinkerer</a> or
-<a class="reference external" href="http://www.sphinx-doc.org/en/stable/">Sphinx</a> (to be clear, it&#8217;s not visible), but the html element is in the page
-to be used &#8212; I&#8217;ll put it below:</p>
-<div id="js_example"></div><p>The <span class="code docutils literal"><span class="pre">raw::</span> <span class="pre">html</span></span> tag in the rst markup makes Tinkerer/Sphinx insert the
-html, in this case the div with id <span class="code docutils literal"><span class="pre">js_example</span></span>, into the document. Next,
-we can use javascript to insert some text. Again, this is hidden in the
-resulting html you are looking at, but in the rst document I have:</p>
+<p>The result of the above code is shown below:</p>
+<div id="js_ex"
+     style="padding: 20px 0px;">
+
+  <p id="js_ex_text"
+     style="padding: 10px; background: #111; color: #eee;">
+     -- click write and clear ---
+  </p>
+
+  <button id="js_ex_write">
+   write
+  </button>
+  <button id="js_ex_clear">
+   clear
+  </button>
+</div><p>The <span class="code docutils literal"><span class="pre">raw::</span> <span class="pre">html</span></span> tag in the rst markup makes Tinkerer/Sphinx insert the
+html into the document. Next, we can use javascript to change the text using
+some click events. In the rst document I have:</p>
 <div class="highlight-rst"><div class="highlight"><pre><span class="p">..</span> <span class="ow">raw</span><span class="p">::</span> html
 
     &lt;script type=&#39;text/javascript&#39;&gt;
-      v = document.getElementById(&#39;js_example&#39;);
-      v.innerHTML = &#39;&lt;p class=\&#39;lead\&#39;&gt;&#39; +
-                    &#39;Hello &lt;strong&gt;js&lt;/strong&gt; world!i&#39; +
-                    &#39;&lt;/p&gt;&#39;;
+      p = document.getElementById(&#39;js_ex_text&#39;);
+
+      buttonWrite = document.getElementById(&#39;js_ex_write&#39;);
+      buttonWrite.onclick = function() {
+        p.innerHTML = &#39;Hello &lt;strong&gt;js&lt;/strong&gt; world!&#39;;
+      };
+
+      buttonClear = document.getElementById(&#39;js_ex_clear&#39;);
+      buttonClear.onclick = function() {
+        p.innerHTML = &#39; -- nothing here, click write --&#39;;
+      };
     &lt;/script&gt;
 </pre></div>
 </div>
 <p>Notice that the <span class="code docutils literal"><span class="pre">raw::</span> <span class="pre">html</span></span> tag is used again and the javascript is
 surrounded by the <span class="code docutils literal"><span class="pre">&lt;script&gt;&lt;/script&gt;</span></span> tags &#8211; just as you would have to
-do in normal, inline html markup. You can use the <em>view source</em> on your browser
-to find the <span class="code docutils literal"><span class="pre">js_example</span></span> div and see there is no text, or you&#8217;ll have to
-take my word that the javascript is doing the writing.</p>
-<p>Okay, now let&#8217;s integrate some <a class="reference external" href="https://d3js.org/">d3</a> into <a class="reference external" href="http://tinkerer.me/">Tinkerer</a> post or <a class="reference external" href="http://www.sphinx-doc.org/en/stable/">Sphinx</a>
+do in normal, inline html markup.</p>
+<p>Okay, now let&#8217;s integrate some <a class="reference external" href="https://d3js.org/">d3</a> into a <a class="reference external" href="http://tinkerer.me/">Tinkerer</a> post or <a class="reference external" href="http://www.sphinx-doc.org/en/stable/">Sphinx</a>
 document.</p>
 <script type='text/javascript'>
-  v = document.getElementById('js_example');
-  v.innerHTML = '<p class=\'lead\'>' +
-                'Hello <strong>js</strong> world!' +
-                '</p>';
+  // get p and initialize for first load
+  p = document.getElementById('js_ex_text');
+  p.innerHTML = '-- click write and clear --';
+
+  buttonWrite = document.getElementById('js_ex_write');
+  buttonWrite.onclick = function() {
+    p.innerHTML = 'Hello <strong>js</strong> world!';
+  };
+
+  buttonClear = document.getElementById('js_ex_clear');
+  buttonClear.onclick = function() {
+    p.innerHTML = ' -- nothing here, click write --';
+  };
 </script></div>
 <div class="section" id="using-d3">
 <h2>Using d3</h2>
@@ -152,22 +191,23 @@ classic <a class="reference external" href="https://bost.ocks.org/mike/circles/"
 example we have to setup an html-div that will be used:</p>
 <div class="highlight-rst"><div class="highlight"><pre><span class="p">..</span> <span class="ow">raw</span><span class="p">::</span> html
 
-   &lt;div id=&#39;vizdiv&#39;&gt;&lt;/div&gt;
+   &lt;div id=&#39;vizdiv&#39; style=&quot;padding: 20px 0px;&quot;&gt;
+   &lt;/div&gt;
 </pre></div>
 </div>
 <p>Let&#8217;s put it here:</p>
-<div id='vizdiv'></div><p>Next, we use the following <a class="reference external" href="https://d3js.org/">d3</a> code to draw some circle using data:</p>
-<div class="highlight-JavaScript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">c_data</span> <span class="o">=</span> <span class="p">[{</span><span class="nx">r</span><span class="o">:</span> <span class="mi">5</span><span class="p">,</span> <span class="nx">cy</span><span class="o">:</span> <span class="mi">100</span><span class="p">,</span> <span class="nx">cx</span><span class="o">:</span> <span class="mi">100</span><span class="p">},</span>
-              <span class="p">{</span><span class="nx">r</span><span class="o">:</span> <span class="mi">10</span><span class="p">,</span> <span class="nx">cy</span><span class="o">:</span> <span class="mi">100</span><span class="p">,</span> <span class="nx">cx</span><span class="o">:</span> <span class="mi">200</span><span class="p">},</span>
-              <span class="p">{</span><span class="nx">r</span><span class="o">:</span> <span class="mi">15</span><span class="p">,</span> <span class="nx">cy</span><span class="o">:</span> <span class="mi">100</span><span class="p">,</span> <span class="nx">cx</span><span class="o">:</span> <span class="mi">300</span><span class="p">}];</span>
+<div id='vizdiv' style="padding: 20px 0px;">
+</div><p>Next, we use the following <a class="reference external" href="https://d3js.org/">d3</a> code to draw some circles using data:</p>
+<div class="highlight-JavaScript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">data</span> <span class="o">=</span> <span class="p">[{</span><span class="nx">r</span><span class="o">:</span> <span class="mi">5</span><span class="p">,</span> <span class="nx">cy</span><span class="o">:</span> <span class="mi">100</span><span class="p">,</span> <span class="nx">cx</span><span class="o">:</span> <span class="mi">100</span><span class="p">},</span>
+            <span class="p">{</span><span class="nx">r</span><span class="o">:</span> <span class="mi">10</span><span class="p">,</span> <span class="nx">cy</span><span class="o">:</span> <span class="mi">100</span><span class="p">,</span> <span class="nx">cx</span><span class="o">:</span> <span class="mi">200</span><span class="p">},</span>
+            <span class="p">{</span><span class="nx">r</span><span class="o">:</span> <span class="mi">15</span><span class="p">,</span> <span class="nx">cy</span><span class="o">:</span> <span class="mi">100</span><span class="p">,</span> <span class="nx">cx</span><span class="o">:</span> <span class="mi">300</span><span class="p">}];</span>
 
 <span class="kd">var</span> <span class="nx">root</span> <span class="o">=</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">select</span><span class="p">(</span><span class="s1">&#39;#vizdiv&#39;</span><span class="p">).</span><span class="nx">append</span><span class="p">(</span><span class="s1">&#39;svg&#39;</span><span class="p">)</span>
     <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s1">&#39;width&#39;</span><span class="p">,</span> <span class="mi">400</span><span class="p">)</span>
-    <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s1">&#39;height&#39;</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
-    <span class="p">.</span><span class="nx">style</span><span class="p">(</span><span class="s1">&#39;border&#39;</span><span class="p">,</span> <span class="s1">&#39;1px solid black&#39;</span><span class="p">);</span>
+    <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s1">&#39;height&#39;</span><span class="p">,</span> <span class="mi">200</span><span class="p">);</span>
 
 <span class="nx">root</span><span class="p">.</span><span class="nx">selectAll</span><span class="p">(</span><span class="s1">&#39;circle&#39;</span><span class="p">)</span>
-    <span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="nx">c_data</span><span class="p">).</span><span class="nx">enter</span><span class="p">()</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="nx">data</span><span class="p">).</span><span class="nx">enter</span><span class="p">()</span>
   <span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="s1">&#39;circle&#39;</span><span class="p">)</span>
     <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="p">{</span><span class="k">return</span> <span class="nx">d</span><span class="p">.</span><span class="nx">r</span><span class="p">;})</span>
     <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s1">&#39;cx&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="p">{</span><span class="k">return</span> <span class="nx">d</span><span class="p">.</span><span class="nx">cx</span><span class="p">;})</span>
@@ -179,17 +219,16 @@ example we have to setup an html-div that will be used:</p>
 <div class="highlight-rst"><div class="highlight"><pre><span class="p">..</span> <span class="ow">raw</span><span class="p">::</span> html
 
    &lt;script type=&#39;text/javascript&#39;&gt;
-   var c_data = [{r: 5, cy: 100, cx: 100},
-                 {r: 10, cy: 100, cx: 200},
-                 {r: 15, cy: 100, cx: 300}];
+   var data = [{r: 5, cy: 100, cx: 100},
+               {r: 10, cy: 100, cx: 200},
+               {r: 15, cy: 100, cx: 300}];
 
    var root = d3.select(&#39;#vizdiv&#39;).append(&#39;svg&#39;)
        .attr(&#39;width&#39;, 400)
-       .attr(&#39;height&#39;, 200)
-       .style(&#39;border&#39;, &#39;1px solid black&#39;);
+       .attr(&#39;height&#39;, 200);
 
    root.selectAll(&#39;circle&#39;)
-       .data(c_data).enter()
+       .data(data).enter()
      .append(&#39;circle&#39;)
        .attr(&#39;r&#39;, function(d) {return d.r;})
        .attr(&#39;cx&#39;, function(d) {return d.cx;})
@@ -201,17 +240,16 @@ example we have to setup an html-div that will be used:</p>
 <p>Notice that we have to use <span class="code docutils literal"><span class="pre">raw::</span> <span class="pre">html</span></span> and the <span class="code docutils literal"><span class="pre">&lt;script&gt;&lt;/script&gt;</span></span>
 tags!</p>
 <script type='text/javascript'>
-var c_data = [{r: 5, cy: 100, cx: 100},
-              {r: 10, cy: 100, cx: 200},
-              {r: 15, cy: 100, cx: 300}];
+var data = [{r: 5, cy: 100, cx: 100},
+            {r: 10, cy: 100, cx: 200},
+            {r: 15, cy: 100, cx: 300}];
 
 var root = d3.select('#vizdiv').append('svg')
     .attr('width', 400)
-    .attr('height', 200)
-    .style('border', '1px solid black');
+    .attr('height', 200);
 
 root.selectAll('circle')
-    .data(c_data).enter()
+    .data(data).enter()
   .append('circle')
     .attr('r', function(d) {return d.r;})
     .attr('cx', function(d) {return d.cx;})

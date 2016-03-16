@@ -16,55 +16,94 @@ Raw javascript
 --------------
 
 First, let's consider a simple javascript example without using `d3`_. I will
-create a html-div and use javascript to insert some text.  In the rst markup
-the div is created using
+create a html-div as well as two buttons that use javascript to insert some
+text.  In the rst markup the div and buttons are created using
 
 .. code-block:: rst
 
     .. raw:: html
 
-        <div id="js_example"></div>
+        <div id="js_ex"
+             style="padding: 20px 0px;">
 
-This does not appear on the html page that is created by `Tinkerer`_ or 
-`Sphinx`_ (to be clear, it's not visible), but the html element is in the page
-to be used --- I'll put it below:
+          <p id="js_ex_text"
+             style="padding: 10px; background: #111; color: #eee;">
+             -- click write and clear ---
+          </p>
+
+          <button id="js_ex_write">
+           write
+          </button>
+          <button id="js_ex_clear">
+           clear
+          </button>
+        </div>
+
+The result of the above code is shown below:
 
 .. raw:: html
 
-    <div id="js_example"></div>
+    <div id="js_ex"
+         style="padding: 20px 0px;">
+
+      <p id="js_ex_text"
+         style="padding: 10px; background: #111; color: #eee;">
+         -- click write and clear ---
+      </p>
+
+      <button id="js_ex_write">
+       write
+      </button>
+      <button id="js_ex_clear">
+       clear
+      </button>
+    </div>
 
 The :code:`raw:: html` tag in the rst markup makes Tinkerer/Sphinx insert the
-html, in this case the div with id :code:`js_example`, into the document. Next,
-we can use javascript to insert some text. Again, this is hidden in the
-resulting html you are looking at, but in the rst document I have:
+html into the document. Next, we can use javascript to change the text using
+some click events. In the rst document I have:
 
 .. code-block:: rst
 
     .. raw:: html
     
         <script type='text/javascript'>
-          v = document.getElementById('js_example');
-          v.innerHTML = '<p class=\'lead\'>' +
-                        'Hello <strong>js</strong> world!i' +
-                        '</p>';
+          p = document.getElementById('js_ex_text');
+
+          buttonWrite = document.getElementById('js_ex_write');
+          buttonWrite.onclick = function() {
+            p.innerHTML = 'Hello <strong>js</strong> world!';
+          };
+
+          buttonClear = document.getElementById('js_ex_clear');
+          buttonClear.onclick = function() {
+            p.innerHTML = ' -- nothing here, click write --';
+          };
         </script>
 
 Notice that the :code:`raw:: html` tag is used again and the javascript is
 surrounded by the :code:`<script></script>` tags -- just as you would have to
-do in normal, inline html markup. You can use the *view source* on your browser
-to find the :code:`js_example` div and see there is no text, or you'll have to
-take my word that the javascript is doing the writing.
+do in normal, inline html markup.
 
-Okay, now let's integrate some `d3`_ into `Tinkerer`_ post or `Sphinx`_
+Okay, now let's integrate some `d3`_ into a `Tinkerer`_ post or `Sphinx`_
 document.
 
 .. raw:: html
 
     <script type='text/javascript'>
-      v = document.getElementById('js_example');
-      v.innerHTML = '<p class=\'lead\'>' +
-                    'Hello <strong>js</strong> world!' +
-                    '</p>';
+      // get p and initialize for first load
+      p = document.getElementById('js_ex_text');
+      p.innerHTML = '-- click write and clear --';
+
+      buttonWrite = document.getElementById('js_ex_write');
+      buttonWrite.onclick = function() {
+        p.innerHTML = 'Hello <strong>js</strong> world!';
+      };
+
+      buttonClear = document.getElementById('js_ex_clear');
+      buttonClear.onclick = function() {
+        p.innerHTML = ' -- nothing here, click write --';
+      };
     </script>
 
 
@@ -114,29 +153,30 @@ example we have to setup an html-div that will be used:
 
     .. raw:: html
     
-       <div id='vizdiv'></div>
+       <div id='vizdiv' style="padding: 20px 0px;">
+       </div>
 
 Let's put it here:
 
 .. raw:: html
 
-   <div id='vizdiv'></div>
+    <div id='vizdiv' style="padding: 20px 0px;">
+    </div>
 
-Next, we use the following `d3`_ code to draw some circle using data:
+Next, we use the following `d3`_ code to draw some circles using data:
 
 .. code-block:: JavaScript
 
-   var c_data = [{r: 5, cy: 100, cx: 100},
-                 {r: 10, cy: 100, cx: 200},
-                 {r: 15, cy: 100, cx: 300}];
+   var data = [{r: 5, cy: 100, cx: 100},
+               {r: 10, cy: 100, cx: 200},
+               {r: 15, cy: 100, cx: 300}];
 
    var root = d3.select('#vizdiv').append('svg')
        .attr('width', 400)
-       .attr('height', 200)
-       .style('border', '1px solid black');
+       .attr('height', 200);
    
    root.selectAll('circle')
-       .data(c_data).enter()
+       .data(data).enter()
      .append('circle')
        .attr('r', function(d) {return d.r;})
        .attr('cx', function(d) {return d.cx;})
@@ -150,17 +190,16 @@ In the rst markup for the post, this actually has to look like this:
     .. raw:: html
     
        <script type='text/javascript'>
-       var c_data = [{r: 5, cy: 100, cx: 100},
-                     {r: 10, cy: 100, cx: 200},
-                     {r: 15, cy: 100, cx: 300}];
-    
+       var data = [{r: 5, cy: 100, cx: 100},
+                   {r: 10, cy: 100, cx: 200},
+                   {r: 15, cy: 100, cx: 300}];
+
        var root = d3.select('#vizdiv').append('svg')
            .attr('width', 400)
-           .attr('height', 200)
-           .style('border', '1px solid black');
+           .attr('height', 200);
        
        root.selectAll('circle')
-           .data(c_data).enter()
+           .data(data).enter()
          .append('circle')
            .attr('r', function(d) {return d.r;})
            .attr('cx', function(d) {return d.cx;})
@@ -174,17 +213,16 @@ tags!
 .. raw:: html
 
    <script type='text/javascript'>
-   var c_data = [{r: 5, cy: 100, cx: 100},
-                 {r: 10, cy: 100, cx: 200},
-                 {r: 15, cy: 100, cx: 300}];
+   var data = [{r: 5, cy: 100, cx: 100},
+               {r: 10, cy: 100, cx: 200},
+               {r: 15, cy: 100, cx: 300}];
 
    var root = d3.select('#vizdiv').append('svg')
        .attr('width', 400)
-       .attr('height', 200)
-       .style('border', '1px solid black');
+       .attr('height', 200);
    
    root.selectAll('circle')
-       .data(c_data).enter()
+       .data(data).enter()
      .append('circle')
        .attr('r', function(d) {return d.r;})
        .attr('cx', function(d) {return d.cx;})
