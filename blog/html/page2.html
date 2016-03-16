@@ -36,7 +36,7 @@
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
       };
-    </script><script type="text/javascript" src="_static/underscore.js"></script><script type="text/javascript" src="_static/doctools.js"></script><script type="text/javascript" src="_static/jsdemo.js"></script><script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script type="text/javascript" src="_static/disqus.js"></script><script type="text/javascript" src="_static/google_analytics.js"></script></head>
+    </script><script type="text/javascript" src="_static/underscore.js"></script><script type="text/javascript" src="_static/doctools.js"></script><script type="text/javascript" src="_static/jsdemo.js"></script><script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script type="text/javascript" src="_static/disqus.js"></script><script type="text/javascript" src="_static/google_analytics.js"></script><script type="text/javascript" src="_static/d3.min.js"></script></head>
     <body role="document">
 
       <div class="container" id="container"><nav class="navbar navbar-default navbar-fixed-top">
@@ -63,6 +63,39 @@
         </div><!--/.container-fluid -->
       </nav><!-- no header --><div class="main-container" role="main"><div class="row"><div class="col-sm-8">
               <div class="timestamp postmeta">
+            <strong>May 04, 2015</strong>
+        </div>
+        <div class="section">
+            <span id="prob-prog-lea-1"/><h1><a href="2015/05/04/probabilistic_programming_with_python_and_lea.html">Probabilistic programming with Python and Lea</a></h1>
+<p>In this post I will cover installation of a probabilistic programming package
+for Python called <a class="reference external" href="https://code.google.com/p/lea/">Lea</a> and provide some simple examples of using the package
+to do calculations with joint, conditional and marginal distributions.  These
+examples follow the by-hand calculations done in my previous
+<a class="reference internal" href="2014/08/26/joint_conditional_and_marginal_probabilities.html#joint-conditional-and-marginal-probabilities"><em>Joint, conditional and marginal probabilities</em></a> post.  <a class="reference external" href="https://code.google.com/p/lea/">Lea</a> is
+really interesting to me because it makes probabilistic programming very easy–
+think reasoning with distributions and Bayesian networks instead of MCMC
+calculations.  In this post I’ll start with basic calculations to demonstrate
+usage, but I’ll move onto classic Bayesian and Bayesian network examples in
+future posts. Also, be sure to check out the <a class="reference external" href="https://code.google.com/p/lea/wiki/LeaPyTutorial">Lea Python tutorials</a> for other
+great examples.</p>
+<p class="readmorewrapper"><a class="readmore" href="2015/05/04/probabilistic_programming_with_python_and_lea.html#more">Read more...</a></p> 
+ 
+ 
+
+        </div>
+        <div class="postmeta">
+        <div class="author">
+            <span>Posted by Chris Strelioff</span>
+        </div>
+        
+        <div class="tags">
+            <span>
+                Tags:
+                <a href="tags/python.html">python</a>, <a href="tags/lea.html">Lea</a>, <a href="tags/joint_probability.html">joint probability</a>, <a href="tags/conditional_probability.html">conditional probability</a>, <a href="tags/marginal_probability.html">marginal probability</a>, <a href="tags/bayesian.html">Bayesian</a></span>
+        </div>
+        <div class="comments">
+            <a href="http://chrisstrelioff.ws/sandbox/2015/05/04/probabilistic_programming_with_python_and_lea.html#disqus_thread" data-disqus-identifier="2015/05/04/probabilistic_programming_with_python_and_lea">Leave a comment</a>
+        </div></div><div class="separator post_separator"></div><div class="timestamp postmeta">
             <strong>April 30, 2015</strong>
         </div>
         <div class="section">
@@ -486,45 +519,6 @@ posterior) will now be a <a class="reference external" href="http://en.wikipedia
         </div>
         <div class="comments">
             <a href="http://chrisstrelioff.ws/sandbox/2014/12/11/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations.html#disqus_thread" data-disqus-identifier="2014/12/11/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations">Leave a comment</a>
-        </div></div><div class="separator post_separator"></div><div class="timestamp postmeta">
-            <strong>December 10, 2014</strong>
-        </div>
-        <div class="section">
-            <h1><a href="2014/12/10/installing_essentia_for_audio_feature_extraction.html">Installing essentia for audio feature extraction</a></h1>
-<p>Some notes on the installation of <a class="reference external" href="http://essentia.upf.edu/">essentia</a>, a collection of c++ code with
-Python wrappers for audio feature extraction, following the <a class="reference external" href="http://essentia.upf.edu/documentation/installing.html">essentia
-installation guide</a>.</p>
-<p class="readmorewrapper"><a class="readmore" href="2014/12/10/installing_essentia_for_audio_feature_extraction.html#more">Read more...</a></p> 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
-
-        </div>
-        <div class="postmeta">
-        <div class="author">
-            <span>Posted by Chris Strelioff</span>
-        </div>
-        
-        <div class="tags">
-            <span>
-                Tags:
-                <a href="tags/essentia.html">essentia</a>, <a href="tags/c.html">c++</a>, <a href="tags/python.html">python</a>, <a href="tags/dsp.html">dsp</a>, <a href="tags/audio_features.html">audio features</a>, <a href="tags/mir.html">mir</a></span>
-        </div>
-        <div class="comments">
-            <a href="http://chrisstrelioff.ws/sandbox/2014/12/10/installing_essentia_for_audio_feature_extraction.html#disqus_thread" data-disqus-identifier="2014/12/10/installing_essentia_for_audio_feature_extraction">Leave a comment</a>
         </div></div><div class="archive_link">
       <h2 class="centered">
         <a href="archive.html"> &mdash; Blog Archive &mdash; </a>
@@ -532,6 +526,8 @@ installation guide</a>.</p>
     </div></div> <!-- document div --><div class="col-sm-3 col-sm-offset-1 blog-sidebar"><section><div class="widget">
     <h1>Recent Posts</h1>
     <ul class="list-unstyled"><li class="recent-post">
+            <a href="2016/03/15/a_d3_experiment_on_my_tinkerer_blog.html">A d3 experiment on my Tinkerer blog</a>
+        </li><li class="recent-post">
             <a href="2016/03/14/install_meteor_on_ubuntu_14_04.html">Install Meteor on Ubuntu 14.04</a>
         </li><li class="recent-post">
             <a href="2016/03/14/installing_node_lts_version_on_ubuntu_14_04.html">Installing node LTS version on Ubuntu 14.04</a>
@@ -549,8 +545,6 @@ installation guide</a>.</p>
             <a href="2015/06/08/decision_trees_in_python_with_scikit_learn_and_pandas.html">Decision trees in python with scikit-learn and pandas</a>
         </li><li class="recent-post">
             <a href="2015/05/27/revisiting_the_medical_tests_example_with_python_and_lea.html">Revisiting the medical tests example with Python and Lea</a>
-        </li><li class="recent-post">
-            <a href="2015/05/04/probabilistic_programming_with_python_and_lea.html">Probabilistic programming with Python and Lea</a>
         </li></ul>
 </div>
 </section><section><div class="widget">
@@ -589,7 +583,7 @@ installation guide</a>.</p>
     </a>&nbsp;<a href="tags/cython.html">
       cython [1]
     </a>&nbsp;<a href="tags/d3.html">
-      d3 [1]
+      d3 [2]
     </a>&nbsp;<a href="tags/decision_trees.html">
       decision trees [2]
     </a>&nbsp;<a href="tags/diy.html">
@@ -621,7 +615,7 @@ installation guide</a>.</p>
     </a>&nbsp;<a href="tags/ipython.html">
       ipython [1]
     </a>&nbsp;<a href="tags/javascript.html">
-      javascript [4]
+      javascript [5]
     </a>&nbsp;<a href="tags/joint_probability.html">
       joint probability [6]
     </a>&nbsp;<a href="tags/json.html">
@@ -743,7 +737,7 @@ installation guide</a>.</p>
     </a>&nbsp;<a href="tags/tableau.html">
       tableau [1]
     </a>&nbsp;<a href="tags/tinkerer.html">
-      tinkerer [1]
+      tinkerer [2]
     </a>&nbsp;<a href="tags/topic_models.html">
       topic models [1]
     </a>&nbsp;<a href="tags/tree.html">

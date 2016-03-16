@@ -1,0 +1,479 @@
+<!DOCTYPE html><!--[if lt IE 7]>      <html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:og="http://ogp.me/ns#"
+    xmlns:fb="https://www.facebook.com/2008/fbml" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:og="http://ogp.me/ns#"
+    xmlns:fb="https://www.facebook.com/2008/fbml" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:og="http://ogp.me/ns#"
+    xmlns:fb="https://www.facebook.com/2008/fbml" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:og="http://ogp.me/ns#"
+    xmlns:fb="https://www.facebook.com/2008/fbml" class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" content="Christopher Strelioff's blog">
+        <meta name="viewport" content="width=device-width">
+        <title>A d3 experiment on my Tinkerer blog &mdash; chris&#39; sandbox</title>
+            <link rel="stylesheet" href="../../../_static/normalize.css" type="text/css">
+            <link rel="stylesheet" href="../../../_static/sphinx.css" type="text/css">
+            <link rel="stylesheet" href="../../../_static/bootstrap.min.css" type="text/css">
+            <link rel="stylesheet" href="../../../_static/main.css" type="text/css">
+            <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+            <link rel="stylesheet" href="../../../_static/font-awesome.min.css" type="text/css">
+            <link rel="stylesheet" href="../../../_static/custom.css" type="text/css">
+        <link rel="stylesheet" href="../../../_static/jsdemo.css" type="text/css" /><link rel="shortcut icon" href="../../../_static/tinkerer.ico" /><script src="../../../_static/vendor/modernizr-2.6.2.min.js"></script>
+        <script src="../../../_static/jquery-1.12.0.min.js"></script>
+        <script src="../../../_static/bootstrap-3.3.6.min.js"></script>
+        <script src="../../../_static/plugins.js"></script>
+        <script src="../../../_static/main.js"></script>
+        <link rel="next" title="Install Meteor on Ubuntu 14.04" href="../14/install_meteor_on_ubuntu_14_04.html" /><link rel="alternate" type="application/rss+xml" title="RSS" href="../../../rss.html" /><script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '1.5',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script><script type="text/javascript" src="../../../_static/underscore.js"></script><script type="text/javascript" src="../../../_static/doctools.js"></script><script type="text/javascript" src="../../../_static/jsdemo.js"></script><script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script type="text/javascript" src="../../../_static/disqus.js"></script><script type="text/javascript" src="../../../_static/google_analytics.js"></script><script type="text/javascript" src="../../../_static/d3.min.js"></script></head>
+    <body role="document">
+
+      <div class="container" id="container"><nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed"
+                    data-toggle="collapse" data-target="#navbar"
+                    aria-expanded="false" aria-controls="navbar">
+              <span class="sr-only">Toggle Navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="../../../index.html" id="navbar-title">
+              chris&#39; sandbox
+            </a>
+          </div>
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="../../../search.html">search</a><li>
+              <li><a href="../../../archive.html">archive</a><li><li><a href="../../../rss.html" title="Subscribe via RSS">
+            rss &nbsp;<span class="fa fa-lg fa-rss"></span></a></li></ul>
+          </div><!--/.nav-collapse -->
+        </div><!--/.container-fluid -->
+      </nav><!-- no header --><div class="main-container" role="main"><div class="row"><div class="col-sm-8">
+              <div class="timestamp postmeta">
+            <strong>March 15, 2016</strong>
+        </div>
+    <div class="section" id="a-d3-experiment-on-my-tinkerer-blog">
+<h1>A d3 experiment on my Tinkerer blog</h1>
+<p>This blog uses <a class="reference external" href="http://tinkerer.me/">Tinkerer</a>, which is based on the <a class="reference external" href="http://www.sphinx-doc.org/en/stable/">Sphinx</a> documentation
+framework, to create static html pages from rest (rst) markup. If you are
+familiar with the Python world you&#8217;ve probably created documentation using
+Sphinx, or at the very least, you have read documenation created in Sphinx.
+Because the setup is Python-focused, it is not straightforward to write posts
+that employ javascript libraries like <a class="reference external" href="https://d3js.org/">d3</a>. This post describes my method for
+doing javascript examples in <a class="reference external" href="http://tinkerer.me/">Tinkerer</a> blog posts or Sphinx docs, as well as
+how to do some <a class="reference external" href="https://d3js.org/">d3</a>.</p>
+<div id="more"> </div><div class="section" id="raw-javascript">
+<h2>Raw javascript</h2>
+<p>First, let&#8217;s consider a simple javascript example without using <a class="reference external" href="https://d3js.org/">d3</a>. I will
+create a html-div and use javascript to insert some text.  In the rst markup
+the div is created using</p>
+<div class="highlight-rst"><div class="highlight"><pre><span class="p">..</span> <span class="ow">raw</span><span class="p">::</span> html
+
+    &lt;div id=&quot;js_example&quot;&gt;&lt;/div&gt;
+</pre></div>
+</div>
+<p>This does not appear on the html page that is created by <a class="reference external" href="http://tinkerer.me/">Tinkerer</a> or
+<a class="reference external" href="http://www.sphinx-doc.org/en/stable/">Sphinx</a> (to be clear, it&#8217;s not visible), but the html element is in the page
+to be used &#8212; I&#8217;ll put it below:</p>
+<div id="js_example"></div><p>The <span class="code docutils literal"><span class="pre">raw::</span> <span class="pre">html</span></span> tag in the rst markup makes Tinkerer/Sphinx insert the
+html, in this case the div with id <span class="code docutils literal"><span class="pre">js_example</span></span>, into the document. Next,
+we can use javascript to insert some text. Again, this is hidden in the
+resulting html you are looking at, but in the rst document I have:</p>
+<div class="highlight-rst"><div class="highlight"><pre><span class="p">..</span> <span class="ow">raw</span><span class="p">::</span> html
+
+    &lt;script type=&#39;text/javascript&#39;&gt;
+      v = document.getElementById(&#39;js_example&#39;);
+      v.innerHTML = &#39;&lt;p class=\&#39;lead\&#39;&gt;&#39; +
+                    &#39;Hello &lt;strong&gt;js&lt;/strong&gt; world!i&#39; +
+                    &#39;&lt;/p&gt;&#39;;
+    &lt;/script&gt;
+</pre></div>
+</div>
+<p>Notice that the <span class="code docutils literal"><span class="pre">raw::</span> <span class="pre">html</span></span> tag is used again and the javascript is
+surrounded by the <span class="code docutils literal"><span class="pre">&lt;script&gt;&lt;/script&gt;</span></span> tags &#8211; just as you would have to
+do in normal, inline html markup. You can use the <em>view source</em> on your browser
+to find the <span class="code docutils literal"><span class="pre">js_example</span></span> div and see there is no text, or you&#8217;ll have to
+take my word that the javascript is doing the writing.</p>
+<p>Okay, now let&#8217;s integrate some <a class="reference external" href="https://d3js.org/">d3</a> into <a class="reference external" href="http://tinkerer.me/">Tinkerer</a> post or <a class="reference external" href="http://www.sphinx-doc.org/en/stable/">Sphinx</a>
+document.</p>
+<script type='text/javascript'>
+  v = document.getElementById('js_example');
+  v.innerHTML = '<p class=\'lead\'>' +
+                'Hello <strong>js</strong> world!' +
+                '</p>';
+</script></div>
+<div class="section" id="using-d3">
+<h2>Using d3</h2>
+<p><strong>Linking d3</strong></p>
+<p>The first step in using <a class="reference external" href="https://d3js.org/">d3</a> is to link to the library. I&#8217;m sure there are a
+variety of ways to do this, but I chose to link to the library on all pages &#8211;
+if you have a slick way to link per page/post please leave a comment below!</p>
+<p>Given this choice, there is a standard way to add external javascript files &#8211;
+see <a class="reference external" href="http://tinkerer.me/doc/more_tinkering.html#enabling-google-analytics">Enabling Google Analytics</a> for an example of adding google analytics js
+to a <a class="reference external" href="http://tinkerer.me/">Tinkerer</a> blog. In my case, I added <em>d3.min.js</em> (you can get the latest
+version here: <a class="reference external" href="https://github.com/mbostock/d3">d3 at github</a>) to the <em>_static</em> directory and modified the
+<em>page.html</em> template in my theme &#8211; see <a class="reference external" href="https://github.com/cstrelioff/chrisstrelioffws-sandbox/blob/master/_themes/ccs_bs3/page.html">page template example</a> &#8211; to include
+the following:</p>
+<div class="highlight-python"><div class="highlight"><pre>{%- extends &quot;layout.html&quot; -%}
+
+{% set script_files = script_files + [&quot;_static/d3.min.js&quot;] %}
+</pre></div>
+</div>
+<p>This tells <a class="reference external" href="http://tinkerer.me/">Tinkerer</a> to link the <em>d3.min.js</em> in the header of each page. If
+you are not working with a theme, create a directory <em>_templates</em> and add the
+file <em>page.html</em> with the above content. The organization would be something
+like this (where <em>conf.py</em> and <em>master.rst</em> are in the base directory of the
+blog):</p>
+<div class="highlight-python"><div class="highlight"><pre>├── conf.py
+├── master.rst
+├── _static
+│   ├── d3.min.js
+├── _templates
+    ├── page.html
+</pre></div>
+</div>
+<p>That should work as well.</p>
+<p><strong>Using d3 in a post</strong></p>
+<p>Finally, here&#8217;s a little experiment using <a class="reference external" href="https://d3js.org/">d3</a> that is motivated by the
+classic <a class="reference external" href="https://bost.ocks.org/mike/circles/">three little circles</a> example.  As with the simple javascript
+example we have to setup an html-div that will be used:</p>
+<div class="highlight-rst"><div class="highlight"><pre><span class="p">..</span> <span class="ow">raw</span><span class="p">::</span> html
+
+   &lt;div id=&#39;vizdiv&#39;&gt;&lt;/div&gt;
+</pre></div>
+</div>
+<p>Let&#8217;s put it here:</p>
+<div id='vizdiv'></div><p>Next, we use the following <a class="reference external" href="https://d3js.org/">d3</a> code to draw some circle using data:</p>
+<div class="highlight-JavaScript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">c_data</span> <span class="o">=</span> <span class="p">[{</span><span class="nx">r</span><span class="o">:</span> <span class="mi">5</span><span class="p">,</span> <span class="nx">cy</span><span class="o">:</span> <span class="mi">100</span><span class="p">,</span> <span class="nx">cx</span><span class="o">:</span> <span class="mi">100</span><span class="p">},</span>
+              <span class="p">{</span><span class="nx">r</span><span class="o">:</span> <span class="mi">10</span><span class="p">,</span> <span class="nx">cy</span><span class="o">:</span> <span class="mi">100</span><span class="p">,</span> <span class="nx">cx</span><span class="o">:</span> <span class="mi">200</span><span class="p">},</span>
+              <span class="p">{</span><span class="nx">r</span><span class="o">:</span> <span class="mi">15</span><span class="p">,</span> <span class="nx">cy</span><span class="o">:</span> <span class="mi">100</span><span class="p">,</span> <span class="nx">cx</span><span class="o">:</span> <span class="mi">300</span><span class="p">}];</span>
+
+<span class="kd">var</span> <span class="nx">root</span> <span class="o">=</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">select</span><span class="p">(</span><span class="s1">&#39;#vizdiv&#39;</span><span class="p">).</span><span class="nx">append</span><span class="p">(</span><span class="s1">&#39;svg&#39;</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s1">&#39;width&#39;</span><span class="p">,</span> <span class="mi">400</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s1">&#39;height&#39;</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">style</span><span class="p">(</span><span class="s1">&#39;border&#39;</span><span class="p">,</span> <span class="s1">&#39;1px solid black&#39;</span><span class="p">);</span>
+
+<span class="nx">root</span><span class="p">.</span><span class="nx">selectAll</span><span class="p">(</span><span class="s1">&#39;circle&#39;</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="nx">c_data</span><span class="p">).</span><span class="nx">enter</span><span class="p">()</span>
+  <span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="s1">&#39;circle&#39;</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="p">{</span><span class="k">return</span> <span class="nx">d</span><span class="p">.</span><span class="nx">r</span><span class="p">;})</span>
+    <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s1">&#39;cx&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="p">{</span><span class="k">return</span> <span class="nx">d</span><span class="p">.</span><span class="nx">cx</span><span class="p">;})</span>
+    <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s1">&#39;cy&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="p">{</span><span class="k">return</span> <span class="nx">d</span><span class="p">.</span><span class="nx">cy</span><span class="p">;})</span>
+    <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s1">&#39;fill&#39;</span><span class="p">,</span> <span class="s1">&#39;steelblue&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>In the rst markup for the post, this actually has to look like this:</p>
+<div class="highlight-rst"><div class="highlight"><pre><span class="p">..</span> <span class="ow">raw</span><span class="p">::</span> html
+
+   &lt;script type=&#39;text/javascript&#39;&gt;
+   var c_data = [{r: 5, cy: 100, cx: 100},
+                 {r: 10, cy: 100, cx: 200},
+                 {r: 15, cy: 100, cx: 300}];
+
+   var root = d3.select(&#39;#vizdiv&#39;).append(&#39;svg&#39;)
+       .attr(&#39;width&#39;, 400)
+       .attr(&#39;height&#39;, 200)
+       .style(&#39;border&#39;, &#39;1px solid black&#39;);
+
+   root.selectAll(&#39;circle&#39;)
+       .data(c_data).enter()
+     .append(&#39;circle&#39;)
+       .attr(&#39;r&#39;, function(d) {return d.r;})
+       .attr(&#39;cx&#39;, function(d) {return d.cx;})
+       .attr(&#39;cy&#39;, function(d) {return d.cy;})
+       .attr(&#39;fill&#39;, &#39;steelblue&#39;);
+   &lt;/script&gt;
+</pre></div>
+</div>
+<p>Notice that we have to use <span class="code docutils literal"><span class="pre">raw::</span> <span class="pre">html</span></span> and the <span class="code docutils literal"><span class="pre">&lt;script&gt;&lt;/script&gt;</span></span>
+tags!</p>
+<script type='text/javascript'>
+var c_data = [{r: 5, cy: 100, cx: 100},
+              {r: 10, cy: 100, cx: 200},
+              {r: 15, cy: 100, cx: 300}];
+
+var root = d3.select('#vizdiv').append('svg')
+    .attr('width', 400)
+    .attr('height', 200)
+    .style('border', '1px solid black');
+
+root.selectAll('circle')
+    .data(c_data).enter()
+  .append('circle')
+    .attr('r', function(d) {return d.r;})
+    .attr('cx', function(d) {return d.cx;})
+    .attr('cy', function(d) {return d.cy;})
+    .attr('fill', 'steelblue');
+</script><p>Okay, that&#8217;s it.  Now I&#8217;m setup to talk more about javascript and d3 on the
+blog &#8211; very nice! If you have other ways to do this, again, please leave
+a comment!</p>
+</div>
+</div>
+
+    <div class="postmeta">
+        <div class="author">
+            <span>Posted by Chris Strelioff</span>
+        </div>
+        
+        <div class="tags">
+            <span>
+                Tags:
+                <a href="../../../tags/tinkerer.html">tinkerer</a>, <a href="../../../tags/javascript.html">javascript</a>, <a href="../../../tags/d3.html">d3</a></span>
+        </div>
+        </div>
+    <div id="disqus_thread"></div><script type="text/javascript">    var disqus_shortname = "chrissandbox";    var disqus_identifier = "2016/03/15/a_d3_experiment_on_my_tinkerer_blog";    disqus_thread();</script><noscript>Please enable JavaScript to view the    <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></div> <!-- document div --><div class="col-sm-3 col-sm-offset-1 blog-sidebar"><section><div class="widget">
+    <h1>Recent Posts</h1>
+    <ul class="list-unstyled"><li class="recent-post">
+            <a href="#">A d3 experiment on my Tinkerer blog</a>
+        </li><li class="recent-post">
+            <a href="../14/install_meteor_on_ubuntu_14_04.html">Install Meteor on Ubuntu 14.04</a>
+        </li><li class="recent-post">
+            <a href="../14/installing_node_lts_version_on_ubuntu_14_04.html">Installing node LTS version on Ubuntu 14.04</a>
+        </li><li class="recent-post">
+            <a href="../../02/18/installing_mongodb_community_edition_on_ubuntu_14_04.html">Installing MongoDB Community Edition on Ubuntu 14.04</a>
+        </li><li class="recent-post">
+            <a href="../../../2015/12/08/arduino_on_ubuntu_14_04_without_the_arduino_ide.html">Arduino on Ubuntu 14.04 without the Arduino IDE</a>
+        </li><li class="recent-post">
+            <a href="../../../2015/08/20/installing_fiona_on_ubuntu_14_04.html">Installing Fiona on Ubuntu 14.04</a>
+        </li><li class="recent-post">
+            <a href="../../../2015/06/25/decision_trees_in_python_again_cross_validation.html">Decision trees in python again, cross-validation</a>
+        </li><li class="recent-post">
+            <a href="../../../2015/06/16/pysoundfile_and_python_3_4_on_ubuntu_14_04.html">PySoundFile and Python 3.4 on Ubuntu 14.04</a>
+        </li><li class="recent-post">
+            <a href="../../../2015/06/08/decision_trees_in_python_with_scikit_learn_and_pandas.html">Decision trees in python with scikit-learn and pandas</a>
+        </li><li class="recent-post">
+            <a href="../../../2015/05/27/revisiting_the_medical_tests_example_with_python_and_lea.html">Revisiting the medical tests example with Python and Lea</a>
+        </li></ul>
+</div>
+</section><section><div class="widget">
+    <h1>Tags</h1><a href="../../../tags/api.html">
+      api [1]
+    </a>&nbsp;<a href="../../../tags/arduino.html">
+      arduino [1]
+    </a>&nbsp;<a href="../../../tags/audio.html">
+      audio [2]
+    </a>&nbsp;<a href="../../../tags/audio_features.html">
+      audio features [1]
+    </a>&nbsp;<a href="../../../tags/bayesian.html">
+      Bayesian [7]
+    </a>&nbsp;<a href="../../../tags/beta.html">
+      Beta [1]
+    </a>&nbsp;<a href="../../../tags/blog_setup.html">
+      blog setup [1]
+    </a>&nbsp;<a href="../../../tags/bootstrap.html">
+      bootstrap [1]
+    </a>&nbsp;<a href="../../../tags/bottleneck.html">
+      bottleneck [1]
+    </a>&nbsp;<a href="../../../tags/c.html">
+      c++ [1]
+    </a>&nbsp;<a href="../../../tags/caret.html">
+      caret [1]
+    </a>&nbsp;<a href="../../../tags/cmpy.html">
+      cmpy [1]
+    </a>&nbsp;<a href="../../../tags/conditional_probability.html">
+      conditional probability [6]
+    </a>&nbsp;<a href="../../../tags/coursera.html">
+      coursera [1]
+    </a>&nbsp;<a href="../../../tags/coursera_intro_to_data_science.html">
+      coursera intro to data science [3]
+    </a>&nbsp;<a href="../../../tags/css.html">
+      css [1]
+    </a>&nbsp;<a href="../../../tags/cython.html">
+      cython [1]
+    </a>&nbsp;<a href="../../../tags/d3.html">
+      d3 [2]
+    </a>&nbsp;<a href="../../../tags/decision_trees.html">
+      decision trees [2]
+    </a>&nbsp;<a href="../../../tags/diy.html">
+      diy [1]
+    </a>&nbsp;<a href="../../../tags/dsp.html">
+      dsp [1]
+    </a>&nbsp;<a href="../../../tags/e1071.html">
+      e1071 [1]
+    </a>&nbsp;<a href="../../../tags/essentia.html">
+      essentia [1]
+    </a>&nbsp;<a href="../../../tags/garmin.html">
+      garmin [1]
+    </a>&nbsp;<a href="../../../tags/geojson.html">
+      geojson [1]
+    </a>&nbsp;<a href="../../../tags/ggplot2.html">
+      ggplot2 [1]
+    </a>&nbsp;<a href="../../../tags/gis.html">
+      gis [2]
+    </a>&nbsp;<a href="../../../tags/git.html">
+      git [1]
+    </a>&nbsp;<a href="../../../tags/gnuplot.html">
+      gnuplot [1]
+    </a>&nbsp;<a href="../../../tags/graphs.html">
+      graphs [1]
+    </a>&nbsp;<a href="../../../tags/html5.html">
+      html5 [1]
+    </a>&nbsp;<a href="../../../tags/igraph.html">
+      igraph [1]
+    </a>&nbsp;<a href="../../../tags/ipython.html">
+      ipython [1]
+    </a>&nbsp;<a href="../../../tags/javascript.html">
+      javascript [5]
+    </a>&nbsp;<a href="../../../tags/joint_probability.html">
+      joint probability [6]
+    </a>&nbsp;<a href="../../../tags/json.html">
+      json [1]
+    </a>&nbsp;<a href="../../../tags/latex.html">
+      LaTeX [1]
+    </a>&nbsp;<a href="../../../tags/lda.html">
+      LDA [1]
+    </a>&nbsp;<a href="../../../tags/lea.html">
+      Lea [2]
+    </a>&nbsp;<a href="../../../tags/machine_learning.html">
+      machine learning [3]
+    </a>&nbsp;<a href="../../../tags/marginal_probability.html">
+      marginal probability [6]
+    </a>&nbsp;<a href="../../../tags/matplotlib.html">
+      matplotlib [1]
+    </a>&nbsp;<a href="../../../tags/meteor.html">
+      meteor [1]
+    </a>&nbsp;<a href="../../../tags/mir.html">
+      mir [1]
+    </a>&nbsp;<a href="../../../tags/mongodb.html">
+      MongoDB [2]
+    </a>&nbsp;<a href="../../../tags/music.html">
+      music [2]
+    </a>&nbsp;<a href="../../../tags/my_python_setup.html">
+      my python setup [5]
+    </a>&nbsp;<a href="../../../tags/my_ubuntu_setup.html">
+      my ubuntu setup [10]
+    </a>&nbsp;<a href="../../../tags/mysql.html">
+      mysql [3]
+    </a>&nbsp;<a href="../../../tags/networks.html">
+      networks [1]
+    </a>&nbsp;<a href="../../../tags/networkx.html">
+      networkx [1]
+    </a>&nbsp;<a href="../../../tags/nodejs.html">
+      nodejs [3]
+    </a>&nbsp;<a href="../../../tags/npm.html">
+      npm [2]
+    </a>&nbsp;<a href="../../../tags/numexpr.html">
+      numexpr [1]
+    </a>&nbsp;<a href="../../../tags/numpy.html">
+      numpy [1]
+    </a>&nbsp;<a href="../../../tags/octave.html">
+      octave [1]
+    </a>&nbsp;<a href="../../../tags/open_oakland.html">
+      Open Oakland [2]
+    </a>&nbsp;<a href="../../../tags/openpyxl.html">
+      openpyxl [1]
+    </a>&nbsp;<a href="../../../tags/pandas.html">
+      pandas [3]
+    </a>&nbsp;<a href="../../../tags/patsy.html">
+      patsy [1]
+    </a>&nbsp;<a href="../../../tags/pip.html">
+      pip [1]
+    </a>&nbsp;<a href="../../../tags/pweave.html">
+      pweave [1]
+    </a>&nbsp;<a href="../../../tags/pygraphviz.html">
+      pygraphviz [1]
+    </a>&nbsp;<a href="../../../tags/pymc.html">
+      pymc [1]
+    </a>&nbsp;<a href="../../../tags/pysoundfile.html">
+      PySoundFile [2]
+    </a>&nbsp;<a href="../../../tags/python.html">
+      python [14]
+    </a>&nbsp;<a href="../../../tags/python.html">
+      Python [1]
+    </a>&nbsp;<a href="../../../tags/python_2_7.html">
+      python 2.7 [5]
+    </a>&nbsp;<a href="../../../tags/python_3_4.html">
+      python 3.4 [2]
+    </a>&nbsp;<a href="../../../tags/pyyaml.html">
+      pyyaml [1]
+    </a>&nbsp;<a href="../../../tags/qgis.html">
+      qgis [1]
+    </a>&nbsp;<a href="../../../tags/r.html">
+      R [1]
+    </a>&nbsp;<a href="../../../tags/randomforest.html">
+      randomForest [1]
+    </a>&nbsp;<a href="../../../tags/restview.html">
+      restview [1]
+    </a>&nbsp;<a href="../../../tags/resume.html">
+      resume [1]
+    </a>&nbsp;<a href="../../../tags/rpart.html">
+      rpart [1]
+    </a>&nbsp;<a href="../../../tags/running.html">
+      running [1]
+    </a>&nbsp;<a href="../../../tags/scikit_learn.html">
+      scikit-learn [3]
+    </a>&nbsp;<a href="../../../tags/scipy.html">
+      scipy [1]
+    </a>&nbsp;<a href="../../../tags/screen.html">
+      screen [1]
+    </a>&nbsp;<a href="../../../tags/server_setup.html">
+      server setup [1]
+    </a>&nbsp;<a href="../../../tags/shapefile.html">
+      shapefile [1]
+    </a>&nbsp;<a href="../../../tags/social_networks.html">
+      social networks [1]
+    </a>&nbsp;<a href="../../../tags/socrata.html">
+      Socrata [1]
+    </a>&nbsp;<a href="../../../tags/sound.html">
+      sound [2]
+    </a>&nbsp;<a href="../../../tags/sphinx.html">
+      sphinx [1]
+    </a>&nbsp;<a href="../../../tags/sql.html">
+      sql [4]
+    </a>&nbsp;<a href="../../../tags/sqlite3.html">
+      sqlite3 [1]
+    </a>&nbsp;<a href="../../../tags/ssh.html">
+      ssh [1]
+    </a>&nbsp;<a href="../../../tags/ssh_keys.html">
+      ssh keys [1]
+    </a>&nbsp;<a href="../../../tags/statsmodels.html">
+      statsmodels [1]
+    </a>&nbsp;<a href="../../../tags/supervised_learning.html">
+      supervised learning [2]
+    </a>&nbsp;<a href="../../../tags/sympy.html">
+      sympy [1]
+    </a>&nbsp;<a href="../../../tags/tableau.html">
+      tableau [1]
+    </a>&nbsp;<a href="../../../tags/tinkerer.html">
+      tinkerer [2]
+    </a>&nbsp;<a href="../../../tags/topic_models.html">
+      topic models [1]
+    </a>&nbsp;<a href="../../../tags/tree.html">
+      tree [1]
+    </a>&nbsp;<a href="../../../tags/ubuntu_14_04.html">
+      ubuntu 14.04 [13]
+    </a>&nbsp;<a href="../../../tags/ubuntu_14_04.html">
+      Ubuntu 14.04 [2]
+    </a>&nbsp;<a href="../../../tags/vim.html">
+      vim [1]
+    </a>&nbsp;<a href="../../../tags/virtualbox.html">
+      virtualbox [1]
+    </a>&nbsp;<a href="../../../tags/virtualenv.html">
+      virtualenv [3]
+    </a>&nbsp;<a href="../../../tags/virtualenvwrapper.html">
+      virtualenvwrapper [2]
+    </a>&nbsp;<a href="../../../tags/vps.html">
+      VPS [1]
+    </a>&nbsp;<a href="../../../tags/yaml.html">
+      yaml [1]
+    </a></div></section></div> <!-- sidebar div --></div> <!-- row --></div> <!-- #main-container -->
+
+      </div> <!--! end of #container -->
+
+        <footer class="container-fluid text-center">&copy; Copyright 2014 -- 2016 Christopher Strelioff. <br />
+            Powered by <a href="http://www.tinkerer.me/">Tinkerer</a> and 
+            <a href="http://sphinx.pocoo.org/">Sphinx</a>.</footer></body>
+</html>

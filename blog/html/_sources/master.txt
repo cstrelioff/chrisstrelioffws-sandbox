@@ -4,6 +4,7 @@ Sitemap
 .. toctree::
    :maxdepth: 1
 
+   2016/03/15/a_d3_experiment_on_my_tinkerer_blog
    2016/03/14/install_meteor_on_ubuntu_14_04
    2016/03/14/installing_node_lts_version_on_ubuntu_14_04
    2016/02/18/installing_mongodb_community_edition_on_ubuntu_14_04
