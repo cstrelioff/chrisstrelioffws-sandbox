@@ -57,7 +57,14 @@ data from the watch:
 
 .. code-block:: bash
 
-    $ garmin-save-runs
+    $ garmin_save_runs
+
+**Edit: 2016, Mar 28**
+
+Above corrected to "garmin_save_runs", from "garmin-save-runs", thanks to
+comment below.
+
+**End edit**
 
 If there is data on the watch, this command should produce ``*.gmn`` files that
 use the directory structure: ``Year/Month/*.gmn``.
