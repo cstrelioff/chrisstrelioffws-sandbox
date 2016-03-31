@@ -4,6 +4,7 @@ Sitemap
 .. toctree::
    :maxdepth: 1
 
+   2016/03/30/upgrading_to_meteor_1_3_on_ubuntu_14_04
    2016/03/15/a_d3_experiment_on_my_tinkerer_blog.rst
    2016/03/14/install_meteor_on_ubuntu_14_04
    2016/03/14/installing_node_lts_version_on_ubuntu_14_04

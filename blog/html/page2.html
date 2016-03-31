@@ -63,6 +63,69 @@
         </div><!--/.container-fluid -->
       </nav><!-- no header --><div class="main-container" role="main"><div class="row"><div class="col-sm-8">
               <div class="timestamp postmeta">
+            <strong>May 27, 2015</strong>
+        </div>
+        <div class="section">
+            <span id="bayes-medical-tests-with-python"/><h1><a href="2015/05/27/revisiting_the_medical_tests_example_with_python_and_lea.html">Revisiting the medical tests example with Python and Lea</a></h1>
+<p>In this post I will use Python, and the probabilistic programming package
+<a class="reference external" href="https://code.google.com/p/lea/">Lea</a>, to re-analyze an example of Bayes’ Theorem covered in an earlier post:
+<a class="reference internal" href="2014/09/11/medical_tests_a_first_example_of_bayesian_calculations.html#bayes-medical-tests"><em>Medical tests, a first example of Bayesian calculations</em></a>.  The focus will be on translating the by-hand
+calculations into Python code.  If you are unfamiliar with the example, it
+would be helpful to read the previous post before continuing. Assuming you are
+set, let’s get started!</p>
+<p class="readmorewrapper"><a class="readmore" href="2015/05/27/revisiting_the_medical_tests_example_with_python_and_lea.html#more">Read more...</a></p> 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        </div>
+        <div class="postmeta">
+        <div class="author">
+            <span>Posted by Chris Strelioff</span>
+        </div>
+        
+        <div class="tags">
+            <span>
+                Tags:
+                <a href="tags/python.html">python</a>, <a href="tags/lea.html">Lea</a>, <a href="tags/joint_probability.html">joint probability</a>, <a href="tags/conditional_probability.html">conditional probability</a>, <a href="tags/marginal_probability.html">marginal probability</a>, <a href="tags/bayesian.html">Bayesian</a></span>
+        </div>
+        <div class="comments">
+            <a href="http://chrisstrelioff.ws/sandbox/2015/05/27/revisiting_the_medical_tests_example_with_python_and_lea.html#disqus_thread" data-disqus-identifier="2015/05/27/revisiting_the_medical_tests_example_with_python_and_lea">Leave a comment</a>
+        </div></div><div class="separator post_separator"></div><div class="timestamp postmeta">
             <strong>May 04, 2015</strong>
         </div>
         <div class="section">
@@ -482,43 +545,6 @@ questions are welcome and much appreciated.</p>
         </div>
         <div class="comments">
             <a href="http://chrisstrelioff.ws/sandbox/2015/01/12/installing_node_js_and_npm_on_ubuntu_14_04.html#disqus_thread" data-disqus-identifier="2015/01/12/installing_node_js_and_npm_on_ubuntu_14_04">Leave a comment</a>
-        </div></div><div class="separator post_separator"></div><div class="timestamp postmeta">
-            <strong>December 11, 2014</strong>
-        </div>
-        <div class="section">
-            <span id="bayes-third-example"/><h1><a href="2014/12/11/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations.html">Inferring probabilities with a Beta prior, a third example of Bayesian calculations</a></h1>
-<p>In this post I will expand on a previous example of inferring probabilities
-from a data series: <a class="reference internal" href="2014/10/24/inferring_probabilities_a_second_example_of_bayesian_calculations.html#bayes-second-example"><em>Inferring probabilities, a second example of Bayesian calculations</em></a>. In particular, instead of
-considering a discrete set of candidate probabilities, I’ll consider all
-(continuous) values between <span class="math">\(0\)</span> and <span class="math">\(1\)</span>.  This means our prior (and
-posterior) will now be a <a class="reference external" href="http://en.wikipedia.org/wiki/Probability_density_function">probability density function</a> (pdf) instead of a
-<a class="reference external" href="http://en.wikipedia.org/wiki/Probability_mass_function">probability mass function</a> (pmf).  More specifically, I’ll use the
-<a class="reference external" href="http://en.wikipedia.org/wiki/Beta_distribution">Beta Distribution</a> for this example.</p>
-<p class="readmorewrapper"><a class="readmore" href="2014/12/11/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations.html#more">Read more...</a></p> 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
-
-        </div>
-        <div class="postmeta">
-        <div class="author">
-            <span>Posted by Chris Strelioff</span>
-        </div>
-        
-        <div class="tags">
-            <span>
-                Tags:
-                <a href="tags/joint_probability.html">joint probability</a>, <a href="tags/conditional_probability.html">conditional probability</a>, <a href="tags/marginal_probability.html">marginal probability</a>, <a href="tags/bayesian.html">Bayesian</a>, <a href="tags/python.html">python</a>, <a href="tags/beta.html">Beta</a></span>
-        </div>
-        <div class="comments">
-            <a href="http://chrisstrelioff.ws/sandbox/2014/12/11/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations.html#disqus_thread" data-disqus-identifier="2014/12/11/inferring_probabilities_with_a_beta_prior_a_third_example_of_bayesian_calculations">Leave a comment</a>
         </div></div><div class="archive_link">
       <h2 class="centered">
         <a href="archive.html"> &mdash; Blog Archive &mdash; </a>
@@ -526,6 +552,8 @@ posterior) will now be a <a class="reference external" href="http://en.wikipedia
     </div></div> <!-- document div --><div class="col-sm-3 col-sm-offset-1 blog-sidebar"><section><div class="widget">
     <h1>Recent Posts</h1>
     <ul class="list-unstyled"><li class="recent-post">
+            <a href="2016/03/30/upgrading_to_meteor_1_3_on_ubuntu_14_04.html">Upgrading to Meteor 1.3 on Ubuntu 14.04</a>
+        </li><li class="recent-post">
             <a href="2016/03/15/a_d3_experiment_on_my_tinkerer_blog.html">A d3 experiment on my Tinkerer blog</a>
         </li><li class="recent-post">
             <a href="2016/03/14/install_meteor_on_ubuntu_14_04.html">Install Meteor on Ubuntu 14.04</a>
@@ -543,8 +571,6 @@ posterior) will now be a <a class="reference external" href="http://en.wikipedia
             <a href="2015/06/16/pysoundfile_and_python_3_4_on_ubuntu_14_04.html">PySoundFile and Python 3.4 on Ubuntu 14.04</a>
         </li><li class="recent-post">
             <a href="2015/06/08/decision_trees_in_python_with_scikit_learn_and_pandas.html">Decision trees in python with scikit-learn and pandas</a>
-        </li><li class="recent-post">
-            <a href="2015/05/27/revisiting_the_medical_tests_example_with_python_and_lea.html">Revisiting the medical tests example with Python and Lea</a>
         </li></ul>
 </div>
 </section><section><div class="widget">
@@ -615,7 +641,7 @@ posterior) will now be a <a class="reference external" href="http://en.wikipedia
     </a>&nbsp;<a href="tags/ipython.html">
       ipython [1]
     </a>&nbsp;<a href="tags/javascript.html">
-      javascript [5]
+      javascript [6]
     </a>&nbsp;<a href="tags/joint_probability.html">
       joint probability [6]
     </a>&nbsp;<a href="tags/json.html">
@@ -633,11 +659,11 @@ posterior) will now be a <a class="reference external" href="http://en.wikipedia
     </a>&nbsp;<a href="tags/matplotlib.html">
       matplotlib [1]
     </a>&nbsp;<a href="tags/meteor.html">
-      meteor [1]
+      meteor [2]
     </a>&nbsp;<a href="tags/mir.html">
       mir [1]
     </a>&nbsp;<a href="tags/mongodb.html">
-      MongoDB [2]
+      MongoDB [3]
     </a>&nbsp;<a href="tags/music.html">
       music [2]
     </a>&nbsp;<a href="tags/my_python_setup.html">
@@ -651,7 +677,7 @@ posterior) will now be a <a class="reference external" href="http://en.wikipedia
     </a>&nbsp;<a href="tags/networkx.html">
       networkx [1]
     </a>&nbsp;<a href="tags/nodejs.html">
-      nodejs [3]
+      nodejs [4]
     </a>&nbsp;<a href="tags/npm.html">
       npm [2]
     </a>&nbsp;<a href="tags/numexpr.html">
@@ -745,7 +771,7 @@ posterior) will now be a <a class="reference external" href="http://en.wikipedia
     </a>&nbsp;<a href="tags/ubuntu_14_04.html">
       ubuntu 14.04 [13]
     </a>&nbsp;<a href="tags/ubuntu_14_04.html">
-      Ubuntu 14.04 [2]
+      Ubuntu 14.04 [3]
     </a>&nbsp;<a href="tags/vim.html">
       vim [1]
     </a>&nbsp;<a href="tags/virtualbox.html">

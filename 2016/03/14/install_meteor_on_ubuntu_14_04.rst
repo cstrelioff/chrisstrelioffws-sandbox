@@ -1,5 +1,13 @@
+.. _install-meteor:
+
 Install Meteor on Ubuntu 14.04
 ==============================
+
+**[Edit] 2016, Mar 30**
+Verision 1.3 of Meteor is now out -- this installation instructions are still
+pretty much the same as below. If you'd like the updated install/upgrade
+instructions checkout :ref:`upgrade-meteor-1.3`.
+**[/Edit]**
 
 I've been spending a lot of time working with Meteor recently.  This framework
 uses javascript and MongoDB to create a full stack solution that is pretty
@@ -83,7 +91,7 @@ and found to be useful are (not free, but not too $$) --
   there were no teaching-assistants so the students are on their own to figure
   things out -- I wasn't too impressed by this aspect of the non-free courses!
 
-So, that's the install and some place to learn more.  If you have other
+So, that's the install and some places to learn more.  If you have other
 resources to share, please leave a note -- I'd love to check it out.  I also
 plan on writing more about Meteor in the coming weeks and months. So, check
 back!
