@@ -1,0 +1,18 @@
+session_name: sandbox-blog
+windows:
+  - window_name: vim
+    focus: true
+    window_index: 1
+    layout: main-vertical
+    panes:
+      - shell_command:
+        - vim
+        - :! pwd
+        focus: true
+      - shell_command:
+        - pwd
+        - git status
+      - shell_command:
+        - pwd
+        - firefox blog/html/index.html &
+
