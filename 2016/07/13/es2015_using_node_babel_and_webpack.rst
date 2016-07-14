@@ -1,20 +1,22 @@
 ES2015 using Node, Babel and Webpack
 ====================================
 
-In this post I will cover setting up a project that uses ES2015-- modern
-JavaScript-- that will still work in current web browsers.  The trick here
-is to use `Babel`_ to *transpile* ES2015 code into something that can run
-on current browsers. Why do this? Well, ES2015 is the future of JavaScript and
-I'd like to start using it now. All readers should be aware that **I 
-am not an expert**. This post is as much for me to remember what I did as to
-inform others on what to do. So, let me know if you have better ways to do this
-or you find mistakes in the comments at the end of the post.
+In this post I will cover setting up a project that uses ES2015/ES6 -- modern
+JavaScript-- that will still work in current web browsers that need ES5. The
+trick is to use `Babel`_ to *transpile* ES2015/ES6 code to ES5, which can run
+on current browsers. Why do this? Well, ES2015/ES6 is the future of JavaScript
+and I'd like to start using it now.
 
 .. more::
 
-First, to get started, I would like to credit posts by others that really
-helped me sort this out (however, all mistakes are my own). You should check
-there out as well:
+All readers should be aware that **I am not an expert**. This post is as much
+for me to remember what I did as to inform others on what to do. So, let me
+know if you have better ways to do this or you find mistakes -- please use the
+comments at the end of the post.
+
+To get started, I would like to credit posts by others that really
+helped me sort this out (however, all mistakes are my own). I will be using a
+combination or re-mix of the following two sources:
 
 1. `Understanding JavaScript Modules: Bundling & Transpiling (by Mark Brown)
    <https://www.sitepoint.com/javascript-modules-bundling-transpiling/>`_
@@ -29,8 +31,8 @@ there out as well:
    particular, the first part is a very nice reference for the topics covered
    here.
 
-**I will be re-tooling the examples from both of the above authors**. So,
-credit to both authors for original source material as well as motivation!!!
+So, credit to both authors, Mark Brown and Stuart Memo, for the original source
+material as well as motivation!!!
 
 node and npm
 ------------
@@ -49,7 +51,7 @@ reference, at the time of this post I have:
 
 You should have similar versions, or higher. Next, I will install two packages
 globally: `webpack`_ and `live-server`_. On Ubuntu global installs require
-admin permissions, so we install with:
+admin permissions, so I install with:
 
 .. code:: bash
 
@@ -68,8 +70,10 @@ Next, I will create a project directory and use npm to create a
     $ cd es2015-project/
     $ npm init -y
 
-Using the **-y** tag forces the defaults to be used for :code:`package.json`
-and the resulting file looks something like this::
+Using the -y tag forces the defaults to be used for :code:`package.json`
+and the resulting file looks something like this:
+
+.. code-block:: JavaScript
 
    {
      "name": "es2015-project",
@@ -84,7 +88,9 @@ and the resulting file looks something like this::
      "license": "ISC"
    }
 
-Next, we create some directories and files that we will fill with code:
+Of course, you can init without this flag or change the file after-the-fact to
+your liking. Next, I create some directories and files that will be filled
+with code:
 
 .. code:: bash
 
@@ -118,7 +124,7 @@ see link above):
     <html lang="en">
     <head>
       <meta charset="utf-8">
-      <title>es2015-proejct</title>
+      <title>es2015-project</title>
     </head>
     <body>
       <h1>Results</h1>
@@ -130,29 +136,39 @@ see link above):
     </body>
     </html>
 
-As you can see, I left the two results empty. These will filled in with our
-fantastic code.  At this point I/you/we can fire-up live-server, installed
-above, to watch the index.html file we have created:
+As you can see, I left the two results empty-- look for the *em* tags in the
+above html. These will be filled with our fantastic ES2015/ES6 code below.
+
+At this point I fire up live-server, installed above, to watch the index.html
+file, as well as others, that I have created:
 
 .. code-block:: bash
 
     $ live-server
 
-To be clear, make sure you are in the root project directory where the
-index.html file is located.
+This will load index.html in the default system browser-- of course, the
+answers will not be there because the code still needs to be written.
+
+**Note:**
+To be clear, make sure that you are in the root project directory, where the
+index.html file is located, when running the live-server command. It also
+helpful to start this up in another terminal so that the messages from
+live-server can be monitored/ignored and it is easy to shutdown (use
+control-c). Or, if you use tmux or screen, open a new window and start
+live-server there.
 
 lib.js and main.js
 ------------------
 
-Next, we create out es2015 code in two files so that we can illustrate import
-and export of code. First, let's create lib.js (again, original code from
-Mark Brown's post; link above):
+Next, we create out ES2015/ES6 code in two files so that we can illustrate
+import and export. First, let's create lib.js (again, motivated by original
+code from Mark Brown's post; link above):
 
 .. code-block:: JavaScript
 
     // lib.js
-    const timesTwo = (number)=> number * 2
-    const addFive = (number)=> number + 5
+    const timesTwo = (number) => number * 2
+    const addFive = (number) => number + 5
     
     export {
       timesTwo,
@@ -165,14 +181,14 @@ contents of index.html
 .. code-block:: JavaScript
 
     // main.js
-    const lib = require('./lib.js');
+    import {timesTwo, addFive} from './lib.js'
     
-    // set html text using lib.js functions
-    document.getElementById('result1').textContent = lib.timesTwo(2);
-    document.getElementById('result2').textContent = lib.addFive(2);
+    document.getElementById('result1').textContent = timesTwo(2)
+    document.getElementById('result2').textContent = addFive(2)
 
-Okay, that's our ES2105 code, but we still need to use `Babel`_ to transpile the
-code and webpack to create the bundle.js file.
+
+Okay, that's our ES2015/ES6 code, but we still need to use `Babel`_ to
+transpile the code and `webpack`_ to create the bundle.js file.
 
 babel and webpack
 -----------------
@@ -183,12 +199,13 @@ Next, we install the babel requirements for our project using npm:
 
     $ npm install --save-dev babel-loader babel-core babel-preset-es2015  
 
-The **--save-dev** will install the babel-related code locally, saving the
-requirements in the packages.json file.
+The install command, with the --save-dev switch, will install the babel-related
+code locally (in the node_modules directory) and save the requirements in the
+packages.json file.
 
-Next, we create a file called webpack.config.js that will use babel to
+Next, we create a file called webpack.config.js that will use `Babel`_ to
 transpile and create the bundle.js that is imported and used by index.html.
-The contents are:
+The contents are (this is motivated by Stuart Memo's post; links above):
 
 .. code-block:: JavaScript
 
@@ -213,33 +230,23 @@ The contents are:
     };
 
 Finally, we call webpack in the project root directory -- the same level as the
-webpack.config.js file. To be concrete, the project looks like this:
+webpack.config.js, index.html and package.json files. To be concrete, the
+project looks like this:
 
 .. code:: bash
 
-    $ tree . -L 2
-    .
-    ├── index.html
     ├── node_modules
     │   ├── babel-core
     │   ├── babel-loader
     │   ├── babel-preset-es2015
     │   └── webpack
-    ├── package.json
     ├── src
     │   ├── lib.js
     │   └── main.js
+    ├── index.html
+    ├── package.json
     └── webpack.config.js
     
-    6 directories, 5 files
-
-and if you do an **ls** in the root directory is should look like this:
-
-.. code:: bash
-
-    $ ls
-    index.html  node_modules/  package.json  src/  webpack.config.js
-
 Hopefully that's clear.  Now run webpack, the result should look something like
 this:
 
@@ -253,23 +260,59 @@ this:
     bundle.js  1.99 kB       0  [emitted]  main
         + 2 hidden modules
 
-Finally, for this first part, we can use **live-server** to load index.html in
-the default browswer:
-
-.. code:: bash
-
-    $ live-server
-
-The page should show with the calculated values inserted into the page.
+Now the index.html page, being displayed and updated with live-server, should
+show calculated values inserted into the page-- very cool.
 
 adding npm packages
 -------------------
 
-As a final example, again motivated by Mark Brown's post, let's import
-**lodash** and use that do the sum in **addFive**. The point of this is mainly
-to show that it is possible -- also very useful!
+As a final example, again motivated by Mark Brown's post, I will install
+lodash and use that do the sum in addFive. The point of this is mainly
+to show that it is possible -- also very useful! It turns out that I have
+already done most of the hard work. First, I install lodash:
+
+.. code:: bash
+
+    $ npm install --save-dev lodash
+
+Next, I modify the lib.js to use lodash, as below:
+
+.. code-block:: JavaScript
+
+    // lib.js
+    import sum from 'lodash/sum'
+    
+    const timesTwo = (number) => number * 2
+    const addFive = (number) => sum([number, 5])
+    
+    export {
+      timesTwo,
+      addFive
+    }
+
+Notice that I only make two small changes:
+
+1. import sum from lodash
+2. change the addFive function to use sum
+
+Otherwise, there are no changes. To make this live, we need to run webpack
+again to transpile to ES5 and live-server will automatically refresh the new
+code:
+
+.. code:: bash
+
+    $ webpack
+    Hash: 733b2ca4f2f0c808b86e
+    Version: webpack 1.13.1
+    Time: 3619ms
+        Asset     Size  Chunks             Chunk Names
+    bundle.js  3.91 kB       0  [emitted]  main
+        + 5 hidden modules
 
 
+That's it -- I'm coding in ES2015/ES6 and running it in the browser.  Try it out
+and see what you think. Also, don't forget to checkout the motivating posts by
+Mark Brown and Stuart Memo -- links at the top of the post.
 
 .. _Babel: https://babeljs.io/
 .. _webpack: https://webpack.github.io/
