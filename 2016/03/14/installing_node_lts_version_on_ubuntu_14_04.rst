@@ -34,6 +34,54 @@ of node and npm using:
 
 Of course, your versions might be different if you install later.
 
+sudo-free global installs
+-------------------------
+
+**2016, July**
+
+I'm adding this (I think) really important part to allow for npm
+install of packages without sudo -- this means it's in a non-destructive place
+that we have to setup. This approach is suggested by the (very nice) npm docs--
+`see here <https://docs.npmjs.com/getting-started/fixing-npm-permissions>`_ --
+I'll be using "Option 2" described there.  To start, we make a
+directory to hold our global installs:
+
+.. code:: bash
+
+    $ mkdir ~/.npm-global
+
+Next, we tell npm about this new location:
+
+.. code:: bash
+
+    $ npm config set prefix '~/.npm-global'
+
+Finally, we have to update our path for bash. The npm docs suggest doing this
+in ~/.profile, but I will do this in ~/.bashrc (this is loaded by ~/.profile
+on Ubuntu machines). So, in ~/.bashrc add this line (at the end of the file
+is fine)
+
+.. code:: bash
+
+    # add path for npm global installs
+    export PATH=~/.npm-global/bin:$PATH
+
+I've added the comment so that I/we can remember what this is for (if it isn't
+obvious from the name).  Finally, source ~/.bashrc like so
+
+.. code:: bash
+
+    $ source ~/.bashrc
+
+And we should be set; global install without sudo. If you'd like to test it out,
+install jshint globally with:
+
+.. code:: bash
+
+    $ npm install -g jshint
+
+You should see that it is using the new location.
+
 Geting started
 --------------
 
