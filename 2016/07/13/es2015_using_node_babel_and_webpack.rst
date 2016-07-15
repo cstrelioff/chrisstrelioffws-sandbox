@@ -50,13 +50,15 @@ reference, at the time of this post I have:
     2.15.8
 
 You should have similar versions, or higher. Next, I will install two packages
-globally: `webpack`_ and `live-server`_. On Ubuntu global installs require
-admin permissions, so I install with:
+globally: `webpack`_ and `live-server`_:
 
 .. code:: bash
 
-    $ sudo npm install -g live-server webpack
+    $ npm install -g live-server webpack
 
+If this command complains about permission issues, try setting up a sudo-free
+location for global installs of npm packages.  I've added a section to
+:ref:`install-node-lts` that covers how to do this on Ubuntu 14.04.
 
 project setup
 -------------
