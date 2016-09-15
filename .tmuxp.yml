@@ -7,12 +7,10 @@ windows:
     panes:
       - shell_command:
         - vim
-        - :! pwd
         focus: true
       - shell_command:
+        - workon py-2.7.12
         - pwd
-        - git status
       - shell_command:
-        - pwd
         - firefox blog/html/index.html &
 
