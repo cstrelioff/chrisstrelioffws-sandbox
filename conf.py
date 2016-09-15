@@ -59,8 +59,9 @@ slug_word_separator = '_'
 # **************************************************************
 
 # Add other Sphinx extensions here
-extensions = ['tinkerer.ext.blog', 'tinkerer.ext.disqus', 'sphinx.ext.mathjax',
-              'sphinxcontrib.jsdemo']
+extensions = ['tinkerer.ext.blog', 'tinkerer.ext.disqus', 'sphinx.ext.mathjax']
+#extensions = ['tinkerer.ext.blog', 'tinkerer.ext.disqus', 'sphinx.ext.mathjax',
+#              'sphinxcontrib.jsdemo']
 
 # Add other template paths here
 templates_path = ['_templates']
