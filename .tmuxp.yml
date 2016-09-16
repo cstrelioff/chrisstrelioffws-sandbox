@@ -9,7 +9,7 @@ windows:
         - vim
         focus: true
       - shell_command:
-        - workon py-2.7.12
+        - workon py-3.5.2
         - pwd
       - shell_command:
         - firefox blog/html/index.html &
