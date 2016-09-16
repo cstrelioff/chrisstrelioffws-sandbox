@@ -4,6 +4,8 @@ Sitemap
 .. toctree::
    :maxdepth: 1
 
+   2016/09/16/vim_and_vundle_on_ubuntu_16_04
+   2016/09/16/python_setup_on_ubuntu_16_04
    2016/07/13/es2015_using_node_babel_and_webpack
    2016/03/30/upgrading_to_meteor_1_3_on_ubuntu_14_04
    2016/03/15/a_d3_experiment_on_my_tinkerer_blog.rst

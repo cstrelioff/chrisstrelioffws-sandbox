@@ -1,3 +1,5 @@
+.. _vim-pathogen:
+
 Install and setup vim on Ubuntu 14.04
 =====================================
 
