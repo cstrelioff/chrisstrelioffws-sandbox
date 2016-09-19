@@ -367,7 +367,7 @@ Again, installation information from pip_ is obtained with:
 
 Finally, following the `sympy tutorial`_, start Python and try:
 
-.. code-block:: python
+.. code-block:: none
 
     Python 2.7.6 (default, Mar 22 2014, 22:59:56) 
     [GCC 4.8.2] on linux2
@@ -422,7 +422,7 @@ which launches the IPython_ terminal.  Notice the IPython_ version is provided
 and the prompt looks different from the normal ``>>>`` Python prompt (see the
 IPython_ documentation for more information):
 
-.. code-block:: python
+.. code-block:: none
 
     Python 2.7.6 (default, Mar 22 2014, 22:59:56) 
     Type "copyright", "credits" or "license" for more information.
@@ -452,7 +452,7 @@ You can create a new notebook and work away. To shutdown the server, back at
 the terminal where you launched the notebook, type **cntrl-C** and then **y**
 when prompted:
 
-.. code-block:: bash
+.. code-block:: none
 
     Shutdown this notebook server (y/[n])? y
     2014-06-04 16:29:04.033 [NotebookApp] CRITICAL | Shutdown confirmed
