@@ -17,6 +17,12 @@ That's it, you're ready to edit.  A good place to start if you need to learn
 more about **vim** is the main website: vim_ . Also be sure to check out the
 `vim tutorials`_. 
 
+**<Note>**
+Sept 2016-- I have upgraded to Ubuntu 16.04 and wrote another post
+about setting up vim_, this time using vundle instead of pathogen.  Checkout
+the new post-- :ref:`vim-vundle` -- if that sounds interesting.
+**</Note>**
+
 Pathogen
 --------
 
