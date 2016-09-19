@@ -49,7 +49,7 @@ nice `Digital Ocean Tutorial on vundle`_, one can use:
   $ if [ -e .vimrc ]; then mv .vimrc .vimrc_bak; fi
   $ if [ -e .vim ]; then mv .vim .vim_bak; fi
 
-Once you are backed up, the vundle git repository can be cloned using:
+Once you are backed up, the vundle_ git repository can be cloned using:
 
 .. code-block:: bash
 
@@ -353,7 +353,7 @@ That's it
 
 So, that's it for my (self-) documentation of getting started with vundle_ on
 Ubuntu 16.04.  Hopefully those who find this post will find it helpfull-- I
-know I'll look back at it when I have to upgrade to Ubunt 18.04 in a couple
+know I'll look back at it when I have to upgrade to Ubuntu 18.04 in a couple
 of years.
 
 If you find typos or have a question please leave comments below. I'll do my
