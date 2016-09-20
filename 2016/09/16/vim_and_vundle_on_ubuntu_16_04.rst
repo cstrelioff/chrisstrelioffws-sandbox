@@ -186,7 +186,8 @@ checkout the lightline_ repository for more information. The changes are:
   Plugin 'itchyny/lightline.vim'
 
 2. On both Ubuntu 14.04 and 16.04 I've had to add the :code:`laststatus=2` fix
-   to get the status line to show properly. At the end of the file, add:
+   to get the status line to show properly. At the end of the **~/.vimrc**
+   file, add:
 
 .. code-block:: none
   
@@ -256,7 +257,7 @@ Using the usual vundle_ install process, do the following:
   Plugin 'aperezdc/vim-template'
 
 2. Set the template fills for name, email, etc. by adding the following to the
-   end of you **~/.vimrc** (of course change to relevant information):
+   end of your **~/.vimrc** (of course change to relevant information):
 
 .. code-block:: none
 
