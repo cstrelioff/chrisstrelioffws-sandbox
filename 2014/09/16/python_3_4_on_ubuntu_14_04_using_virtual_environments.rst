@@ -1,3 +1,5 @@
+.. _python3 on ubuntu 14.04:
+
 Python 3.4 on Ubuntu 14.04 using virtual environments
 =====================================================
 
