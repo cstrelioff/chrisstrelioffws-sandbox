@@ -4,6 +4,7 @@ Sitemap
 .. toctree::
    :maxdepth: 1
 
+   2016/10/10/dropbox_on_ubuntu_16_04
    2016/09/21/vim_and_vundle_on_ubuntu_16_04
    2016/09/21/python_setup_on_ubuntu_16_04
    2016/07/13/es2015_using_node_babel_and_webpack
