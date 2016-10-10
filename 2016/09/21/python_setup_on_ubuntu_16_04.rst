@@ -581,5 +581,5 @@ rule-- be nice!
 
 .. author:: default
 .. categories:: none
-.. tags:: python, ubuntu 16.06, pip, virtualenv, virtualenvwrapper
+.. tags:: python, ubuntu 16.04, pip, virtualenv, virtualenvwrapper
 .. comments::
