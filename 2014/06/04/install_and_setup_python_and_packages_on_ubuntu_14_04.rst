@@ -3,6 +3,11 @@
 Install Python packages on Ubuntu 14.04
 =======================================
 
+**<note>**
+There is an updated post for Ubuntu 16.04-- :ref:`python ubuntu 16.04`,
+check it out for current information.
+**</note>**
+
 In this post I will document my setup of Python 2.7.6 in Ubuntu 14.04.  Of
 course, the base Python is installed by default, both Python 2.7.6 and Python
 3.4.  Try the following in the terminal:
