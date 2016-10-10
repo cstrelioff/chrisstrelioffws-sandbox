@@ -3,6 +3,12 @@
 Install and setup vim on Ubuntu 14.04
 =====================================
 
+**<note>**
+I have upgraded to Ubuntu 16.04 and wrote another post about setting up vim_,
+this time using vundle instead of pathogen.  Checkout the new post--
+:ref:`vim-vundle` -- if that sounds interesting to you.
+**</note>**
+
 **Vim** is a powerful editor that can be used on your laptop/desktop and is
 also typically found of any Linux server you might encounter.  As a result, I
 started using **vim** as my main editor.  The Ubuntu install is simple:
@@ -16,12 +22,6 @@ started using **vim** as my main editor.  The Ubuntu install is simple:
 That's it, you're ready to edit.  A good place to start if you need to learn
 more about **vim** is the main website: vim_ . Also be sure to check out the
 `vim tutorials`_. 
-
-**<Note>**
-Sept 2016-- I have upgraded to Ubuntu 16.04 and wrote another post
-about setting up vim_, this time using vundle instead of pathogen.  Checkout
-the new post-- :ref:`vim-vundle` -- if that sounds interesting.
-**</Note>**
 
 Pathogen
 --------
