@@ -1,5 +1,12 @@
+.. _texlive 2013 ubuntu 14.04:
+
 Install vanilla LaTeX on Ubuntu 14.04
 =====================================
+
+**<note>**
+There is now a PPA to install TeX Live 2016 for both Ubuntu 14.04 and 16.04--
+checkout the new post: :ref:`texlive 2016 ubuntu 16.04`.
+**</note>**
 
 In this post I will go through a vanilla installation of Tex Live-- **you may
 not want to do this**.  I'm choosing this installation method because of the
